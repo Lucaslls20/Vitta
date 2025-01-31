@@ -4,5 +4,6 @@ export const COLORS = {
   textPrimary: "#1B5E20",   // Verde escuro para texto
   textSecondary: "#616161", // Cinza neutro
   white: "#FFFFFF",         // Branco puro
-  shadow: "#1B5E20",        // Sombra verde escuro
+  shadow: "#1B5E20",
+  error:'#E6E6FA'        // Sombra verde escuro
 };

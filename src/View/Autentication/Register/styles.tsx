@@ -79,6 +79,7 @@ export const styles = StyleSheet.create({
         textAlign: "center",
         color: COLORS.textSecondary,
         marginTop: 10,
+        paddingBottom:5
     },
     loginLink: {
         color: COLORS.primary,

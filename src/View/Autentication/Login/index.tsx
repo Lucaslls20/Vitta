@@ -1,21 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Image, Animated, Easing } from "react-native";
-import { TextInput, Button, Title, ActivityIndicator } from "react-native-paper";
+import { TextInput, Button, Title, ActivityIndicator, Snackbar } from "react-native-paper";
 import { styles } from "./styles";
 import { COLORS } from "../../Colors";
+import { useLoginViewModel } from "../../../ViewModels/LoginViewModel";
 
 export default function Login({ navigation }: any) {
-    const [loading, setLoading] = useState(false);
     const [fadeAnim] = useState(new Animated.Value(1));
     const [scaleValue] = useState(new Animated.Value(1));
+    const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado do Snackbar
 
-    const handleLogin = () => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            navigation.navigate('Tabs');
-        }, 2000);
-    };
+    const { email, setEmail, password, setPassword, loading, error, login } = useLoginViewModel();
 
     const animateButton = () => {
         Animated.sequence([
@@ -32,16 +27,11 @@ export default function Login({ navigation }: any) {
         ]).start();
     };
 
-    const handleNavigateToRegister = () => {
-        Animated.timing(fadeAnim, {
-            toValue: 0,
-            duration: 300,
-            easing: Easing.linear,
-            useNativeDriver: true,
-        }).start(() => {
-            navigation.navigate("Register");
-            fadeAnim.setValue(1);
-        });
+    const handleLogin = async () => {
+        await login();
+        if (error) {
+            setSnackbarVisible(true);
+        }
     };
 
     return (
@@ -64,12 +54,16 @@ export default function Login({ navigation }: any) {
                     left={<TextInput.Icon icon="email" color={COLORS.primary} />}
                     style={styles.input}
                     keyboardType="email-address"
+                    onChangeText={setEmail}
+                    value={email}
                     theme={{ colors: { primary: COLORS.primary } }}
                 />
                 
                 <TextInput
                     mode="outlined"
                     label="Senha"
+                    value={password}
+                    onChangeText={setPassword}
                     left={<TextInput.Icon icon="lock" color={COLORS.primary} />}
                     style={styles.input}
                     secureTextEntry
@@ -84,7 +78,7 @@ export default function Login({ navigation }: any) {
                         Clique aqui
                     </Text>
                 </Text>
-
+                  {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
                 <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
                     <Button
                         mode="contained"
@@ -106,11 +100,23 @@ export default function Login({ navigation }: any) {
                     Não possui uma conta?{' '}
                     <Text
                         style={styles.loginLink}
-                        onPress={handleNavigateToRegister}>
+                        onPress={() => navigation.navigate("Register")}>
                         Faça Cadastro
                     </Text>
                 </Text>
             </View>
+
+            {/* Snackbar de erro */}
+            <Snackbar
+                visible={snackbarVisible}
+                onDismiss={() => setSnackbarVisible(false)}
+                action={{
+                    label: 'Fechar',
+                    onPress: () => setSnackbarVisible(false),
+                }}
+                style={{ backgroundColor: COLORS.error }}>
+                <Text style={{color:'#333'}}>{error}</Text>
+            </Snackbar>
         </Animated.View>
     );
 }
