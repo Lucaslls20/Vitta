@@ -1,16 +1,35 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Image, Animated, Easing } from "react-native";
+import { View, Text, Image, Animated } from "react-native";
 import { TextInput, Button, Title, ActivityIndicator, Snackbar } from "react-native-paper";
 import { styles } from "./styles";
 import { COLORS } from "../../Colors";
 import { useLoginViewModel } from "../../../ViewModels/LoginViewModel";
+import { auth } from "../../../Services/firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 export default function Login({ navigation }: any) {
     const [fadeAnim] = useState(new Animated.Value(1));
     const [scaleValue] = useState(new Animated.Value(1));
-    const [snackbarVisible, setSnackbarVisible] = useState(false); // Estado do Snackbar
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const { email, setEmail, password, setPassword, loading, error, login } = useLoginViewModel();
+
+    const handleForgotPassword = async () => {
+        if (!email) {
+            setSnackbarMessage("Digite seu e-mail antes de redefinir a senha.");
+            setSnackbarVisible(true);
+            return;
+        }
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+            setSnackbarMessage("Email de redefinição de senha enviado! Verifique sua caixa de entrada.");
+        } catch (error) {
+            setSnackbarMessage("Erro ao enviar email. Verifique se o email está correto.");
+        }
+        setSnackbarVisible(true);
+    };
 
     const animateButton = () => {
         Animated.sequence([
@@ -30,6 +49,7 @@ export default function Login({ navigation }: any) {
     const handleLogin = async () => {
         await login();
         if (error) {
+            setSnackbarMessage(error);
             setSnackbarVisible(true);
         }
     };
@@ -44,7 +64,7 @@ export default function Login({ navigation }: any) {
                     style={styles.image}
                 />
             </View>
-            
+
             <View style={styles.form}>
                 <Title style={styles.title}>Bem-vindo de volta!</Title>
 
@@ -58,7 +78,7 @@ export default function Login({ navigation }: any) {
                     value={email}
                     theme={{ colors: { primary: COLORS.primary } }}
                 />
-                
+
                 <TextInput
                     mode="outlined"
                     label="Senha"
@@ -72,13 +92,15 @@ export default function Login({ navigation }: any) {
 
                 <Text style={styles.forgotPassword}>
                     Esqueceu sua senha?{' '}
-                    <Text 
-                        onPress={() => console.log("Alterar senha")} 
+                    <Text
+                        onPress={handleForgotPassword}
                         style={styles.forgotPasswordClick}>
                         Clique aqui
                     </Text>
                 </Text>
-                  {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
+
+                {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
+
                 <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
                     <Button
                         mode="contained"
@@ -106,7 +128,7 @@ export default function Login({ navigation }: any) {
                 </Text>
             </View>
 
-            {/* Snackbar de erro */}
+            {/* Snackbar de feedback */}
             <Snackbar
                 visible={snackbarVisible}
                 onDismiss={() => setSnackbarVisible(false)}
@@ -115,7 +137,7 @@ export default function Login({ navigation }: any) {
                     onPress: () => setSnackbarVisible(false),
                 }}
                 style={{ backgroundColor: COLORS.error }}>
-                <Text style={{color:'#333'}}>{error}</Text>
+                <Text style={{ color: '#333' }}>{snackbarMessage}</Text>
             </Snackbar>
         </Animated.View>
     );
