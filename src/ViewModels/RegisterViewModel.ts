@@ -13,6 +13,7 @@ const isValidEmail = (email: string): boolean => {
 
 export const useRegisterViewModel = (): RegisterViewModel => {
   const [email, setEmail] = useState<string>('');
+  const [name, setName] = useState<string>('')
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,12 +66,14 @@ export const useRegisterViewModel = (): RegisterViewModel => {
 
   return {
     email,
+    name,
     password,
     confirmPassword,
     loading,
     error,
     register,
     setEmail,
+    setName,
     setPassword,
     setConfirmPassword,
   };

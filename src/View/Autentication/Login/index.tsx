@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, Image, Animated } from "react-native";
+import { View, Text, Image, Animated, TouchableOpacity } from "react-native";
 import { TextInput, Button, Title, ActivityIndicator, Snackbar } from "react-native-paper";
 import { styles } from "./styles";
 import { COLORS } from "../../Colors";
 import { useLoginViewModel } from "../../../ViewModels/LoginViewModel";
 import { auth } from "../../../Services/firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
+import { CustomButton } from "../../../Components/CustomButton";
+import { CustomSnackbar } from "../../../Components/CustomSnackbar";
+import { CustomTextInput } from "../../../Components/CustomTextInput";
 
 export default function Login({ navigation }: any) {
     const [fadeAnim] = useState(new Animated.Value(1));
     const [scaleValue] = useState(new Animated.Value(1));
-    const [snackbarVisible, setSnackbarVisible] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarVisible, setSnackbarVisible] = useState<boolean>(false);
+    const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
     const { email, setEmail, password, setPassword, loading, error, login } = useLoginViewModel();
 
@@ -68,26 +71,22 @@ export default function Login({ navigation }: any) {
             <View style={styles.form}>
                 <Title style={styles.title}>Bem-vindo de volta!</Title>
 
-                <TextInput
-                    mode="outlined"
+                <CustomTextInput
                     label="Digite seu e-mail"
-                    left={<TextInput.Icon icon="email" color={COLORS.primary} />}
-                    style={styles.input}
-                    keyboardType="email-address"
-                    onChangeText={setEmail}
                     value={email}
-                    theme={{ colors: { primary: COLORS.primary } }}
+                    onChangeText={setEmail}
+                    icon="email"
+                    keyboardType="email-address"
+                    style={styles.input}
                 />
 
-                <TextInput
-                    mode="outlined"
+                <CustomTextInput
                     label="Senha"
                     value={password}
                     onChangeText={setPassword}
-                    left={<TextInput.Icon icon="lock" color={COLORS.primary} />}
-                    style={styles.input}
+                    icon="lock"
                     secureTextEntry
-                    theme={{ colors: { primary: COLORS.primary } }}
+                    style={styles.input}
                 />
 
                 <Text style={styles.forgotPassword}>
@@ -101,23 +100,13 @@ export default function Login({ navigation }: any) {
 
                 {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
 
-                <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
-                    <Button
-                        mode="contained"
-                        onPressIn={animateButton}
-                        onPress={handleLogin}
-                        style={[styles.button, loading && styles.buttonDisabled]}
-                        contentStyle={styles.buttonContent}
-                        disabled={loading}
-                        labelStyle={styles.buttonLabel}>
-                        {loading ? (
-                            <ActivityIndicator animating={true} color={COLORS.white} />
-                        ) : (
-                            "LOGIN"
-                        )}
-                    </Button>
-                </Animated.View>
-
+                <CustomButton
+                    onPress={handleLogin}
+                    onPressIn={animateButton}
+                    label="LOGIN"
+                    loading={loading}
+                    disabled={loading}
+                />
                 <Text style={styles.footerText}>
                     Não possui uma conta?{' '}
                     <Text
@@ -127,18 +116,11 @@ export default function Login({ navigation }: any) {
                     </Text>
                 </Text>
             </View>
-
-            {/* Snackbar de feedback */}
-            <Snackbar
+            <CustomSnackbar
                 visible={snackbarVisible}
                 onDismiss={() => setSnackbarVisible(false)}
-                action={{
-                    label: 'Fechar',
-                    onPress: () => setSnackbarVisible(false),
-                }}
-                style={{ backgroundColor: COLORS.error }}>
-                <Text style={{ color: '#333' }}>{snackbarMessage}</Text>
-            </Snackbar>
+                message={snackbarMessage}
+            />
         </Animated.View>
     );
 }

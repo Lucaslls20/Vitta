@@ -1,6 +1,7 @@
 
 export interface RegisterViewModel {
     email: string;
+    name: string;
     password: string;
     confirmPassword: string;
     loading: boolean;
@@ -9,4 +10,5 @@ export interface RegisterViewModel {
     setEmail: (email: string) => void;
     setPassword: (password: string) => void;
     setConfirmPassword: (confirmPassword: string) => void;
+    setName: (name:string) => void;
   }

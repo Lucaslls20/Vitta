@@ -2,21 +2,18 @@ import React, { useState } from "react";
 import { View, Text, Image, Animated, Easing, ScrollView } from "react-native";
 import { TextInput, Button, Title, Subheading, ActivityIndicator, Snackbar } from "react-native-paper";
 import { styles } from "./styles";
-import { COLORS } from "../../Colors";
 import { useRegisterViewModel } from "../../../ViewModels/RegisterViewModel";
+import { CustomButton } from "../../../Components/CustomButton";
+import { CustomSnackbar } from "../../../Components/CustomSnackbar";
+import { CustomTextInput } from "../../../Components/CustomTextInput";
 
 export default function Register({ navigation }: any) {
     const [fadeAnim] = useState(new Animated.Value(1));
     const [scaleValue] = useState(new Animated.Value(1));
-    const [snackbarVisible, setSnackbarVisible] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarVisible, setSnackbarVisible] = useState<boolean>(false);
+    const [snackbarMessage, setSnackbarMessage] = useState<string>('');
 
-    const {
-        email, setEmail,
-        password, setPassword,
-        confirmPassword, setConfirmPassword,
-        loading, error, register
-    } = useRegisterViewModel();
+    const { email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, loading, error, register, name, setName } = useRegisterViewModel();
 
     const animateButton = () => {
         Animated.sequence([
@@ -69,59 +66,48 @@ export default function Register({ navigation }: any) {
                     <Subheading style={styles.subtitle}>
                         Crie sua conta e melhore sua saúde com a gente!
                     </Subheading>
-                    <TextInput
-                        mode="outlined"
+                    <CustomTextInput
                         label="Digite seu nome"
-                        left={<TextInput.Icon icon="account" color={COLORS.primary} />}
+                        value={name} // Se precisar armazenar, crie um estado para nome
+                        onChangeText={setName}
+                        icon="account"
                         style={styles.input}
-                        theme={{ colors: { primary: COLORS.primary } }}
                     />
-                    <TextInput
-                        mode="outlined"
+
+                    <CustomTextInput
                         label="Digite seu e-mail"
                         value={email}
                         onChangeText={setEmail}
-                        left={<TextInput.Icon icon="email" color={COLORS.primary} />}
-                        style={styles.input}
+                        icon="email"
                         keyboardType="email-address"
-                        theme={{ colors: { primary: COLORS.primary } }}
+                        style={styles.input}
                     />
-                    <TextInput
-                        mode="outlined"
+
+                    <CustomTextInput
                         label="Senha"
                         value={password}
                         onChangeText={setPassword}
-                        left={<TextInput.Icon icon="lock" color={COLORS.primary} />}
-                        style={styles.input}
+                        icon="lock"
                         secureTextEntry
-                        theme={{ colors: { primary: COLORS.primary } }}
+                        style={styles.input}
                     />
-                    <TextInput
-                        mode="outlined"
+
+                    <CustomTextInput
                         label="Confirme sua senha"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
-                        left={<TextInput.Icon icon="lock" color={COLORS.primary} />}
-                        style={styles.input}
+                        icon="lock"
                         secureTextEntry
-                        theme={{ colors: { primary: COLORS.primary } }}
+                        style={styles.input}
                     />
                     {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
-                    <Button
-                        mode="contained"
+                    <CustomButton
                         onPress={handleRegister}
-                        style={[styles.button, loading && styles.buttonDisabled]}
-                        contentStyle={styles.buttonContent}
-                        disabled={loading}
                         onPressIn={animateButton}
-                        labelStyle={styles.buttonLabel}>
-
-                        {loading ? (
-                            <ActivityIndicator animating={true} color={COLORS.white} />
-                        ) : (
-                            "CRIAR CONTA"
-                        )}
-                    </Button>
+                        label="CRIAR CONTA"
+                        loading={loading}
+                        disabled={loading}
+                    />
                     <Text style={styles.footerText}>
                         Já tem uma conta?{" "}
                         <Text
@@ -132,18 +118,11 @@ export default function Register({ navigation }: any) {
                         </Text>
                     </Text>
                 </View>
-                <Snackbar
+                <CustomSnackbar
                     visible={snackbarVisible}
                     onDismiss={() => setSnackbarVisible(false)}
-                    duration={3000}
-                    action={{
-                        label: "Fechar",
-                        onPress: () => setSnackbarVisible(false),
-                    }}
-                    style={{ backgroundColor: COLORS.error }}
-                >
-                 <Text style={{color:'#333'}}>{snackbarMessage}</Text>
-                </Snackbar>
+                    message={snackbarMessage}
+                />
             </Animated.View>
         </ScrollView>
     );
