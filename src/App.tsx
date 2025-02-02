@@ -8,6 +8,7 @@ import SplashScreen from "./View/Autentication/SplashScreen";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "./View/PagesBottomTabs/Home";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { COLORS } from "./View/Colors";
 
 export type RootStackParamList = {
     Login: undefined
@@ -32,7 +33,11 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 
 function TabRoutes(){
     return(
-    <Tab.Navigator>
+    <Tab.Navigator   screenOptions={{
+      tabBarActiveBackgroundColor:COLORS.white,
+      tabBarActiveTintColor: COLORS.primary,
+      tabBarInactiveTintColor: COLORS.shadow,
+    }}>
     <Tab.Screen name="Home" component={Home} options={{
           headerShown: false,
           tabBarIcon: ({ color, size }: IconProps) => (
