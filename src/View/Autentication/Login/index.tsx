@@ -6,9 +6,9 @@ import { COLORS } from "../../Colors";
 import { useLoginViewModel } from "../../../ViewModels/LoginViewModel";
 import { auth } from "../../../Services/firebaseConfig";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { CustomButton } from "../../../Components/CustomButton";
-import { CustomSnackbar } from "../../../Components/CustomSnackbar";
-import { CustomTextInput } from "../../../Components/CustomTextInput";
+import { CustomButton } from "../../../Components/Autentication/CustomButton";
+import { CustomSnackbar } from "../../../Components/Autentication/CustomSnackbar";
+import { CustomTextInput } from "../../../Components/Autentication/CustomTextInput";
 
 export default function Login({ navigation }: any) {
     const [fadeAnim] = useState(new Animated.Value(1));

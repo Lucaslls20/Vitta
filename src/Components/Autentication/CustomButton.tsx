@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, ActivityIndicator } from 'react-native-paper';
-import { COLORS } from '../View/Colors';
-import { styles } from '../View/Autentication/Login/styles';
+import { COLORS } from '../../View/Colors';
+import { styles } from '../../View/Autentication/Login/styles';
 
 interface CustomButtonProps {
     onPress: () => void;

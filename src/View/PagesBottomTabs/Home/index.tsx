@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
-import { ActivityIndicator, Text, Card, Button, TextInput, Avatar, Chip } from 'react-native-paper';
+import { ActivityIndicator, Text, Card, Button, TextInput, Avatar } from 'react-native-paper';
 import { styles } from './styles';
 import { calendarTheme } from './calendarTheme';
 import { useHomeViewModel } from '../../../ViewModels/HomeViewModelNutritionix';
@@ -9,17 +9,17 @@ import { Calendar } from 'react-native-calendars';
 import FitnessRecipes from '../../../Components/Home/FitnessRecipes/FitnessRecipes';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RenderNutritionCard from '../../../Components/Home/renderNutricionCard/renderNutritionCard';
+import UserGreeting from '../../../Components/Home/UserGreeting';
 
 export const Home: React.FC = () => {
   const { nutrition, loading, error, fetchNutritionData, dailySummary, setError } = useHomeViewModel();
   const [query, setQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-
+ 
   const handleSearch = () => {
     if (query.trim().length > 0) {
       fetchNutritionData(query);
     } else {
-      // Feedback visual para campo vazio
       setError('Por favor, digite um alimento para pesquisar');
     }
   };
@@ -27,26 +27,10 @@ export const Home: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView contentContainerStyle={styles.container}>
-        {/* Header melhorado */}
-        <View style={styles.header}>
-          <Avatar.Icon
-            icon="account"
-            size={56}
-            style={styles.userAvatar}
-            theme={{ colors: { primary: COLORS.primary } }}
-          />
-          <View>
-            <Text style={styles.greeting}>Bem-vindo, João! 👋</Text>
-            <View style={styles.caloriesContainer}>
-              <Icon name="fire" size={16} color={COLORS.primary} />
-              <Text style={styles.subGreeting}>
-                Consumo hoje: {dailySummary?.calories || 0} kcal
-              </Text>
-            </View>
-          </View>
-        </View>
+       
+       <UserGreeting/>
 
-        {/* Calendário com tema aprimorado */}
+        {/* Calendário */}
         <Calendar
           style={styles.calendar}
           onDayPress={(day: any) => setSelectedDate(day.dateString)}
@@ -73,7 +57,7 @@ export const Home: React.FC = () => {
           theme={calendarTheme}
         />
 
-        {/* Campo de busca aprimorado */}
+        {/* Barra de busca */}
         <View style={styles.searchContainer}>
           <TextInput
             mode="outlined"
@@ -83,27 +67,17 @@ export const Home: React.FC = () => {
             style={styles.searchInput}
             outlineColor={COLORS.primary}
             activeOutlineColor={COLORS.primary}
-            right={
-              <TextInput.Icon
-                icon="magnify"
-                color={COLORS.primary}
-                onPress={handleSearch}
-              />
-            }
+            right={<TextInput.Icon icon="magnify" color={COLORS.primary} onPress={handleSearch} />}
             onSubmitEditing={handleSearch}
             placeholder="Ex: 1 xícara de arroz integral"
             placeholderTextColor={COLORS.textSecondary}
           />
         </View>
 
-        {/* Estados melhorados */}
+        {/* Estados */}
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator
-              animating={true}
-              color={COLORS.primary}
-              size="large"
-            />
+            <ActivityIndicator animating={true} color={COLORS.primary} size="large" />
             <Text style={styles.loadingText}>Analisando valores nutricionais...</Text>
           </View>
         ) : error ? (
@@ -112,14 +86,15 @@ export const Home: React.FC = () => {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : nutrition ? (
-         <RenderNutritionCard/>
+          <RenderNutritionCard />
         ) : (
           <View style={styles.emptyState}>
-            <Image
-              source={{uri:'https://previews.123rf.com/images/chudtsankov/chudtsankov1503/chudtsankov150300085/37831875-happy-hamburger-cartoon-character-waving-illustration-isolated-on-white.jpg'}}
+           {/* <Image
+              source={{ uri: 'https://previews.123rf.com/images/chudtsankov/chudtsankov1503/chudtsankov150300085/37831875-happy-hamburger-cartoon-character-waving-illustration-isolated-on-white.jpg' }}
               style={styles.emptyImage}
               resizeMode="contain"
             />
+            */}
             <Text style={styles.emptyText}>
               Vamos começar!{'\n'}
               <Text style={styles.emptySubtext}>
@@ -128,10 +103,16 @@ export const Home: React.FC = () => {
             </Text>
           </View>
         )}
-        <Text style={styles.text}>Receitas nutritivas para você :</Text>
-        <FitnessRecipes/>
+
+        <Text style={styles.text}>Receitas Vegetarianas :</Text>
+        <FitnessRecipes diet='vegetarian' />
+        <Text style={styles.text}>Receitas que contem Peixe :</Text>
+        <FitnessRecipes diet='pescetarian' />
+        <Text style={styles.text}>Receitas que não contem gluten :</Text>
+        <FitnessRecipes diet='glutenFree' />
       </ScrollView>
     </SafeAreaView>
   );
 };
-export default Home
+
+export default Home;

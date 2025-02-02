@@ -4,36 +4,30 @@ import { useState, useEffect } from 'react';
 import { Recipe, RecipeApiResponse } from '../Models/HomeModelSpoonacular';
 import { APIKEY } from '../Services/SpoonacularConfig';
 
-// URL base da API da Spoonacular
 const BASE_URL = 'https://api.spoonacular.com/recipes';
 
 /**
- * Hook que encapsula a lógica de obtenção de receitas fitness da Spoonacular.
+ * Hook que encapsula a lógica de obtenção de receitas de acordo com uma dieta específica.
  *
+ * @param {string} diet - Tipo de dieta a ser filtrada (ex: "ketogenic", "vegetarian", "vegan").
  * @returns {Object} - Objeto contendo:
  *   - recipes: Array de receitas.
  *   - loading: Boolean indicando se os dados estão sendo carregados.
  *   - error: Mensagem de erro, caso ocorra.
  *   - refresh: Função para refazer a busca das receitas.
  */
-export const useRecipeViewModel = () => {
+export const useRecipeViewModel = (diet: string = 'fitness') => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  /**
-   * Função assíncrona que busca receitas fitness utilizando o endpoint `complexSearch`.
-   */
-  const fetchFitnessRecipes = async () => {
+  const fetchRecipesByDiet = async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      // Exemplo de chamada à API com o filtro de receitas fitness.
-      // O parâmetro "tags=fitness" é utilizado para filtrar as receitas.
-      // O parâmetro "addRecipeInformation=true" pode ser usado para obter mais detalhes.
+
       const response = await fetch(
-        `${BASE_URL}/complexSearch?tags=fitness&apiKey=${APIKEY}&addRecipeInformation=true`
+        `${BASE_URL}/complexSearch?diet=${diet}&apiKey=${APIKEY}&addRecipeInformation=true`
       );
 
       if (!response.ok) {
@@ -50,15 +44,14 @@ export const useRecipeViewModel = () => {
     }
   };
 
-  // useEffect para carregar as receitas ao montar o componente.
   useEffect(() => {
-    fetchFitnessRecipes();
-  }, []);
+    fetchRecipesByDiet();
+  }, [diet]);
 
   return {
     recipes,
     loading,
     error,
-    refresh: fetchFitnessRecipes,
+    refresh: fetchRecipesByDiet,
   };
 };

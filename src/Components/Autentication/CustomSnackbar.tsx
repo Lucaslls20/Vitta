@@ -1,6 +1,6 @@
 import React from 'react';
 import { Snackbar, Text } from 'react-native-paper';
-import { COLORS } from '../View/Colors';
+import {COLORS} from '../../View/Colors'
 
 interface CustomSnackbarProps {
     visible: boolean;

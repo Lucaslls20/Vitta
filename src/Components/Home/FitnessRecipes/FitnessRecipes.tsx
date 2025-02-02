@@ -7,8 +7,13 @@ import { Recipe } from '../../../Models/HomeModelSpoonacular';
 import { COLORS } from '../../../View/Colors';
 import { styles } from './styles';
 
-const FitnessRecipes: React.FC = () => {
-  const { recipes, loading, error, refresh } = useRecipeViewModel();
+interface FitnessRecipesProps {
+  diet: string; 
+}
+
+
+const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
+  const { recipes, loading, error, refresh } = useRecipeViewModel(diet);
 
   const renderItem = ({ item }: { item: Recipe }) => (
     <Card style={styles.card} elevation={4}>

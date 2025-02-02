@@ -3,9 +3,9 @@ import { View, Text, Image, Animated, Easing, ScrollView } from "react-native";
 import { TextInput, Button, Title, Subheading, ActivityIndicator, Snackbar } from "react-native-paper";
 import { styles } from "./styles";
 import { useRegisterViewModel } from "../../../ViewModels/RegisterViewModel";
-import { CustomButton } from "../../../Components/CustomButton";
-import { CustomSnackbar } from "../../../Components/CustomSnackbar";
-import { CustomTextInput } from "../../../Components/CustomTextInput";
+import { CustomButton } from "../../../Components/Autentication/CustomButton";
+import { CustomSnackbar } from "../../../Components/Autentication/CustomSnackbar";
+import { CustomTextInput } from "../../../Components/Autentication/CustomTextInput";
 
 export default function Register({ navigation }: any) {
     const [fadeAnim] = useState(new Animated.Value(1));

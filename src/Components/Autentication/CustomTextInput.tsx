@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
 import { ViewStyle } from "react-native";
-import { COLORS } from "../View/Colors";
+import { COLORS } from "../../View/Colors";
 
 interface CustomTextInputProps {
     label: string;
