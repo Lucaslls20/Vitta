@@ -16,4 +16,7 @@ export interface DailySummary {
   markedDates: {
     [date: string]: { marked: boolean; dotColor: string };
   };
+  dailyCalories: {
+    [date: string]: number;
+  };
 }

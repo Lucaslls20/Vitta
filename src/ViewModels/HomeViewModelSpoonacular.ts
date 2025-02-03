@@ -1,5 +1,3 @@
-// src/viewmodels/RecipeViewModel.ts
-
 import { useState, useEffect } from 'react';
 import { Recipe, RecipeApiResponse } from '../Models/HomeModelSpoonacular';
 import { APIKEY } from '../Services/SpoonacularConfig';
@@ -31,14 +29,14 @@ export const useRecipeViewModel = (diet: string = 'fitness') => {
       );
 
       if (!response.ok) {
-        throw new Error('Erro ao buscar receitas.');
+        throw new Error('Error when searching for recipes.');
       }
 
       const data: RecipeApiResponse = await response.json();
       setRecipes(data.results);
     } catch (err) {
       console.error(err);
-      setError('Erro ao buscar receitas. Tente novamente mais tarde.');
+      setError('Error when searching for recipes. Please try again later.');
     } finally {
       setLoading(false);
     }

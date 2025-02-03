@@ -22,26 +22,29 @@ export const useLoginViewModel = (): LoginViewModel => {
     setError(null);
 
     if (!email || !password) {
-        setError('Email e senha são obrigatórios.');
+        setError('Email and password are mandatory.');
         setLoading(false);
         return;
     }
 
     if (!validateEmail(email)) {
-        setError('Formato de email inválido.');
+        setError('Invalid email format.');
         setLoading(false);
         return;
     }
 
     if (password.length < 6) {
-        setError('A senha deve ter no mínimo 6 caracteres.');
+        setError('The password must be at least 6 characters long.');
         setLoading(false);
         return;
     }
 
     try {
         await signInWithEmailAndPassword(auth, email, password);
-        navigation.navigate('Tabs');
+        navigation.reset({
+            index: 0,
+            routes: [{ name: "Tabs" }],
+          });
         setLoading(false);
     } catch (err: unknown) {
         console.error(err);
@@ -49,16 +52,16 @@ export const useLoginViewModel = (): LoginViewModel => {
             const errorCode = (err as any).code;
             switch (errorCode) {
                 case 'auth/user-not-found':
-                    setError('Usuário não encontrado.');
+                    setError('User not found.');
                     break;
                 case 'auth/wrong-password':
-                    setError('Senha incorreta.');
+                    setError('Incorrect password.');
                     break;
                 case 'auth/too-many-requests':
-                    setError('Muitas tentativas falhas. Tente novamente mais tarde.');
+                    setError('Many failed attempts. Please try again later.');
                     break;
                 default:
-                    setError('Erro ao fazer login. Verifique se seus dados estão corretos.');
+                    setError('Error logging in. Check that your data is correct.');
             }
         }
         setLoading(false);

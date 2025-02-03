@@ -34,8 +34,8 @@ export default function SplashScreen({ navigation }: any) {
                     }}
                     style={styles.image}
                 />
-                <Text style={styles.title}>Bem-vindo ao Vitta</Text>
-                <Text style={styles.subtitle}>Melhore sua saúde aqui!</Text>
+                <Text style={styles.title}>Welcome to Vitta</Text>
+                <Text style={styles.subtitle}>Improve your health here!</Text>
                 <RNActivityIndicator size="large" color={COLORS.primary} style={styles.customIndicator} />
             </View>
         </Animated.View>

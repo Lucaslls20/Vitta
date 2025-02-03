@@ -6,11 +6,15 @@ import { auth, db } from '../../Services/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
 import { COLORS } from '../../View/Colors';
 import { styles } from '../../View/PagesBottomTabs/Home/styles';
-import { useHomeViewModel } from '../../ViewModels/HomeViewModelNutritionix';
+import { DailySummary } from '../../Models/HomeModelNutricion';
 
-const UserGreeting: React.FC = () => {
+interface UserGreetingProps {
+    dailySummary: DailySummary | null;
+}
+
+const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
     const [userName, setUserName] = useState<string | null>(null);
-    const { nutrition, loading, error, fetchNutritionData, dailySummary, setError } = useHomeViewModel();
+    const currentDate = new Date().toISOString().split('T')[0];
 
     useEffect(() => {
         const fetchUserName = async () => {
@@ -35,12 +39,13 @@ const UserGreeting: React.FC = () => {
         <View style={styles.header}>
             <Avatar.Icon icon="account" size={56} style={styles.userAvatar} theme={{ colors: { primary: COLORS.primary } }} />
             <View>
-                <Text style={styles.greeting}>Bem-vindo, {userName || 'Carregando...'}! 👋</Text>
+                <Text style={styles.greeting}>Welcome, {userName || 'Carregando...'}! 👋</Text>
                 <View style={styles.caloriesContainer}>
                     <Icon name="fire" size={16} color={COLORS.primary} />
                     <Text style={styles.subGreeting}>
-                        Consumo hoje: {dailySummary?.calories || 0} kcal
+                        Consumption today: {dailySummary?.dailyCalories?.[currentDate] ?? 0} kcal
                     </Text>
+
                 </View>
             </View>
         </View>

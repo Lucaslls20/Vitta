@@ -25,25 +25,25 @@ export const useRegisterViewModel = (): RegisterViewModel => {
     setLoading(true);
 
     if (password === '' && email === '' && confirmPassword === '' && name === '') {
-      setError('Todos os campos estão vazios. Preencha-os.');
+      setError('All fields are empty. Fill them in.');
       setLoading(false);
       return;
     }
 
     if (!isValidEmail(email)) {
-      setError('Por favor, insira um e-mail válido.');
+      setError('Please enter a valid email.');
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('A senha deve ter pelo menos 6 caracteres.');
+      setError('The password must be at least 6 characters long.');
       setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem.');
+      setError('Passwords do not match.');
       setLoading(false);
       return;
     }
@@ -61,14 +61,17 @@ export const useRegisterViewModel = (): RegisterViewModel => {
       });
 
       // Navegue para a próxima tela
-      navigation.navigate("Tabs");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Tabs" }],
+      });
     } catch (err: any) {
       const errorMessages: Record<string, string> = {
-        'auth/email-already-in-use': 'Este e-mail já está em uso.',
-        'auth/invalid-email': 'O e-mail fornecido é inválido.',
-        'auth/weak-password': 'A senha deve ter pelo menos 6 caracteres.',
+        'auth/email-already-in-use': 'This email is already in use.',
+        'auth/invalid-email': 'The email provided is invalid.',
+        'auth/weak-password': 'The password must be at least 6 characters long.',
       };
-      setError(errorMessages[err.code] || 'Erro ao criar conta. Tente novamente.');
+      setError(errorMessages[err.code] || 'Error creating account. Please try again.');
     } finally {
       setLoading(false);
     }

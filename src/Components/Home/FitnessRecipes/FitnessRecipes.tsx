@@ -31,13 +31,13 @@ const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
             mode="contained"
             onPress={() => {
               // Aqui você pode implementar a navegação ou a ação desejada para ver a receita
-              console.log(`Ver receita ${item.id}`);
+              console.log(`See Details ${item.id}`);
             }}
             style={styles.button}
             labelStyle={styles.buttonLabel}
             contentStyle={{backgroundColor:COLORS.primary}}
           >
-            Ver receita
+          See Details
           </Button>
         </Card.Actions>
       </LinearGradient>

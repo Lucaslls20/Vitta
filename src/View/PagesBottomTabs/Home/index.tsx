@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
-import { ActivityIndicator, Text, Card, Button, TextInput, Avatar } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, ScrollView, SafeAreaView } from 'react-native';
+import { ActivityIndicator, Text, TextInput } from 'react-native-paper';
 import { styles } from './styles';
 import { calendarTheme } from './calendarTheme';
 import { useHomeViewModel } from '../../../ViewModels/HomeViewModelNutritionix';
@@ -15,7 +15,7 @@ export const Home: React.FC = () => {
   const { nutrition, loading, error, fetchNutritionData, dailySummary, setError } = useHomeViewModel();
   const [query, setQuery] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
- 
+
   const handleSearch = () => {
     if (query.trim().length > 0) {
       fetchNutritionData(query);
@@ -27,41 +27,42 @@ export const Home: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView contentContainerStyle={styles.container}>
-       
-       <UserGreeting/>
+        <UserGreeting dailySummary={dailySummary}/>
 
         {/* Calendário */}
         <Calendar
-          style={styles.calendar}
-          onDayPress={(day: any) => setSelectedDate(day.dateString)}
-          markedDates={{
-            [selectedDate]: {
-              selected: true,
-              selectedColor: COLORS.primary,
-              selectedTextColor: COLORS.white,
-            },
-            ...dailySummary?.markedDates,
-            [new Date().toISOString().split('T')[0]]: {
-              customStyles: {
-                container: {
-                  backgroundColor: COLORS.secondary,
-                  borderColor: COLORS.primary,
-                  borderWidth: 1,
-                },
-                text: {
-                  color: COLORS.primary,
-                },
-              },
-            },
-          }}
-          theme={calendarTheme}
-        />
-
+  style={styles.calendar}
+  onDayPress={(day: any) => setSelectedDate(day.dateString)}
+  markedDates={{
+    [selectedDate]: {
+      selected: true,
+      selectedColor: COLORS.primary,
+      selectedTextColor: COLORS.white,
+    },
+    ...Object.keys(dailySummary?.dailyCalories || {}).reduce((acc, date) => ({
+      ...acc,
+      [date]: { marked: true, dotColor: COLORS.primary }
+    }), {}),
+    [new Date().toISOString().split('T')[0]]: {
+      customStyles: {
+        container: {
+          backgroundColor: COLORS.secondary,
+          borderColor: COLORS.primary,
+          borderWidth: 1,
+        },
+        text: {
+          color: COLORS.primary,
+        },
+      },
+    },
+  }}
+  theme={calendarTheme}
+/>
         {/* Barra de busca */}
         <View style={styles.searchContainer}>
           <TextInput
             mode="outlined"
-            label="O que você comeu hoje?"
+            label="What did you eat today?"
             value={query}
             onChangeText={setQuery}
             style={styles.searchInput}
@@ -69,7 +70,7 @@ export const Home: React.FC = () => {
             activeOutlineColor={COLORS.primary}
             right={<TextInput.Icon icon="magnify" color={COLORS.primary} onPress={handleSearch} />}
             onSubmitEditing={handleSearch}
-            placeholder="Ex: 1 xícara de arroz integral"
+            placeholder="Ex: 1 cup of brown rice"
             placeholderTextColor={COLORS.textSecondary}
           />
         </View>
@@ -78,7 +79,7 @@ export const Home: React.FC = () => {
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator animating={true} color={COLORS.primary} size="large" />
-            <Text style={styles.loadingText}>Analisando valores nutricionais...</Text>
+            <Text style={styles.loadingText}>Analyzing nutritional values...</Text>
           </View>
         ) : error ? (
           <View style={styles.errorContainer}>
@@ -86,30 +87,27 @@ export const Home: React.FC = () => {
             <Text style={styles.errorText}>{error}</Text>
           </View>
         ) : nutrition ? (
-          <RenderNutritionCard />
+          <RenderNutritionCard nutrition={nutrition} />
         ) : (
           <View style={styles.emptyState}>
-           {/* <Image
-              source={{ uri: 'https://previews.123rf.com/images/chudtsankov/chudtsankov1503/chudtsankov150300085/37831875-happy-hamburger-cartoon-character-waving-illustration-isolated-on-white.jpg' }}
-              style={styles.emptyImage}
-              resizeMode="contain"
-            />
-            */}
             <Text style={styles.emptyText}>
-              Vamos começar!{'\n'}
+            Let's get started!{'\n'}
               <Text style={styles.emptySubtext}>
-                Pesquise um alimento para ver suas informações nutricionais
+              Search for a food to see its nutritional information
               </Text>
             </Text>
           </View>
         )}
 
-        <Text style={styles.text}>Receitas Vegetarianas :</Text>
-        <FitnessRecipes diet='vegetarian' />
-        <Text style={styles.text}>Receitas que contem Peixe :</Text>
-        <FitnessRecipes diet='pescetarian' />
-        <Text style={styles.text}>Receitas que não contem gluten :</Text>
-        <FitnessRecipes diet='glutenFree' />
+        {/* Seções de Receitas */}
+        <Text style={styles.text}>Vegetarian Recipes:</Text>
+        <FitnessRecipes diet="vegetarian" />
+        
+        <Text style={styles.text}>Recipes that contain Fish:</Text>
+        <FitnessRecipes diet="pescetarian" />
+        
+        <Text style={styles.text}>Gluten-Free Recipes:</Text>
+        <FitnessRecipes diet="glutenFree" />
       </ScrollView>
     </SafeAreaView>
   );

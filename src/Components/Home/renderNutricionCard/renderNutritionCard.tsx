@@ -4,26 +4,29 @@ import LinearGradient from 'react-native-linear-gradient';
 import { styles } from '../../../View/PagesBottomTabs/Home/styles';
 import { COLORS } from '../../../View/Colors';
 import { Text, Chip } from 'react-native-paper';
-import { useHomeViewModel } from '../../../ViewModels/HomeViewModelNutritionix';
+import { NutritionData } from '../../../Models/HomeModelNutricion';
 
-export default function RenderNutritionCard(){
+interface NutritionCardProps {
+  nutrition: NutritionData; // Certifique-se de importar a interface NutritionData
+}
 
-    const { nutrition, loading, error, fetchNutritionData, dailySummary, setError } = useHomeViewModel();
+export default function RenderNutritionCard({ nutrition }: NutritionCardProps){
 
-    const NutritionItem = ({ icon, label, value }: any) => (
-        <View style={styles.nutritionItem}>
-          <Icon name={icon} size={20} color={COLORS.white} />
-          <Text style={styles.itemLabel}>{label}</Text>
-          <Text style={styles.itemValue}>{value}</Text>
-        </View>
-      );
-
-      const InfoRow = ({ label, value }: any) => (
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>{label}:</Text>
-          <Text style={styles.infoValue}>{value}</Text>
-        </View>
-      );
+  const NutritionItem = ({ icon, label, value }: { icon: string; label: string; value?: number | string }) => (
+    <View style={styles.nutritionItem}>
+      <Icon name={icon} size={20} color={COLORS.white} />
+      <Text style={styles.itemLabel}>{label}</Text>
+      <Text style={styles.itemValue}>{value !== undefined ? `${value}` : '-'}g</Text>
+    </View>
+  );
+  
+  const InfoRow = ({ label, value }: { label: string; value?: number | string }) => (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoLabel}>{label}:</Text>
+      <Text style={styles.infoValue}>{value !== undefined ? `${value}` : '-'}g</Text>
+    </View>
+  );
+  
 
       return (
         <LinearGradient
@@ -31,27 +34,28 @@ export default function RenderNutritionCard(){
       style={styles.card}>
       <View style={styles.cardHeader}>
         <Icon name="food-apple" size={24} color={COLORS.white} />
-        <Text style={styles.cardTitle}>Informações Nutricionais</Text>
+        <Text style={styles.cardTitle}>Nutritional Information
+        </Text>
       </View>
 
       <View style={styles.nutritionGrid}>
-        <NutritionItem icon="fire" label="Calorias" value={`${nutrition?.calories} kcal`} />
-        <NutritionItem icon="dumbbell" label="Proteína" value={`${nutrition?.protein}g`} />
-        <NutritionItem icon="water" label="Gordura" value={`${nutrition?.fat}g`} />
-        <NutritionItem icon="grain" label="Carboidratos" value={`${nutrition?.carbs}g`} />
+        <NutritionItem icon="fire" label="Calories" value={`${nutrition?.calories} kcal`} />
+        <NutritionItem icon="dumbbell" label="Protein" value={`${nutrition?.protein}g`} />
+        <NutritionItem icon="water" label="Fat" value={`${nutrition?.fat}g`} />
+        <NutritionItem icon="grain" label="Carbohydrates" value={`${nutrition?.carbs}g`} />
       </View>
 
       {nutrition?.servingWeightGrams && (
         <Chip style={styles.servingChip} textStyle={styles.servingText}>
-          Porção: {nutrition.servingWeightGrams}g
+          Portion: {nutrition.servingWeightGrams}g
         </Chip>
       )}
 
       <View style={styles.additionalInfo}>
-        <InfoRow label="Açúcares" value={`${nutrition?.sugars}g`} />
-        <InfoRow label="Fibras" value={`${nutrition?.fiber}g`} />
-        <InfoRow label="Colesterol" value={`${nutrition?.cholesterol}mg`} />
-        <InfoRow label="Sódio" value={`${nutrition?.sodium}mg`} />
+        <InfoRow label="Sugars" value={`${nutrition?.sugars}g`} />
+        <InfoRow label="Fibers" value={`${nutrition?.fiber}g`} />
+        <InfoRow label="Cholesterol" value={`${nutrition?.cholesterol}mg`} />
+        <InfoRow label="Sodium" value={`${nutrition?.sodium}mg`} />
       </View>
     </LinearGradient>
       )

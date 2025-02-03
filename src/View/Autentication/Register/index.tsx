@@ -62,12 +62,12 @@ export default function Register({ navigation }: any) {
                     />
                 </View>
                 <View style={styles.form}>
-                    <Title style={styles.title}>Bem-vindo ao Vitta</Title>
+                    <Title style={styles.title}>Welcome to Vitta</Title>
                     <Subheading style={styles.subtitle}>
-                        Crie sua conta e melhore sua saúde com a gente!
+                    Create your account and improve your health with us!
                     </Subheading>
                     <CustomTextInput
-                        label="Digite seu nome"
+                        label="Enter yout name"
                         value={name} // Se precisar armazenar, crie um estado para nome
                         onChangeText={setName}
                         icon="account"
@@ -75,7 +75,7 @@ export default function Register({ navigation }: any) {
                     />
 
                     <CustomTextInput
-                        label="Digite seu e-mail"
+                        label="Enter your e-mail"
                         value={email}
                         onChangeText={setEmail}
                         icon="email"
@@ -84,7 +84,7 @@ export default function Register({ navigation }: any) {
                     />
 
                     <CustomTextInput
-                        label="Senha"
+                        label="Password"
                         value={password}
                         onChangeText={setPassword}
                         icon="lock"
@@ -93,7 +93,7 @@ export default function Register({ navigation }: any) {
                     />
 
                     <CustomTextInput
-                        label="Confirme sua senha"
+                        label="Confirm your password"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         icon="lock"
@@ -104,17 +104,17 @@ export default function Register({ navigation }: any) {
                     <CustomButton
                         onPress={handleRegister}
                         onPressIn={animateButton}
-                        label="CRIAR CONTA"
+                        label="CREATE ACCOUNT"
                         loading={loading}
                         disabled={loading}
                     />
                     <Text style={styles.footerText}>
-                        Já tem uma conta?{" "}
+                    Already have an account?{" "}
                         <Text
                             style={styles.loginLink}
                             onPress={handleNavigateToLogin}
                         >
-                            Entre agora!
+                           Enter now!
                         </Text>
                     </Text>
                 </View>

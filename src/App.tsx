@@ -55,7 +55,7 @@ export default function App(){
     <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
     <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
-    <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false }} />
+    <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false,gestureEnabled: false }} />
     </Stack.Navigator>
     </NavigationContainer>
     )

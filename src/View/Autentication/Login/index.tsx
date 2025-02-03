@@ -20,16 +20,16 @@ export default function Login({ navigation }: any) {
 
     const handleForgotPassword = async () => {
         if (!email) {
-            setSnackbarMessage("Digite seu e-mail antes de redefinir a senha.");
+            setSnackbarMessage("Enter your email before resetting your password.");
             setSnackbarVisible(true);
             return;
         }
 
         try {
             await sendPasswordResetEmail(auth, email);
-            setSnackbarMessage("Email de redefinição de senha enviado! Verifique sua caixa de entrada.");
+            setSnackbarMessage("Password reset email sent! Check your inbox.");
         } catch (error) {
-            setSnackbarMessage("Erro ao enviar email. Verifique se o email está correto.");
+            setSnackbarMessage("Error sending email. Check that the email is correct.");
         }
         setSnackbarVisible(true);
     };
@@ -69,10 +69,10 @@ export default function Login({ navigation }: any) {
             </View>
 
             <View style={styles.form}>
-                <Title style={styles.title}>Bem-vindo de volta!</Title>
+                <Title style={styles.title}>Welcome back!</Title>
 
                 <CustomTextInput
-                    label="Digite seu e-mail"
+                    label="Enter your email"
                     value={email}
                     onChangeText={setEmail}
                     icon="email"
@@ -81,7 +81,7 @@ export default function Login({ navigation }: any) {
                 />
 
                 <CustomTextInput
-                    label="Senha"
+                    label="Password"
                     value={password}
                     onChangeText={setPassword}
                     icon="lock"
@@ -90,11 +90,11 @@ export default function Login({ navigation }: any) {
                 />
 
                 <Text style={styles.forgotPassword}>
-                    Esqueceu sua senha?{' '}
+                Forgot your password?{' '}
                     <Text
                         onPress={handleForgotPassword}
                         style={styles.forgotPasswordClick}>
-                        Clique aqui
+                        Click here
                     </Text>
                 </Text>
 
@@ -108,11 +108,11 @@ export default function Login({ navigation }: any) {
                     disabled={loading}
                 />
                 <Text style={styles.footerText}>
-                    Não possui uma conta?{' '}
+                Don't have an account?{' '}
                     <Text
                         style={styles.loginLink}
                         onPress={() => navigation.navigate("Register")}>
-                        Faça Cadastro
+                        Register
                     </Text>
                 </Text>
             </View>
