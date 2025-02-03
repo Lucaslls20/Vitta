@@ -5,8 +5,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./View/Autentication/Login";
 import Register from "./View/Autentication/Register";
 import SplashScreen from "./View/Autentication/SplashScreen";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Home from "./View/PagesBottomTabs/Home";
+import SeeDetails from "./View/PagesBottomTabs/SeeDetails";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { COLORS } from "./View/Colors";
 
@@ -15,6 +16,7 @@ export type RootStackParamList = {
     Register: undefined
     SplashScreen: undefined
     Tabs: undefined
+    SeeDetails: undefined
 }
 
 export type NavigationProps = StackNavigationProp<RootStackParamList>;
@@ -56,6 +58,7 @@ export default function App(){
     <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
     <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
     <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false,gestureEnabled: false }} />
+    <Stack.Screen name="SeeDetails" component={SeeDetails} options={{ headerShown: false,gestureEnabled: false }} />
     </Stack.Navigator>
     </NavigationContainer>
     )

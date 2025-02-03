@@ -6,20 +6,21 @@ import { useRecipeViewModel } from '../../../ViewModels/HomeViewModelSpoonacular
 import { Recipe } from '../../../Models/HomeModelSpoonacular';
 import { COLORS } from '../../../View/Colors';
 import { styles } from './styles';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../../App';
 
 interface FitnessRecipesProps {
   diet: string; 
 }
 
-
 const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
   const { recipes, loading, error, refresh } = useRecipeViewModel(diet);
+  const navigation = useNavigation<NavigationProps>()
 
   const renderItem = ({ item }: { item: Recipe }) => (
     <Card style={styles.card} elevation={4}>
-      {/* Utilizamos o LinearGradient como background do Card */}
       <LinearGradient
-        colors={[COLORS.secondary, COLORS.secondary]} // Defina as cores do gradiente conforme sua paleta
+        colors={[COLORS.secondary, COLORS.secondary]} 
         style={styles.gradient}
       >
         <Card.Cover source={{ uri: item.image }} style={styles.image} />
@@ -29,10 +30,7 @@ const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
         <Card.Actions style={styles.actions}>
           <Button
             mode="contained"
-            onPress={() => {
-              // Aqui você pode implementar a navegação ou a ação desejada para ver a receita
-              console.log(`See Details ${item.id}`);
-            }}
+            onPress={() => navigation.navigate('SeeDetails')}
             style={styles.button}
             labelStyle={styles.buttonLabel}
             contentStyle={{backgroundColor:COLORS.primary}}
