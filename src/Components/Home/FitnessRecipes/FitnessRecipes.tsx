@@ -30,7 +30,7 @@ const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
         <Card.Actions style={styles.actions}>
           <Button
             mode="contained"
-            onPress={() => navigation.navigate('SeeDetails')}
+            onPress={() => navigation.navigate('SeeDetails', { recipeId: item.id })}
             style={styles.button}
             labelStyle={styles.buttonLabel}
             contentStyle={{backgroundColor:COLORS.primary}}
