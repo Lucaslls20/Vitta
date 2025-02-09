@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, ActivityIndicator, SafeAreaView } from 'react-native';
 import { Appbar, Card, Title, Paragraph, Chip, Text, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../Colors';
@@ -14,7 +14,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
     const navigation = useNavigation();
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <LinearGradient
                     colors={[COLORS.primary, COLORS.shadow]}
@@ -35,7 +35,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
                 <View style={styles.errorContainer}>
                     <Text style={styles.errorText}>{error}</Text>
                     <Button mode="contained" onPress={() => navigation.goBack()} style={styles.button}>
-                        Voltar
+                        Back
                     </Button>
                 </View>
             ) : (
@@ -53,12 +53,13 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
                                 <Chip icon="clock-outline" style={styles.chip}>
                                     <Text style={styles.textChip}>{recipeDetails?.preparationTime}</Text>
                                 </Chip>
+                              
                                 <Chip
-                                    icon="nutrition"
-                                    style={[styles.chip, styles.glycemicChip]}
+                                    icon="cash" // Novo ícone
+                                    style={[styles.chip, styles.priceChip]}
                                     textStyle={styles.chipText}
                                 >
-                                    Carga Glicêmica: {recipeDetails?.glycemicLoad}
+                                    Price per Portion: {recipeDetails?.pricePerServing}
                                 </Chip>
                             </View>
                         </Card.Content>
@@ -66,7 +67,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
 
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={styles.sectionTitle}>Ingredientes</Title>
+                            <Title style={styles.sectionTitle}>Ingredients</Title>
                             {recipeDetails?.ingredients.map((ingredient, index) => (
                                 <Paragraph key={index} style={styles.listItem}>
                                     • {ingredient}
@@ -77,7 +78,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
 
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={styles.sectionTitle}>Modo de Preparo</Title>
+                            <Title style={styles.sectionTitle}>Preparation method</Title>
                             {recipeDetails?.preparationSteps.map((step, index) => (
                                 <Paragraph key={index} style={styles.listItem}>
                                     {index + 1}. {step}
@@ -96,7 +97,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
                     </Button>
                 </ScrollView>
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 

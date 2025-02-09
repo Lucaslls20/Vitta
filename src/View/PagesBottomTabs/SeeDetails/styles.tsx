@@ -1,5 +1,12 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 import { COLORS } from "../../Colors";
+
+const SPACING = {
+    small: 8,
+    medium: 16,
+    large: 24,
+  };
+  
 
 export const styles = StyleSheet.create({
     container: {
@@ -17,13 +24,15 @@ export const styles = StyleSheet.create({
         borderBottomRightRadius: 15,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
+        borderRadius:15,
         marginHorizontal: 5,
         marginVertical: 8
     },
     gradientHeader: {
         paddingBottom: 10,
-        borderBottomLeftRadius: 35,
-        borderBottomRightRadius: 35,
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+        borderRadius:15
     },
     header: {
         backgroundColor: 'transparent',
@@ -31,7 +40,7 @@ export const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: '700',
         color: COLORS.white,
         textAlign: 'justify',
     },
@@ -53,16 +62,22 @@ export const styles = StyleSheet.create({
         marginBottom: 10,
     },
     recipeImage: {
-        height: 250,
+        height: Dimensions.get('window').height * 0.3, // 30% da tela
+        aspectRatio: 16 / 9,
         width: '100%',
         marginBottom: 5
     },
     card: {
-        margin: 10,
-        borderRadius: 8,
-        elevation: 3,
-        backgroundColor: COLORS.secondary
-    },
+        margin: SPACING.medium,
+        borderRadius: 12,
+        backgroundColor: COLORS.white,
+        elevation: 2,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        borderWidth:0.15
+      },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -89,11 +104,12 @@ export const styles = StyleSheet.create({
         color: COLORS.white
     },
     sectionTitle: {
-        fontSize: 20,
-        fontWeight: '900',
+        fontSize: 18,
+        fontWeight: '700',
         color: COLORS.textPrimary,
-        marginBottom: 10,
-    },
+        marginBottom: SPACING.small,
+        letterSpacing: 0.5,
+      },
     listItem: {
         fontSize: 16,
         lineHeight: 24,
@@ -114,7 +130,7 @@ export const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     buttonDisabled: {
-        opacity:0.9
+        opacity: 0.9
     },
     buttonContent: {
         height: 48,
@@ -124,4 +140,7 @@ export const styles = StyleSheet.create({
         fontWeight: "700",
         color: COLORS.white,
     },
+    priceChip: {
+        marginLeft: 8,
+    }
 });
