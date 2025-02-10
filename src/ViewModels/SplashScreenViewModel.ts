@@ -22,7 +22,7 @@ export const useSplashScreenViewModel = (onFinish: () => void) => {
           });
         }
         onFinish(); // Chama o callback ao finalizar
-      }, 5000); // Mesmo tempo da SplashScreen
+      }, 1000); // Mesmo tempo da SplashScreen
     });
 
     return () => unsubscribe();

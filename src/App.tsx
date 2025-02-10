@@ -8,9 +8,13 @@ import SplashScreen from "./View/Autentication/SplashScreen";
 import Home from "./View/PagesBottomTabs/Home";
 import SeeDetails from "./View/PagesBottomTabs/SeeDetails";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { StackNavigationProp } from "@react-navigation/stack";
 import { COLORS } from "./View/Colors";
 import { RouteProp } from "@react-navigation/native";
+import Health from "./View/PagesBottomTabs/Health";
+
+
 
 export type RootStackParamList = {
   Login: undefined
@@ -25,6 +29,7 @@ export type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export type RootTabParamList = {
   Home: undefined
+  Health: undefined
 }
 
 type IconProps = {
@@ -48,6 +53,13 @@ function TabRoutes() {
           <Icon name="home" color={color} size={size} />
         ),
       }} />
+      <Tab.Screen name="Health" component={Health} options={{
+        headerShown: false,
+        tabBarIcon: ({ color, size }: IconProps) => (
+          <MaterialIcons name="energy-savings-leaf" color={color} size={size} />
+        ),
+      }} />
+
     </Tab.Navigator>
   )
 }
