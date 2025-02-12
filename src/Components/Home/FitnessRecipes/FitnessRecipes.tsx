@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { Card, Title, Button, Text } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import { useRecipeViewModel } from '../../../ViewModels/HomeViewModelSpoonacular';
@@ -45,7 +45,7 @@ const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <Text>Carregando receitas...</Text>
+        <Text>Loading recipes...</Text>
       </View>
     );
   }
@@ -55,7 +55,7 @@ const FitnessRecipes: React.FC<FitnessRecipesProps> = ({ diet }) => {
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>{error}</Text>
         <Button mode="outlined" onPress={refresh}>
-          Tentar Novamente
+         Try again
         </Button>
       </View>
     );

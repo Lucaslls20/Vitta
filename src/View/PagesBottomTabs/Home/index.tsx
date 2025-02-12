@@ -20,7 +20,7 @@ export const Home: React.FC = () => {
     if (query.trim().length > 0) {
       fetchNutritionData(query);
     } else {
-      setError('Por favor, digite um alimento para pesquisar');
+      setError('Please enter a food to search');
     }
   };
 

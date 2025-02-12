@@ -1,5 +1,3 @@
-// src/viewModels/RecipesViewModel.ts
-
 import { Recipe } from '../Models/HealthModel';
 import { APIKEY } from '../Services/SpoonacularConfig';
 
@@ -12,20 +10,15 @@ export class RecipesViewModel {
   constructor() {
     this.loadRecipes();
   }
-
-  /**
-   * Carrega as receitas para os três tipos de refeição em paralelo.
-   */
   private async loadRecipes(): Promise<void> {
     try {
-      // Para almoço, usamos "main course", pois é o valor aceito pela API para esse tipo.
       await Promise.all([
         this.fetchRecipes('breakfast').then((recipes) => (this.breakfastRecipes = recipes)),
         this.fetchRecipes('main course').then((recipes) => (this.lunchRecipes = recipes)),
         this.fetchRecipes('dinner').then((recipes) => (this.dinnerRecipes = recipes))
       ]);
     } catch (error) {
-      console.error('Erro ao carregar receitas saudáveis:', error);
+      console.error('Error loading healthy recipes:', error);
     }
   }
 
@@ -43,13 +36,13 @@ export class RecipesViewModel {
 
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Erro na requisição: ${response.statusText}`);
+        throw new Error(`Request error: ${response.statusText}`);
       }
       const data = await response.json();
-      // A propriedade "results" deve conter um array de receitas com ao menos os campos "id", "title" e "image".
+      
       return data.results as Recipe[];
     } catch (error) {
-      console.error(`Erro ao buscar receitas do tipo "${mealType}":`, error);
+      console.error(`Error when searching for recipes like "${mealType}":`, error);
       return [];
     }
   }

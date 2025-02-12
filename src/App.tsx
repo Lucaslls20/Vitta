@@ -43,7 +43,7 @@ const Tab = createBottomTabNavigator<RootTabParamList>()
 function TabRoutes() {
   return (
     <Tab.Navigator screenOptions={{
-      tabBarActiveBackgroundColor: COLORS.white,
+      tabBarActiveBackgroundColor: COLORS.secondary,
       tabBarActiveTintColor: COLORS.primary,
       tabBarInactiveTintColor: COLORS.shadow,
     }}>
