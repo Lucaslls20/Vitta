@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { auth, db } from '../../Services/firebaseConfig';
+import { auth, db } from '../../../Services/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
-import { COLORS } from '../../View/Colors';
-import { styles } from '../../View/PagesBottomTabs/Home/styles';
-import { DailySummary } from '../../Models/HomeModelNutricion';
+import { COLORS } from '../../../View/Colors';
+import { styles } from '../../../View/PagesBottomTabs/Home/styles';
+import { DailySummary } from '../../../Models/HomeModelNutricion';
 
 interface UserGreetingProps {
     dailySummary: DailySummary | null;
 }
 
-const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
+export const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
     const [userName, setUserName] = useState<string | null>(null);
     const currentDate = new Date().toISOString().split('T')[0];
 
@@ -51,5 +51,3 @@ const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
         </View>
     );
 };
-
-export default UserGreeting;
