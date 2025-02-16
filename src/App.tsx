@@ -9,10 +9,12 @@ import Home from "./View/PagesBottomTabs/Home";
 import SeeDetails from "./View/PagesBottomTabs/SeeDetails";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { StackNavigationProp } from "@react-navigation/stack";
 import { COLORS } from "./View/Colors";
 import { RouteProp } from "@react-navigation/native";
 import Health from "./View/PagesBottomTabs/Health";
+import Profile from "./View/PagesBottomTabs/Profile";
 
 
 
@@ -30,6 +32,7 @@ export type NavigationProps = StackNavigationProp<RootStackParamList>;
 export type RootTabParamList = {
   Home: undefined
   Health: undefined
+  Profile:undefined
 }
 
 type IconProps = {
@@ -57,6 +60,12 @@ function TabRoutes() {
         headerShown: false,
         tabBarIcon: ({ color, size }: IconProps) => (
           <MaterialIcons name="energy-savings-leaf" color={color} size={size} />
+        ),
+      }} />
+      <Tab.Screen name="Profile" component={Profile} options={{
+        headerShown: false,
+        tabBarIcon: ({ color, size }: IconProps) => (
+          <FontAwesome name="user-circle-o" color={color} size={size} />
         ),
       }} />
 
