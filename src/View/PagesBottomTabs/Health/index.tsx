@@ -39,7 +39,7 @@ export default function Health() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header userName="João Silva" userAvatar="url-da-foto-do-usuário" />
+      <Header userName="João Silva" userAvatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s" />
       
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <SearchBar
