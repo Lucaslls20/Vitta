@@ -7,9 +7,13 @@ import ProfileListSection, { ListItemProps } from '../../../Components/Profile/P
 import LogoutButton from '../../../Components/Profile/LogoutButton';
 import { styles } from './styles';
 import useProfileViewModel from '../../../ViewModels/ProfileHeaderViewModel';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../../App';
 
 const Profile: React.FC = () => {
   const { user, loading } = useProfileViewModel();
+
+  const navigation = useNavigation<NavigationProps>()
 
   const statsData: StatItem[] = [
     { value: '25', label: 'Workouts' },
@@ -57,7 +61,7 @@ const Profile: React.FC = () => {
       <StatsSection stats={statsData} />
 
       <ActionButtons
-        onEditProfile={() => console.log('Edit Profile')}
+        onEditProfile={() => navigation.navigate('EditProfile')}
         onShare={() => console.log('Share Achievements')}
       />
 

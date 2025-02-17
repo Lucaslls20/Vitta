@@ -6,5 +6,7 @@ export const COLORS = {
   white: "#FFFFFF",         // Branco puro
   shadow: "#1B5E20",
   error:'#E6E6FA',        // Sombra verde escuro
-  today: '#FFC222'
+  today: '#FFC222',
+  accent: "#81C784",
+  border: "#E0E0E0"  
 };

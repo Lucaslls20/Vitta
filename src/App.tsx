@@ -15,7 +15,7 @@ import { COLORS } from "./View/Colors";
 import { RouteProp } from "@react-navigation/native";
 import Health from "./View/PagesBottomTabs/Health";
 import Profile from "./View/PagesBottomTabs/Profile";
-
+import EditProfile from "./View/EditProfile";
 
 
 export type RootStackParamList = {
@@ -24,6 +24,7 @@ export type RootStackParamList = {
   SplashScreen: undefined
   Tabs: undefined
   SeeDetails: { recipeId: number }
+  EditProfile: undefined
 }
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
 
@@ -81,14 +82,8 @@ export default function App() {
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
         <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
         <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false, gestureEnabled: false }} />
-        <Stack.Screen
-          name="SeeDetails"
-          component={SeeDetails}
-          options={{
-            headerShown: false,
-            gestureEnabled: false
-          }}
-        />
+        <Stack.Screen name="SeeDetails" component={SeeDetails} options={{   headerShown: false,   gestureEnabled: false}} />
+        <Stack.Screen name="EditProfile" component={EditProfile} options={{   headerShown: false,   gestureEnabled: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   )
