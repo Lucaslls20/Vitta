@@ -21,6 +21,8 @@ const ProfileListSection: React.FC<ProfileListSectionProps> = ({ title, items })
       <List.Subheader style={styles.listSubheader}>{title}</List.Subheader>
       {items.map((item, index) => (
         <List.Item
+        rippleColor={COLORS.secondary} // Feedback visual ao tocar
+        underlayColor={COLORS.secondary}
           key={index}
           title={item.title}
           left={() => (
