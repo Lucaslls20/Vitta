@@ -31,7 +31,7 @@ export type NavigationProps = StackNavigationProp<RootStackParamList>;
 
 export type RootTabParamList = {
   Home: undefined
-  Health: undefined
+  Daily: undefined
   Profile:undefined
 }
 
@@ -56,7 +56,7 @@ function TabRoutes() {
           <Icon name="home" color={color} size={size} />
         ),
       }} />
-      <Tab.Screen name="Health" component={Health} options={{
+      <Tab.Screen name='Daily' component={Health} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }: IconProps) => (
           <MaterialIcons name="energy-savings-leaf" color={color} size={size} />

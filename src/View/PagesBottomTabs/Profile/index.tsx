@@ -6,8 +6,10 @@ import ActionButtons from '../../../Components/Profile/ActionButtons';
 import ProfileListSection, { ListItemProps } from '../../../Components/Profile/ProfileListSection';
 import LogoutButton from '../../../Components/Profile/LogoutButton';
 import { styles } from './styles';
+import useProfileViewModel from '../../../ViewModels/ProfileHeaderViewModel';
 
 const Profile: React.FC = () => {
+  const { user, loading } = useProfileViewModel();
 
   const statsData: StatItem[] = [
     { value: '25', label: 'Workouts' },
@@ -49,7 +51,7 @@ const Profile: React.FC = () => {
       <ProfileHeader
         backgroundImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s"
         avatarImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s"
-        name="John Doe"
+        name={user?.displayName || 'Usuário'}
       />
 
       <StatsSection stats={statsData} />
