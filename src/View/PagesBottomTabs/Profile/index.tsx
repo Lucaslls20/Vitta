@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
     {
       title: 'Terms and Conditions',
       leftIcon: 'file-document-multiple-outline',
-      onPress: () => console.log('Terms and Conditions'),
+      onPress: () => navigation.navigate('TermsAndConditionsScreen'),
     },
   ];
 

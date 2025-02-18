@@ -16,7 +16,7 @@ import { RouteProp } from "@react-navigation/native";
 import Health from "./View/PagesBottomTabs/Health";
 import Profile from "./View/PagesBottomTabs/Profile";
 import EditProfile from "./View/EditProfile";
-
+import TermsAndConditionsScreen from "./View/TermsAndConditionsScreen"; 
 
 export type RootStackParamList = {
   Login: undefined
@@ -25,6 +25,7 @@ export type RootStackParamList = {
   Tabs: undefined
   SeeDetails: { recipeId: number }
   EditProfile: undefined
+  TermsAndConditionsScreen: undefined
 }
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
 
@@ -84,6 +85,7 @@ export default function App() {
         <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="SeeDetails" component={SeeDetails} options={{   headerShown: false,   gestureEnabled: false}} />
         <Stack.Screen name="EditProfile" component={EditProfile} options={{   headerShown: false,   gestureEnabled: false}} />
+        <Stack.Screen name='TermsAndConditionsScreen' component={TermsAndConditionsScreen} options={{   headerShown: false,   gestureEnabled: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   )
