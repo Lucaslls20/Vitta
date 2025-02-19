@@ -1,103 +1,88 @@
-import React, { useRef } from 'react';
-import { StyleSheet, View, ScrollView, Text, SafeAreaView } from 'react-native';
-import { Button, Card, Title, Paragraph } from 'react-native-paper';
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
+import { ProgressBar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../App';
 import { styles } from './styles';
+import { COLORS } from '../Colors';
+import { Header } from '../../Components/TermsAndConditionsScreen/Header';
+import { ClauseCard } from '../../Components/TermsAndConditionsScreen/ClauseCard';
+import { AcceptButton } from '../../Components/TermsAndConditionsScreen/AcceptButton';
 
-const TermsAndConditionsScreen = () => {
+export const TermsAndConditionsScreen = () => {
   const scrollViewRef = useRef<ScrollView | null>(null);
+  const navigation = useNavigation<NavigationProps>();
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
-  const handleScrollToTop = () => {
-    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
-
-  const handleScrollToBottom = () => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+    const progress = (layoutMeasurement.height + contentOffset.y) / contentSize.height;
+    setScrollProgress(progress);
+    setIsScrolledToBottom(progress >= 0.95);
   };
 
   const handleAcceptAndContinue = () => {
     console.log('Terms accepted');
+    // Adicionar lógica de navegação aqui
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Title style={styles.title}>Políticas de Integração e Autenticação</Title>
-          <Paragraph style={styles.date}>Última atualização: 18/02/2025</Paragraph>
-        </Card.Content>
-      </Card>
+      <Header onGoBack={handleGoBack} />
+      <ProgressBar
+        progress={scrollProgress}
+        color={COLORS.primary}
+        style={styles.progressBar}
+      />
 
       <ScrollView
         style={styles.scrollContainer}
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Política 1 - Firebase Authentication */}
-        <Text style={styles.clauseTitle}>Autenticação com Firebase</Text>
-        <Text style={styles.clauseText}>
-          Ao utilizar este aplicativo, você concorda com os termos de autenticação do Firebase. 
-          O Firebase Authentication gerencia o acesso e a segurança das suas credenciais, protegendo 
-          seus dados pessoais de acordo com os padrões de segurança do Google. Recomendamos que você 
-          leia a política de privacidade e os Termos de Serviço do Firebase para obter mais detalhes.
-        </Text>
+        <Text style={styles.date}>Last updated: 02/18/2025</Text>
 
-        {/* Política 2 - Cloud Firestore */}
-        <Text style={styles.clauseTitle}>Armazenamento via Cloud Firestore</Text>
-        <Text style={styles.clauseText}>
-          As informações relacionadas à sua conta, preferências e outros dados são armazenadas no Cloud Firestore. 
-          Ao utilizar este serviço, você concorda que seus dados serão processados e armazenados de forma segura, 
-          seguindo as diretrizes e políticas de segurança do Firestore. Para mais informações, consulte os Termos de 
-          Serviço e a política de privacidade do Firestore.
-        </Text>
+        <ClauseCard
+          title="Authentication with Firebase"
+          text="By using this application, you agree to the Firebase authentication terms. Firebase Authentication manages the access and security of your credentials, protecting your personal data in accordance with Google's security standards. We recommend that you read the Firebase Privacy Policy and Terms of Service for more details."
+        />
 
-        {/* Política 3 - Spoonacular API */}
-        <Text style={styles.clauseTitle}>Integração com a Spoonacular API</Text>
-        <Text style={styles.clauseText}>
-          Este aplicativo utiliza a Spoonacular API para fornecer informações nutricionais e receitas. 
-          Ao acessar esses dados, você concorda com os termos de uso e políticas da Spoonacular API. 
-          As informações fornecidas são para fins informativos e devem ser utilizadas em conformidade com as diretrizes 
-          e condições estabelecidas pela Spoonacular.
-        </Text>
+        <ClauseCard
+          title="Storage via Cloud Firestore"
+          text="Information related to your account, preferences, and other data is stored in Cloud Firestore. By using this service, you agree that your data will be processed and stored securely, following Firestore's security guidelines and policies. For more information, please refer to the Firestore Terms of Service and Privacy Policy."
+        />
 
-        {/* Política 4 - Nutritionix API */}
-        <Text style={styles.clauseTitle}>Integração com a Nutritionix API</Text>
-        <Text style={styles.clauseText}>
-          Além disso, este aplicativo utiliza a Nutritionix API para oferecer informações detalhadas sobre nutrição 
-          e monitorar o consumo alimentar. Ao utilizar este serviço, você concorda com os termos de uso e a política 
-          de privacidade da Nutritionix. As informações fornecidas são destinadas para fins informativos e devem ser 
-          interpretadas conforme as diretrizes estipuladas pela API.
-        </Text>
+        <ClauseCard
+          title="Integration with the Spoonacular API"
+          text="This application uses the Spoonacular API to provide nutritional information and recipes. By accessing this data, you agree to the terms of use and policies of the Spoonacular API. The information provided is for informational purposes and should be used in accordance with the guidelines and conditions established by Spoonacular."
+        />
+
+        <ClauseCard
+          title="Integration with the Nutritionix API"
+          text="In addition, this application uses the Nutritionix API to provide detailed information about nutrition and monitor food intake. By using this service, you agree to the Nutritionix terms of use and privacy policy. The information provided is for informational purposes and should be interpreted in accordance with the guidelines stipulated by the API."
+        />
       </ScrollView>
 
-      <View style={styles.buttonRow}>
-        <Button
-          mode="outlined"
-          onPress={handleScrollToBottom}
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-        >
-          Scroll to Bottom
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={handleScrollToTop}
-          style={styles.button}
-          labelStyle={styles.buttonLabel}
-        >
-          Scroll to Top
-        </Button>
-      </View>
-
-      <Button
-        mode="contained"
+      <AcceptButton
         onPress={handleAcceptAndContinue}
-        style={styles.acceptButton}
-        labelStyle={styles.acceptButtonLabel}
-      >
-        Accept & Continue
-      </Button>
+        disabled={isScrolledToBottom}
+      />
     </SafeAreaView>
   );
 };
 
-export default TermsAndConditionsScreen;
+export default TermsAndConditionsScreen

@@ -1,12 +1,23 @@
 export const COLORS = {
-  primary: "#2E7D32",       // Verde mais escuro e profissional
-  secondary: "#E8F5E9",     // Verde claro suave
-  textPrimary: "#1B5E20",   // Verde escuro para texto
-  textSecondary: "#616161", // Cinza neutro
-  white: "#FFFFFF",         // Branco puro
-  shadow: "#1B5E20",
-  error:'#E6E6FA',        // Sombra verde escuro
-  today: '#FFC222',
+  // Core Colors
+  primary: "#2E7D32",       
+  secondary: "#E8F5E9",     
   accent: "#81C784",
-  border: "#E0E0E0"  
+  tertiary: "#FFB74D",
+  
+  // Text
+  textPrimary: "#1B5E20",   
+  textSecondary: "#616161", 
+  textOnPrimary: "#FFFFFF",
+  
+  // System
+  error: "#D32F2F",         
+  success: "#388E3C",
+  warning: "#FBC02D",
+  
+  // Utils
+  white: "#FFFFFF",         
+  border: "#E0E0E0",
+  shadow: "rgba(0, 0, 0, 0.15)",
+  today: "#FFAB00"
 };
