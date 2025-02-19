@@ -41,7 +41,7 @@ const Profile: React.FC = () => {
     {
       title: 'Privacy Policy',
       leftIcon: 'file-document-outline',
-      onPress: () => console.log('Privacy Policy'),
+      onPress: () => navigation.navigate('PrivacyPolicyScreen'),
     },
     {
       title: 'Terms and Conditions',
