@@ -6,9 +6,10 @@ import { COLORS } from '../../../View/Colors';
 
 interface HeaderProps {
   onGoBack: () => void;
+  title: string
 }
 
-export const Header = ({ onGoBack }: HeaderProps) => (
+export const Header = ({ onGoBack, title }: HeaderProps) => (
   <View style={styles.header}>
     <TouchableOpacity
       onPress={onGoBack}
@@ -19,7 +20,7 @@ export const Header = ({ onGoBack }: HeaderProps) => (
       <Icon name="arrow-left" size={30} color={COLORS.primary} />
     </TouchableOpacity>
     <Text style={styles.headerTitle}>
-      Integration and Authentication Policies
+   {title}
     </Text>
   </View>
 );

@@ -1,64 +1,88 @@
-import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Appbar, Card, Title, Paragraph } from 'react-native-paper';
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  ScrollView,
+  Text,
+  SafeAreaView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
+import { ProgressBar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../App';
+import { styles } from './styles';
 import { COLORS } from '../Colors';
+import { Header } from '../../Components/TermsAndConditionsScreen/Header';
+import { ClauseCard } from '../../Components/TermsAndConditionsScreen/ClauseCard';
+import { AcceptButton } from '../../Components/TermsAndConditionsScreen/AcceptButton';
 
-const PrivacyPolicyScreen: React.FC = () => {
+export const PrivacyPolicyScreen = () => {
+  const scrollViewRef = useRef<ScrollView | null>(null);
+  const navigation = useNavigation<NavigationProps>();
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+    const progress = (layoutMeasurement.height + contentOffset.y) / contentSize.height;
+    setScrollProgress(progress);
+    setIsScrolledToBottom(progress >= 0.95);
+  };
+
+  const handleAcceptAndContinue = () => {
+    console.log('Privacy policy accepted');
+    // Adicione a lógica de navegação aqui
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
   return (
-    <>
-      {/* Cabeçalho com Appbar */}
-      <Appbar.Header style={{ backgroundColor: COLORS.primary }}>
-        <Appbar.Content 
-          title="Política de Privacidade" 
-          titleStyle={{ color: COLORS.textOnPrimary }} 
-        />
-      </Appbar.Header>
+    <SafeAreaView style={styles.container}>
+      <Header onGoBack={handleGoBack} title='Privacy Policy' />
+      <ProgressBar
+        progress={scrollProgress}
+        color={COLORS.primary}
+        style={styles.progressBar}
+      />
 
-      {/* Conteúdo rolável */}
-      <ScrollView style={styles.container}>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Title style={styles.title}>Tratamento de Dados Pessoais</Title>
-            <Paragraph style={styles.paragraph}>
-              Nosso aplicativo utiliza o Firebase para autenticação e o Firestore para armazenar os dados necessários à personalização da sua experiência. Todas as informações são tratadas com alto nível de segurança e em conformidade com as normas de proteção de dados.
-            </Paragraph>
-            <Paragraph style={styles.paragraph}>
-              Integramos as APIs da Spoonacular e da Nutritionix para fornecer informações nutricionais e de receitas. Esses dados são obtidos diretamente dos serviços e não são armazenados em nossos servidores, sendo utilizados exclusivamente para apresentar resultados precisos aos nossos usuários.
-            </Paragraph>
-            <Paragraph style={styles.paragraph}>
-              Desenvolvido com React Native e TypeScript, nosso aplicativo foi projetado para oferecer uma experiência moderna, intuitiva e segura. Caso tenha dúvidas sobre o tratamento de seus dados, entre em contato conosco.
-            </Paragraph>
-          </Card.Content>
-        </Card>
+      <ScrollView
+        style={styles.scrollContainer}
+        ref={scrollViewRef}
+        contentContainerStyle={styles.scrollContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        <Text style={styles.date}>Last updated: 02/18/2025</Text>
+
+        <ClauseCard
+          title="Data Collection"
+          text="We collect information to provide better services. This includes data you provide directly, such as name and email, and data collected automatically, such as usage details."
+        />
+
+        <ClauseCard
+          title="Data Usage"
+          text="Your data is used to personalize your experience, improve our services, and communicate with you. We do not share your data with third parties without your consent."
+        />
+
+        <ClauseCard
+          title="Data Security"
+          text="We implement security measures like encryption and access controls to protect your data. However, no system is completely secure, and you should also take steps to protect your information."
+        />
+
+        <ClauseCard
+          title="Third-Party Services"
+          text="Our app integrates with third-party services (e.g., Firebase, APIs). These services have their own privacy policies, and we recommend reviewing them."
+        />
       </ScrollView>
-    </>
+
+      <AcceptButton
+        onPress={handleAcceptAndContinue}
+        disabled={isScrolledToBottom}
+      />
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.secondary,
-    padding: 10,
-  },
-  card: {
-    marginVertical: 10,
-    backgroundColor: COLORS.white,
-    borderColor: COLORS.border,
-    borderWidth: 1,
-    borderRadius: 8,
-    shadowColor: COLORS.shadow,
-    elevation: 3,
-  },
-  title: {
-    color: COLORS.textPrimary,
-    marginBottom: 10,
-  },
-  paragraph: {
-    color: COLORS.textSecondary,
-    marginBottom: 10,
-    lineHeight: 22,
-  },
-});
 
 export default PrivacyPolicyScreen;

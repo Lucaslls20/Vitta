@@ -40,7 +40,7 @@ export const TermsAndConditionsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header onGoBack={handleGoBack} />
+      <Header onGoBack={handleGoBack} title=' Integration and Authentication Policies' />
       <ProgressBar
         progress={scrollProgress}
         color={COLORS.primary}
