@@ -10,6 +10,7 @@ import SeeDetails from "./View/PagesBottomTabs/SeeDetails";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import Foundation from 'react-native-vector-icons/Foundation'
 import { StackNavigationProp } from "@react-navigation/stack";
 import { COLORS } from "./View/Colors";
 import { RouteProp } from "@react-navigation/native";
@@ -18,6 +19,7 @@ import Profile from "./View/PagesBottomTabs/Profile";
 import EditProfile from "./View/EditProfile";
 import TermsAndConditionsScreen from "./View/TermsAndConditionsScreen"; 
 import PrivacyPolicyScreen from "./View/PrivacyPolicy";
+import GraphicScreen from "./View/PagesBottomTabs/Graphic";
 
 export type RootStackParamList = {
   Login: undefined
@@ -37,6 +39,7 @@ export type RootTabParamList = {
   Home: undefined
   Daily: undefined
   Profile:undefined
+  Graphic: undefined
 }
 
 type IconProps = {
@@ -52,7 +55,7 @@ function TabRoutes() {
     <Tab.Navigator screenOptions={{
       tabBarActiveBackgroundColor: COLORS.secondary,
       tabBarActiveTintColor: COLORS.primary,
-      tabBarInactiveTintColor: COLORS.shadow,
+      tabBarInactiveTintColor: COLORS.shadowApp,
     }}>
       <Tab.Screen name="Home" component={Home} options={{
         headerShown: false,
@@ -66,6 +69,12 @@ function TabRoutes() {
           <MaterialIcons name="energy-savings-leaf" color={color} size={size} />
         ),
       }} />
+        <Tab.Screen name='Graphic' component={GraphicScreen} options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }: IconProps) => (
+            <Foundation name="graph-bar" color={color} size={size} />
+          ),
+        }} />
       <Tab.Screen name="Profile" component={Profile} options={{
         headerShown: false,
         tabBarIcon: ({ color, size }: IconProps) => (

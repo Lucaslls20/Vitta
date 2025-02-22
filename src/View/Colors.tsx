@@ -19,5 +19,6 @@ export const COLORS = {
   white: "#FFFFFF",         
   border: "#E0E0E0",
   shadow: "rgba(0, 0, 0, 0.15)",
+  shadowApp: 'rgba(0,0,0,0.4)',
   today: "#FFAB00"
 };
