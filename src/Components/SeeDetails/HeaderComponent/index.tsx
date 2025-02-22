@@ -8,7 +8,7 @@ import { styles } from '../../../View/PagesBottomTabs/SeeDetails/styles';
 export const HeaderComponent = ({ title, onBack }: { title: string; onBack: () => void }) => (
   <View style={styles.headerContainer}>
     <LinearGradient
-      colors={[COLORS.primary, COLORS.shadow]}
+      colors={[COLORS.primary, COLORS.primary]}
       style={styles.gradientHeader}
     >
       <Appbar.Header style={styles.header}>
