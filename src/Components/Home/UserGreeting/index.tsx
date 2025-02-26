@@ -37,18 +37,17 @@ export const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
 
     return (
         <View style={styles.header}>
-            <Avatar.Image source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s'}} 
-            size={50} 
-            style={styles.userAvatar} 
-            theme={{ colors: { primary: COLORS.primary } }} />
+            <Avatar.Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' }}
+                size={50}
+                style={styles.userAvatar}
+                theme={{ colors: { primary: COLORS.primary } }} />
             <View>
                 <Text style={styles.greeting}>Welcome, {userName || 'Carregando...'}! 👋</Text>
                 <View style={styles.caloriesContainer}>
                     <Icon name="fire" size={16} color={COLORS.primary} />
                     <Text style={styles.subGreeting}>
-                        Consumption today: {dailySummary?.dailyCalories?.[currentDate] ?? 0} kcal
+                        Consumption today: {dailySummary?.calories ?? 0} kcal
                     </Text>
-
                 </View>
             </View>
         </View>

@@ -3,43 +3,79 @@ import { NutritionData, DailySummary } from '../Models/HomeModelNutricion';
 import { APIKEY, APP_ID } from '../Services/NutritionixConfig';
 import { COLORS } from '../View/Colors';
 import { auth, db } from '../Services/firebaseConfig';
-import { collection, query, where, onSnapshot, doc, setDoc, updateDoc, getDoc, increment } from 'firebase/firestore';
+import { 
+  collection, query, where, onSnapshot, doc, setDoc, updateDoc, getDoc, increment, serverTimestamp } from 'firebase/firestore';
 
 export const useHomeViewModel = () => {
   const [nutrition, setNutrition] = useState<NutritionData | null>(null);
   const [dailySummary, setDailySummary] = useState<DailySummary>({ calories: 0, markedDates: {}, dailyCalories: {} });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(auth.currentUser);
 
+  // Monitora alterações na autenticação do usuário
   useEffect(() => {
-    const user = auth.currentUser;
+    const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribeAuth();
+  }, []);
+
+  // Carrega dados do Firestore quando o usuário muda
+  useEffect(() => {
     if (!user) return;
 
     const today = new Date().toISOString().split('T')[0];
 
     const fetchDailyData = async () => {
       try {
-        const userRef = doc(db, 'calories', `${user.uid}_${today}`);
+        const userRef = doc(db, 'calorias', `${user.uid}_${today}`);
         const userSnap = await getDoc(userRef);
 
+        // Cria documento se não existir
         if (!userSnap.exists()) {
-          // Se não houver registro para hoje, cria com 0 calorias
           await setDoc(userRef, {
             userId: user.uid,
             date: today,
             totalCalories: 0,
+            createdAt: serverTimestamp(),
           });
         }
 
-        // Pega os dados de calorias diárias
-        const q = query(collection(db, 'calories'), where('userId', '==', user.uid));
+        // Configura listener para atualizações em tempo real
+        const q = query(collection(db, 'calorias'), where('userId', '==', user.uid));
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
           const dailyCalories: { [date: string]: number } = {};
+          const markedDates: { [date: string]: any } = {};
+
           querySnapshot.forEach((doc) => {
             const data = doc.data();
-            dailyCalories[data.date] = data.totalCalories;
+            const dateValue = data.date;
+            // Converte o campo de data para string no formato "YYYY-MM-DD"
+            const dateStr = (typeof dateValue === 'object' && dateValue.toDate)
+              ? dateValue.toDate().toISOString().split('T')[0]
+              : dateValue;
+            const calories = data.totalCalories;
+            
+            dailyCalories[dateStr] = calories;
+            
+            // Marca datas com calorias registradas
+            if (calories > 0) {
+              markedDates[dateStr] = { marked: true, dotColor: COLORS.primary };
+            }
           });
-          setDailySummary((prev) => ({ ...prev, dailyCalories }));
+
+          // Atualiza estado com dados do dia atual
+          const todayCalories = dailyCalories[today] || 0;
+          setDailySummary(prev => ({
+            ...prev,
+            dailyCalories,
+            calories: todayCalories,
+            markedDates: {
+              ...prev.markedDates,
+              ...markedDates
+            }
+          }));
         });
 
         return unsubscribe;
@@ -49,7 +85,7 @@ export const useHomeViewModel = () => {
     };
 
     fetchDailyData();
-  }, []);
+  }, [user]); // Executa quando o usuário muda
 
   const fetchNutritionData = async (query: string) => {
     try {
@@ -65,15 +101,19 @@ export const useHomeViewModel = () => {
         },
         body: JSON.stringify({
           query,
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timezone: "US/Eastern"
         }),
       });
 
-      if (!response.ok) throw new Error(handleApiError(response.status));
+      if (!response.ok) {
+        const errorBody = await response.text();
+        throw new Error(handleApiError(response.status));
+      }
 
       const data = await response.json();
       if (!data.foods || data.foods.length === 0) throw new Error('Alimento não encontrado');
 
+      // Calcula totais nutricionais
       const totalNutrition = data.foods.reduce(
         (acc: any, food: any) => ({
           calories: acc.calories + (food.nf_calories || 0),
@@ -92,32 +132,24 @@ export const useHomeViewModel = () => {
 
       setNutrition(totalNutrition);
 
-      const user = auth.currentUser;
-      if (!user) throw new Error('Usuário não autenticado');
-
+      // Atualiza dados no Firestore
       const currentDate = new Date().toISOString().split('T')[0];
-      const calorieDocRef = doc(db, 'calories', `${user.uid}_${currentDate}`);
+      const calorieDocRef = doc(db, 'calorias', `${user!.uid}_${currentDate}`);
 
       try {
         await updateDoc(calorieDocRef, {
           totalCalories: increment(totalNutrition.calories),
+          updatedAt: serverTimestamp(),
         });
       } catch (error) {
         await setDoc(calorieDocRef, {
-          userId: user.uid,
+          userId: user!.uid,
           date: currentDate,
           totalCalories: totalNutrition.calories,
+          createdAt: serverTimestamp(),
         });
       }
 
-      setDailySummary(prev => ({
-        ...prev,
-        calories: prev.calories + totalNutrition.calories,
-        markedDates: {
-          ...prev.markedDates,
-          [currentDate]: { marked: true, dotColor: COLORS.primary },
-        },
-      }));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
@@ -138,14 +170,14 @@ export const useHomeViewModel = () => {
 const handleApiError = (status: number): string => {
   switch (status) {
     case 400:
-      return 'Invalid request. Check the sent data.';
+      return 'Dados inválidos. Verifique as informações enviadas.';
     case 401:
-      return 'Unauthorized. Check your API key.';
+      return 'Autenticação inválida. Verifique suas credenciais.';
     case 404:
-      return 'Resource not found.';
+      return 'Recurso não encontrado.';
     case 500:
-      return 'Internal server error. Please try again later.';
+      return 'Erro interno no servidor. Tente novamente mais tarde.';
     default:
-      return 'An unexpected error has occurred.';
+      return 'Ocorreu um erro inesperado.';
   }
 };
