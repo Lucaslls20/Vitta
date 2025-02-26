@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RecipesViewModel } from '../../../ViewModels/HealthViewModel';
 import { Recipe } from '../../../Models/HealthModel';
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView, ScrollView, View } from 'react-native';
+import { Text } from 'react-native-paper';
 import { styles } from './styles';
 import { Header } from '../../../Components/Health/Header';
 import { SearchBar } from '../../../Components/Health/SearchBar';
@@ -15,9 +16,10 @@ export default function Health() {
 
   useEffect(() => {
     const checkDataLoaded = () => {
+      // Considere os dados carregados se pelo menos uma refeição possuir receitas
       if (
-        viewModel.breakfastRecipes.length > 0 &&
-        viewModel.lunchRecipes.length > 0 &&
+        viewModel.breakfastRecipes.length > 0 ||
+        viewModel.lunchRecipes.length > 0 ||
         viewModel.dinnerRecipes.length > 0
       ) {
         setIsLoading(false);
@@ -37,28 +39,38 @@ export default function Health() {
     return <LoadingIndicator />;
   }
 
+  const filteredBreakfast = filterRecipes(viewModel.breakfastRecipes);
+  const filteredLunch = filterRecipes(viewModel.lunchRecipes);
+  const filteredDinner = filterRecipes(viewModel.dinnerRecipes);
+
+  const hasAnyRecipe =
+    filteredBreakfast.length > 0 ||
+    filteredLunch.length > 0 ||
+    filteredDinner.length > 0;
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header userName="João Silva" userAvatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s" />
-      
+      <Header
+        userName="João Silva"
+        userAvatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s"
+      />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <SearchBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
+        <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-        <RecipeSection
-          title="Breakfast"
-          data={filterRecipes(viewModel.breakfastRecipes)}
-        />
-        <RecipeSection
-          title="Lunch"
-          data={filterRecipes(viewModel.lunchRecipes)}
-        />
-        <RecipeSection
-          title="Dinner"
-          data={filterRecipes(viewModel.dinnerRecipes)}
-        />
+        {!hasAnyRecipe ? (
+          <View style={styles.noResultsContainer}>
+            <Text style={styles.noResultsText}>
+              Nenhuma receita encontrada para as refeições. Por favor, tente
+              novamente mais tarde!
+            </Text>
+          </View>
+        ) : (
+          <>
+            <RecipeSection title="Breakfast" data={filteredBreakfast} />
+            <RecipeSection title="Lunch" data={filteredLunch} />
+            <RecipeSection title="Dinner" data={filteredDinner} />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

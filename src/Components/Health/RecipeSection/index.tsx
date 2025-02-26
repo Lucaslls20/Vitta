@@ -10,26 +10,20 @@ interface RecipeSectionProps {
   data: Recipe[];
 }
 
-export const RecipeSection = ({ title, data }: RecipeSectionProps) => (
-  <View>
-    {data.length > 0 ? (
-      <>
-        <Text style={styles.sectionTitle}>{title}</Text>
-        <FlatList
-          horizontal
-          data={data}
-          renderItem={({ item }) => <ListItem item={item} />}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContainer}
-          showsHorizontalScrollIndicator={false}
-        />
-      </>
-    ) : (
-      <View style={styles.noResultsContainer}>
-        <Text style={styles.noResultsText}>
-        No recipes found for {title.toLowerCase()}
-        </Text>
-      </View>
-    )}
-  </View>
-);
+export const RecipeSection = ({ title, data }: RecipeSectionProps) => {
+  if (data.length === 0) return null; // Não renderiza nada se não houver receitas
+
+  return (
+    <View>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <FlatList
+        horizontal
+        data={data}
+        renderItem={({ item }) => <ListItem item={item} />}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.listContainer}
+        showsHorizontalScrollIndicator={false}
+      />
+    </View>
+  );
+};
