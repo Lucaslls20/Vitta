@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import { Avatar } from 'react-native-paper';
+import { View, Text, Image } from 'react-native'; // Importamos Image de 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { auth, db } from '../../../Services/firebaseConfig';
 import { doc, getDoc } from 'firebase/firestore';
@@ -37,10 +36,10 @@ export const UserGreeting: React.FC<UserGreetingProps> = ({ dailySummary }) => {
 
     return (
         <View style={styles.header}>
-            <Avatar.Image source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' }}
-                size={50}
-                style={styles.userAvatar}
-                theme={{ colors: { primary: COLORS.primary } }} />
+            <Image
+                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' }}
+                style={[styles.userAvatar, { width: 50, height: 50, borderRadius:25 }]} // Adicionamos width e height ao estilo
+            />
             <View>
                 <Text style={styles.greeting}>Welcome, {userName || 'Carregando...'}! 👋</Text>
                 <View style={styles.caloriesContainer}>

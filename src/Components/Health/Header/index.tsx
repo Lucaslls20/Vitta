@@ -1,5 +1,6 @@
 import React from 'react';
-import { Appbar, Avatar } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
+import { Image, TouchableOpacity } from 'react-native';
 import { styles } from '../../../View/PagesBottomTabs/Health/styles';
 
 interface HeaderProps {
@@ -18,12 +19,11 @@ export const Header = ({ userName, userAvatar }: HeaderProps) => (
       title={userName}
       titleStyle={styles.appBarTitle}
     />
-    <Avatar.Image
-      size={40}
-      source={{ uri: userAvatar }}
-      style={styles.userAvatar}
-      onTouchEnd={() => {}}
-      accessibilityLabel="User profile"
-    />
+    <TouchableOpacity onPress={() => {}} accessibilityLabel="User profile">
+      <Image
+        source={{ uri: userAvatar }}
+        style={[styles.userAvatar, { width: 44, height:44 , borderRadius:22 }]}
+      />
+    </TouchableOpacity>
   </Appbar.Header>
 );
