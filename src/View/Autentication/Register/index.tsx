@@ -13,7 +13,8 @@ export default function Register({ navigation }: any) {
     const [snackbarVisible, setSnackbarVisible] = useState<boolean>(false);
     const [snackbarMessage, setSnackbarMessage] = useState<string>('');
 
-    const { email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, loading, error, register, name, setName } = useRegisterViewModel();
+    const { email, setEmail, password, setPassword, confirmPassword, setConfirmPassword, loading, error, register, name, setName, phoneNumber,
+        setPhoneNumber } = useRegisterViewModel();
 
     const animateButton = () => {
         Animated.sequence([
@@ -64,7 +65,7 @@ export default function Register({ navigation }: any) {
                 <View style={styles.form}>
                     <Title style={styles.title}>Welcome to Vitta</Title>
                     <Subheading style={styles.subtitle}>
-                    Create your account and improve your health with us!
+                        Create your account and improve your health with us!
                     </Subheading>
                     <CustomTextInput
                         label="Enter yout name"
@@ -72,6 +73,7 @@ export default function Register({ navigation }: any) {
                         onChangeText={setName}
                         icon="account"
                         style={styles.input}
+                        placeHolder="Example Peter"
                     />
 
                     <CustomTextInput
@@ -81,6 +83,17 @@ export default function Register({ navigation }: any) {
                         icon="email"
                         keyboardType="email-address"
                         style={styles.input}
+                        placeHolder="user123@gmail.com"
+                    />
+
+                    <CustomTextInput
+                        label="Enter your phone number"
+                        value={phoneNumber}
+                        onChangeText={setPhoneNumber}
+                        icon="phone"
+                        keyboardType="phone-pad"
+                        style={styles.input}
+                        placeHolder="+55 21 91234-5678"
                     />
 
                     <CustomTextInput
@@ -90,6 +103,7 @@ export default function Register({ navigation }: any) {
                         icon="lock"
                         secureTextEntry
                         style={styles.input}
+                        placeHolder="Create your password!"
                     />
 
                     <CustomTextInput
@@ -99,6 +113,7 @@ export default function Register({ navigation }: any) {
                         icon="lock"
                         secureTextEntry
                         style={styles.input}
+                        placeHolder=''
                     />
                     {error && <Text style={{ color: 'red', textAlign: 'center' }}>{error}</Text>}
                     <CustomButton
@@ -109,12 +124,12 @@ export default function Register({ navigation }: any) {
                         disabled={loading}
                     />
                     <Text style={styles.footerText}>
-                    Already have an account?{" "}
+                        Already have an account?{" "}
                         <Text
                             style={styles.loginLink}
                             onPress={handleNavigateToLogin}
                         >
-                           Enter now!
+                            Enter now!
                         </Text>
                     </Text>
                 </View>

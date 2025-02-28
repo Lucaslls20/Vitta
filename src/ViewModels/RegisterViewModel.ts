@@ -19,12 +19,13 @@ export const useRegisterViewModel = (): RegisterViewModel => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const navigation = useNavigation<NavigationProps>();
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   const register = async (): Promise<void> => {
     setError(null);
     setLoading(true);
 
-    if (password === '' && email === '' && confirmPassword === '' && name === '') {
+    if (password === '' && email === '' && confirmPassword === '' && name === '' || !phoneNumber) {
       setError('All fields are empty. Fill them in.');
       setLoading(false);
       return;
@@ -57,6 +58,7 @@ export const useRegisterViewModel = (): RegisterViewModel => {
       await setDoc(doc(db, "users", uid), {
         name,
         email,
+        phone: phoneNumber,
         // NÃO SALVE A SENHA em texto puro!
       });
 
@@ -84,10 +86,12 @@ export const useRegisterViewModel = (): RegisterViewModel => {
     confirmPassword,
     loading,
     error,
+    phoneNumber,
     register,
     setEmail,
     setName,
     setPassword,
     setConfirmPassword,
+    setPhoneNumber,
   };
 };

@@ -11,6 +11,7 @@ interface CustomTextInputProps {
     secureTextEntry?: boolean;
     keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
     style?: ViewStyle;
+    placeHolder: string
 }
 
 export function CustomTextInput({
@@ -21,6 +22,7 @@ export function CustomTextInput({
     secureTextEntry = false,
     keyboardType = "default",
     style,
+    placeHolder
 }: CustomTextInputProps) {
    
     const [isVisible, setIsVisible] = useState(!secureTextEntry);
@@ -30,6 +32,7 @@ export function CustomTextInput({
             mode="outlined"
             label={label}
             value={value}
+            placeholder={placeHolder}
             onChangeText={onChangeText}
             left={icon && <TextInput.Icon icon={icon} color={COLORS.primary} />}
             right={
