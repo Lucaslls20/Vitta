@@ -16,7 +16,6 @@ import { Header } from '../../../Components/Health/Header';
 import useCalorieViewModel from '../../../ViewModels/useGraphicViewModel';
 import { styles } from './styles';
 
-// Definição de interfaces para tipagem
 interface SelectedPoint {
   value: number;
   label: string;
@@ -32,12 +31,11 @@ interface DataPoint {
 }
 
 const GraphicScreen = () => {
-  // Define o estado com tipagem explícita para SelectedPoint ou null
   const [selectedPoint, setSelectedPoint] = useState<SelectedPoint | null>(null);
   const { period, setPeriod, chartData, quickStats, weeklyHighlights, loading } = useCalorieViewModel();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Função para animar a transição do gráfico
+  // Animação para transição do gráfico
   const animateChart = () => {
     fadeAnim.setValue(0);
     Animated.timing(fadeAnim, {
@@ -47,7 +45,7 @@ const GraphicScreen = () => {
     }).start();
   };
 
-  // Sempre que o período ou os dados do gráfico mudarem, anima o gráfico e limpa o ponto selecionado
+  // Sempre que o período ou os dados mudarem, reinicia a animação e limpa o tooltip
   useEffect(() => {
     animateChart();
     setSelectedPoint(null);
@@ -65,23 +63,25 @@ const GraphicScreen = () => {
       strokeWidth: '2',
       stroke: COLORS.accent,
     },
-    propsForLabels: {
-      fontSize: 12,
-    },
-    style: {
-      borderRadius: 16,
-    },
-    fillShadowGradient: COLORS.accent,
+    fillShadowGradient: COLORS.primary,
     fillShadowGradientOpacity: 0.1,
+    propsForBackgroundLines: {
+      stroke: COLORS.border,
+      strokeDasharray: '3 3',
+    },
   };
 
-  // Tipando o parâmetro "data" para garantir que os campos existam
+  // Tooltip aprimorado: reposiciona considerando a largura da tela e define deslocamento vertical
   const handleDataPointClick = (data: DataPoint) => {
+    const screenWidth = Dimensions.get('window').width;
+    const tooltipWidth = 80;
+    const x = Math.max(16, Math.min(data.x - tooltipWidth / 2, screenWidth - tooltipWidth - 16));
+  
     setSelectedPoint({
       value: data.value,
       label: chartData.labels[data.index],
-      x: data.x,
-      y: data.y,
+      x,
+      y: data.y - 50,
     });
   };
 
@@ -115,31 +115,31 @@ const GraphicScreen = () => {
                 onPress={() => setPeriod(item)}
               >
                 <Text style={[styles.periodButtonText, period === item && styles.periodButtonTextActive]}>
-                  {item === 'week' ? 'Semana' : item === 'month' ? 'Mês' : 'Ano'}
+                  {item === 'week' ? 'Week' : item === 'month' ? 'Month' : 'Year'}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
-          {/* Seção de Status Rápido */}
+          {/* Status Rápido */}
           <View style={styles.quickStats}>
             <Surface style={[styles.quickStat, { backgroundColor: COLORS.secondary }]}>
               <MaterialIcons name="local-fire-department" size={24} color={COLORS.tertiary} />
               <Text style={styles.quickStatValue}>{quickStats.currentDay}</Text>
-              <Text style={styles.quickStatLabel}>Consumo hoje</Text>
+              <Text style={styles.quickStatLabel}>Consumption today</Text>
               <ProgressBar 
                 progress={quickStats.goal > 0 ? quickStats.currentDay / quickStats.goal : 0} 
                 color={COLORS.primary}
                 style={styles.progressBar}
               />
-              <Text style={styles.quickStatGoal}>Meta: {quickStats.goal} kcal</Text>
+              <Text style={styles.quickStatGoal}>Goal: {quickStats.goal} kcal</Text>
             </Surface>
 
             <Surface style={[styles.quickStat, { backgroundColor: COLORS.accent }]}>
               <MaterialIcons name="calendar-month" size={24} color={COLORS.textPrimary} />
               <Text style={styles.quickStatValue}>{quickStats.periodTotal}</Text>
               <Text style={styles.quickStatLabel}>
-                Total {period === 'week' ? 'semanal' : period === 'month' ? 'mensal' : 'anual'}
+                Total {period === 'week' ? 'weekly' : period === 'month' ? 'monthly' : 'annual'}
               </Text>
               <View style={styles.comparisonContainer}>
                 <MaterialIcons 
@@ -149,25 +149,25 @@ const GraphicScreen = () => {
                 />
                 <Text style={styles.comparisonText}>
                   {quickStats.comparisonPercentage >= 0 ? '+' : ''}
-                  {quickStats.comparisonPercentage}% vs período anterior
+                  {quickStats.comparisonPercentage}% vs previous period
                 </Text>
               </View>
             </Surface>
           </View>
 
-          {/* Gráfico Principal */}
+          {/* Gráfico Principal com destaque para o dia atual e linha de meta interativa */}
           <Card style={styles.mainCard}>
             <Card.Content>
               <View style={styles.cardHeader}>
-                <Title style={styles.cardTitle}>Evolução Diária</Title>
+                <Title style={styles.cardTitle}>Daily Evolution</Title>
                 <View style={styles.legend}>
                   <View style={styles.legendItem}>
                     <View style={[styles.legendDot, { backgroundColor: COLORS.primary }]} />
-                    <Text style={styles.legendText}>Consumo</Text>
+                    <Text style={styles.legendText}>Consumption</Text>
                   </View>
                   <View style={styles.legendItem}>
                     <View style={[styles.legendDot, { backgroundColor: COLORS.today }]} />
-                    <Text style={styles.legendText}>Hoje</Text>
+                    <Text style={styles.legendText}>Today</Text>
                   </View>
                 </View>
               </View>
@@ -180,6 +180,25 @@ const GraphicScreen = () => {
                   chartConfig={chartConfig}
                   style={styles.chart}
                   onDataPointClick={handleDataPointClick}
+                  getDotProps={(value, index) => {
+                    const isToday = period === 'week' &&
+                    chartData.labels[index] === new Date().toLocaleDateString('en-US', { weekday: 'short' });
+                    return {
+                      r: isToday ? 8 : 6,
+                      fill: isToday ? COLORS.today : COLORS.primary,
+                      stroke: isToday ? COLORS.accent : 'transparent',
+                      strokeWidth: 2,
+                    };
+                  }}
+                  decorator={() => {
+                    const maxData = Math.max(...chartData.datasets[0].data, quickStats.goal);
+                    const y = (1 - quickStats.goal / maxData) * 220;
+                    return (
+                      <View style={[styles.goalLine, { top: y }]}>
+                        <Text style={styles.goalLineText}>Goal: {quickStats.goal}kcal</Text>
+                      </View>
+                    );
+                  }}
                 />
               </Animated.View>
 
@@ -195,18 +214,18 @@ const GraphicScreen = () => {
           {/* Destaques da Semana */}
           <Card style={styles.highlightsCard}>
             <Card.Content>
-              <Title style={styles.sectionTitle}>Destaques da Semana</Title>
+              <Title style={styles.sectionTitle}>Highlights of the Week</Title>
               <View style={styles.highlightsContainer}>
                 <View style={styles.highlightItem}>
                   <MaterialIcons name="star" size={20} color={COLORS.tertiary} />
                   <Text style={styles.highlightText}>
-                    Melhor dia: {weeklyHighlights.bestDay.day} ({weeklyHighlights.bestDay.calories} kcal)
+                  Best day: {weeklyHighlights.bestDay.day} ({weeklyHighlights.bestDay.calories} kcal)
                   </Text>
                 </View>
                 <View style={styles.highlightItem}>
                   <MaterialIcons name="info" size={20} color={COLORS.accent} />
                   <Text style={styles.highlightText}>
-                    Média de calorias: {weeklyHighlights.averageCalories} kcal
+                  Calorie average: {weeklyHighlights.averageCalories} kcal
                   </Text>
                 </View>
               </View>
@@ -217,11 +236,11 @@ const GraphicScreen = () => {
           <View style={styles.actionCards}>
             <Surface style={[styles.actionCard, { backgroundColor: COLORS.secondary }]}>
               <MaterialIcons name="restaurant" size={28} color={COLORS.primary} />
-              <Text style={styles.actionCardText}>Registrar Refeição</Text>
+              <Text style={styles.actionCardText}>Register Meal</Text>
             </Surface>
             <Surface style={[styles.actionCard, { backgroundColor: COLORS.accent }]}>
               <MaterialIcons name="fitness-center" size={28} color={COLORS.textPrimary} />
-              <Text style={styles.actionCardText}>Adicionar Exercício</Text>
+              <Text style={styles.actionCardText}>Add Exercise</Text>
             </Surface>
           </View>
         </ScrollView>

@@ -178,4 +178,19 @@ export const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: COLORS.primary,
   },
+  goalLine: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    borderBottomWidth: 2,
+    borderColor: COLORS.error,
+    alignItems: 'center',
+  },
+  goalLineText: {
+    backgroundColor: COLORS.primary,
+    color: COLORS.white,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+    top: -10,
+  },
 });
