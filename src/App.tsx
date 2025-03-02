@@ -20,6 +20,7 @@ import EditProfile from "./View/EditProfile";
 import TermsAndConditionsScreen from "./View/TermsAndConditionsScreen"; 
 import PrivacyPolicyScreen from "./View/PrivacyPolicy";
 import GraphicScreen from "./View/PagesBottomTabs/Graphic";
+import Settings from "./View/Settings";
 
 export type RootStackParamList = {
   Login: undefined
@@ -30,6 +31,7 @@ export type RootStackParamList = {
   EditProfile: undefined
   TermsAndConditionsScreen: undefined
   PrivacyPolicyScreen: undefined
+  Settings: undefined
 }
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
 
@@ -98,6 +100,7 @@ export default function App() {
         <Stack.Screen name="EditProfile" component={EditProfile} options={{   headerShown: false,   gestureEnabled: false}} />
         <Stack.Screen name='TermsAndConditionsScreen' component={TermsAndConditionsScreen} options={{   headerShown: false,   gestureEnabled: false}} />
         <Stack.Screen name='PrivacyPolicyScreen' component={PrivacyPolicyScreen} options={{   headerShown: false,   gestureEnabled: false}} />
+        <Stack.Screen name='Settings' component={Settings} options={{   headerShown: false,   gestureEnabled: false}} />
       </Stack.Navigator>
     </NavigationContainer>
   )

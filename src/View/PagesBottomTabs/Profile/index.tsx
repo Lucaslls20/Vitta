@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
   ];
 
   const preferencesItems: ListItemProps[] = [
-    { title: 'Settings', leftIcon: 'cog', onPress: () => console.log('Settings') },
+    { title: 'Settings', leftIcon: 'cog', onPress: () => navigation.navigate('Settings') },
     { title: 'Favorites Recipes', leftIcon: 'heart', onPress: () => console.log('Favorite Recipes') },
   ];
 
