@@ -55,7 +55,7 @@ export const useHomeViewModel = () => {
             const dateStr = (typeof dateValue === 'object' && dateValue.toDate)
               ? dateValue.toDate().toISOString().split('T')[0]
               : dateValue;
-            const calories = data.totalCalories;
+              const calories = Number(data.totalCalories.toFixed(2));
             
             dailyCalories[dateStr] = calories;
             
@@ -92,6 +92,8 @@ export const useHomeViewModel = () => {
       setLoading(true);
       setError('');
 
+      const normalizedQuery = query.toLowerCase();
+
       const response = await fetch('https://trackapi.nutritionix.com/v2/natural/nutrients', {
         method: 'POST',
         headers: {
@@ -100,7 +102,7 @@ export const useHomeViewModel = () => {
           'x-app-id': APP_ID,
         },
         body: JSON.stringify({
-          query,
+          query: normalizedQuery,
           timezone: "US/Eastern"
         }),
       });
@@ -130,7 +132,18 @@ export const useHomeViewModel = () => {
         }
       );
 
-      setNutrition(totalNutrition);
+      const roundedNutrition = {
+        calories: Number(totalNutrition.calories.toFixed(2)),
+        protein: Number(totalNutrition.protein.toFixed(2)),
+        fat: Number(totalNutrition.fat.toFixed(2)),
+        carbs: Number(totalNutrition.carbs.toFixed(2)),
+        sugars: Number(totalNutrition.sugars.toFixed(2)),
+        fiber: Number(totalNutrition.fiber.toFixed(2)),
+        cholesterol: Number(totalNutrition.cholesterol.toFixed(2)),
+        sodium: Number(totalNutrition.sodium.toFixed(2)),
+      };
+
+      setNutrition(roundedNutrition);
 
       // Atualiza dados no Firestore
       const currentDate = new Date().toISOString().split('T')[0];
@@ -138,14 +151,14 @@ export const useHomeViewModel = () => {
 
       try {
         await updateDoc(calorieDocRef, {
-          totalCalories: increment(totalNutrition.calories),
+          totalCalories: increment(roundedNutrition.calories),
           updatedAt: serverTimestamp(),
         });
       } catch (error) {
         await setDoc(calorieDocRef, {
           userId: user!.uid,
           date: currentDate,
-          totalCalories: totalNutrition.calories,
+          totalCalories: roundedNutrition.calories,
           createdAt: serverTimestamp(),
         });
       }
