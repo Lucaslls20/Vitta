@@ -110,7 +110,7 @@ const GraphicScreen = () => {
             handleDataPointClick={handleDataPointClick}
             period={period}
           />
-          <WeeklyHighlights weeklyHighlights={weeklyHighlights} />
+          <WeeklyHighlights weeklyHighlights={weeklyHighlights} period={period} />
           <ActionCards />
         </ScrollView>
 

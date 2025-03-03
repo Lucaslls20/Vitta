@@ -27,7 +27,10 @@ const useCalorieViewModel = () => {
 
   // Busca dados do Firestore quando há usuário autenticado
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
 
     const q = query(collection(db, 'calorias'), where('userId', '==', userId));
     const unsubscribe = onSnapshot(q, (querySnapshot: QuerySnapshot<DocumentData>) => {
@@ -68,6 +71,7 @@ const useCalorieViewModel = () => {
     previousPeriod = false
   ): CalorieEntry[] => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normaliza a data atual para o início do dia
     let startDate: Date;
     let endDate: Date;
     const periodOffset = previousPeriod ? -1 : 0;
@@ -75,9 +79,12 @@ const useCalorieViewModel = () => {
     switch (period) {
       case 'week': {
         const dayOfWeek = today.getDay();
-        const diff = today.getDate() - dayOfWeek;
-        startDate = new Date(today.getFullYear(), today.getMonth(), diff + (periodOffset * 7));
-        endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 6);
+        const diff = today.getDate() - dayOfWeek + (periodOffset * 7);
+        startDate = new Date(today.getFullYear(), today.getMonth(), diff);
+        startDate.setHours(0, 0, 0, 0);
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6);
+        endDate.setHours(23, 59, 59, 999);
         break;
       }
       case 'month': {
@@ -96,7 +103,11 @@ const useCalorieViewModel = () => {
       }
     }
 
-    return entries.filter((entry) => entry.date >= startDate && entry.date <= endDate);
+    return entries.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      entryDate.setHours(0, 0, 0, 0); // Normaliza a data da entrada
+      return entryDate >= startDate && entryDate <= endDate;
+    });
   };
 
   // Função auxiliar para comparar se duas datas são iguais (dia, mês e ano)
@@ -112,42 +123,49 @@ const useCalorieViewModel = () => {
     let labels: string[] = [];
     let data: number[] = [];
     const today = new Date();
-
+  
     if (period === 'week') {
       // Gera todos os dias da semana atual
       const startDate = new Date(today);
       startDate.setDate(today.getDate() - today.getDay());
       const endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 6);
-
+  
       const daysInWeek: Date[] = [];
       const currentDate = new Date(startDate);
       while (currentDate <= endDate) {
         daysInWeek.push(new Date(currentDate));
         currentDate.setDate(currentDate.getDate() + 1);
       }
-
-      labels = daysInWeek.map(day => 
-        day.toLocaleDateString('en-US', { weekday: 'short' }) // 🇺🇸 Changed
+  
+      labels = daysInWeek.map(day =>
+        day.toLocaleDateString('en-US', { weekday: 'short' })
       );
-      data = daysInWeek.map(day => 
+      data = daysInWeek.map(day =>
         filteredEntries
           .filter(entry => isSameDay(entry.date, day))
           .reduce((sum, entry) => sum + entry.totalCalories, 0)
       );
     } else if (period === 'month') {
-      // Gera todas as semanas do mês
-      const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      // Gera todas as semanas do mês utilizando o cálculo do último dia
+      const periodOffset = 0; // Para o período atual; ajuste para -1 se for período anterior
+      const startDateForMonth = new Date(today.getFullYear(), today.getMonth() + periodOffset, 1);
+      const lastDay = new Date(
+        startDateForMonth.getFullYear(),
+        startDateForMonth.getMonth() + 1,
+        0
+      ).getDate();
       const weeksCount = Math.ceil(lastDay / 7);
-      labels = Array.from({ length: weeksCount }, (_, i) => `Week ${i + 1}`); // 🇺🇸 Changed
+      
+      labels = Array.from({ length: weeksCount }, (_, i) => `Week ${i + 1}`);
       
       data = labels.map((_, weekIndex) => {
         const startDay = weekIndex * 7 + 1;
         const endDay = Math.min((weekIndex + 1) * 7, lastDay);
         return filteredEntries
-          .filter(entry => 
-            entry.date.getMonth() === today.getMonth() &&
-            entry.date.getDate() >= startDay && 
+          .filter(entry =>
+            entry.date.getMonth() === startDateForMonth.getMonth() &&
+            entry.date.getDate() >= startDay &&
             entry.date.getDate() <= endDay
           )
           .reduce((sum, entry) => sum + entry.totalCalories, 0);
@@ -155,18 +173,18 @@ const useCalorieViewModel = () => {
     } else {
       // Gera todos os meses do ano
       labels = Array.from({ length: 12 }, (_, i) =>
-        new Date(today.getFullYear(), i, 1).toLocaleDateString('en-US', { month: 'short' }) // 🇺🇸 Changed
+        new Date(today.getFullYear(), i, 1).toLocaleDateString('en-US', { month: 'short' })
       );
       data = labels.map((_, monthIndex) =>
         filteredEntries
-          .filter(entry => 
+          .filter(entry =>
             entry.date.getFullYear() === today.getFullYear() &&
             entry.date.getMonth() === monthIndex
           )
           .reduce((sum, entry) => sum + entry.totalCalories, 0)
       );
     }
-
+  
     return {
       labels,
       datasets: [{
@@ -205,8 +223,10 @@ const useCalorieViewModel = () => {
     const previousEntries = filterEntriesByPeriod(entries, period, true);
     const currentTotal = currentEntries.reduce((sum, entry) => sum + entry.totalCalories, 0);
     const previousTotal = previousEntries.reduce((sum, entry) => sum + entry.totalCalories, 0);
-    if (previousTotal === 0) return 0;
-    return Number(((currentTotal - previousTotal) / previousTotal * 100).toFixed(1));
+    if (previousTotal === 0) {
+      return currentTotal === 0 ? 0 : 100; // Ou outro valor adequado
+    }
+    return Number((((currentTotal - previousTotal) / previousTotal) * 100).toFixed(2));
   };
 
   const findBestDay = (entries: CalorieEntry[]) => {
