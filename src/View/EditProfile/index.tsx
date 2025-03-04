@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../App';
 import CancelButton from '../../Components/EditProfile/CancelButton';
@@ -9,16 +9,15 @@ import SaveButton from '../../Components/EditProfile/SaveButton';
 import { styles } from './styles';
 
 const EditProfile: React.FC = () => {
-    const [nome, setNome] = useState('');
-    const [username, setUsername] = useState('');
-    const [telefone, setTelefone] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const navigation = useNavigation<NavigationProps>()
 
     const profileImage = { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <CancelButton onPress={() => navigation.goBack()} />
             
             <ProfilePictureUpload
@@ -28,36 +27,43 @@ const EditProfile: React.FC = () => {
 
             <FormInput
                 label="Name"
-                icon="account"
-                value={nome}
-                onChangeText={setNome}
+                value={name}
+                onChangeText={setName}
+                placeHolder='Melissa Peters'
             />
 
             <FormInput
-                label="Username"
-                icon="account-circle"
-                value={username}
-                onChangeText={setUsername}
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                placeHolder='majesters@gmail.com'
             />
 
             <FormInput
                 label="Phone number"
-                icon="phone"
-                value={telefone}
-                onChangeText={setTelefone}
-                keyboardType="phone-pad"
+                value={password}
+                onChangeText={setPassword}
+                placeHolder='55 (31) 999049860'
+            />
+            <FormInput
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                placeHolder='123456'
+            />
+            <FormInput
+                label="Confirm Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                placeHolder='123456'
             />
 
-            <FormInput
-                label="E-mail"
-                icon="email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-            />
 
             <SaveButton onPress={() => {/* Lógica para salvar */}} />
-        </View>
+        </SafeAreaView>
     );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import { COLORS } from '../../../View/Colors';
 import { styles } from '../../../View/EditProfile/styles';
 interface SaveButtonProps {
@@ -16,7 +16,7 @@ const SaveButton: React.FC<SaveButtonProps> = ({ onPress, style }) => (
     buttonColor={COLORS.primary}
     textColor={COLORS.white}
   >
-    Save
+  <Text style={styles.saveButtonText}>Save</Text>
   </Button>
 );
 

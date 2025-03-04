@@ -1,39 +1,51 @@
 import React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { StyleProp, ViewStyle, View } from 'react-native';
+import { TextInput, Text } from 'react-native-paper';
 import { COLORS } from '../../../View/Colors';
 import { styles } from '../../../View/EditProfile/styles';
 
 interface FormInputProps {
   label: string;
-  icon: string;
+  // Removido o 'icon' ou você pode torná-lo opcional se necessário:
+  // icon?: string;
   value: string;
   onChangeText: (text: string) => void;
   keyboardType?: 'default' | 'email-address' | 'phone-pad';
   style?: StyleProp<ViewStyle>;
+  secureTextEntry?: boolean;
+  placeHolder: string
 }
 
 const FormInput: React.FC<FormInputProps> = ({ 
   label, 
-  icon, 
   value, 
   onChangeText, 
   keyboardType = 'default', 
-  style 
+  style,
+  secureTextEntry = false, // valor padrão para inputs que não sejam de senha
+  placeHolder,
 }) => (
-  <TextInput
-    label={label}
-    value={value}
-    onChangeText={onChangeText}
-    left={<TextInput.Icon icon={icon} color={COLORS.textSecondary} />}
-    mode="outlined"
-    style={[styles.input, style]}
-    outlineColor={COLORS.primary}
-    activeOutlineColor={COLORS.primary}
-    textColor={COLORS.textPrimary}
-    keyboardType={keyboardType}
-    theme={{ colors: { background: COLORS.secondary } }}
-  />
+  <View style={[styles.inputContainer, style]}>
+    <Text style={styles.label}>{label}</Text>
+    <TextInput
+      value={value}
+      onChangeText={onChangeText}
+      mode='outlined'
+      style={styles.input}
+      outlineColor={COLORS.border}
+      activeOutlineColor={COLORS.primary}
+      textColor={COLORS.textPrimary}
+      keyboardType={keyboardType}
+      placeholder={placeHolder}
+      secureTextEntry={secureTextEntry}
+      theme={{ 
+        colors: { 
+          background: COLORS.white,
+          onSurfaceVariant: COLORS.textSecondary
+        } 
+      }}
+    />
+  </View>
 );
 
 export default FormInput;
