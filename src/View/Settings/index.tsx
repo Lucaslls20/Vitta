@@ -18,6 +18,7 @@ import { COLORS } from '../Colors';
 import { NavigationProps } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import useSettingsViewModel from '../../ViewModels/SettingsViewModel'; // Atualize o caminho conforme necessário
+import { LogoutView } from '../../Components/LogOut';
 
 const Settings = () => {
   const { user, loading } = useSettingsViewModel();
@@ -167,34 +168,10 @@ const Settings = () => {
             </List.Section>
           </Surface>
 
-          {/* Botão de Logout */}
-          <View style={styles.logoutContainer}>
-            <Button
-              mode="contained"
-              icon="logout"
-              onPress={showLogoutDialog}
-              style={styles.logoutButton}
-              labelStyle={styles.logoutButtonLabel}
-              contentStyle={{ backgroundColor: COLORS.error }}
-            >
-              Sair da conta
-            </Button>
-          </View>
-        </ScrollView>
 
-        {/* Diálogo de Confirmação de Logout */}
-        <Portal>
-          <Dialog visible={logoutDialogVisible} onDismiss={hideLogoutDialog} style={styles.logoutDialog}>
-            <Dialog.Title style={styles.dialogTitle}>Sair da conta</Dialog.Title>
-            <Dialog.Content>
-              <Text style={styles.dialogContent}>Tem certeza que deseja sair da sua conta?</Text>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={hideLogoutDialog}>Cancelar</Button>
-              <Button onPress={handleLogout} style={{ backgroundColor: COLORS.textSecondary }}>Sair</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
+        <LogoutView />
+        
+        </ScrollView>
       </View>
     </PaperProvider>
   );

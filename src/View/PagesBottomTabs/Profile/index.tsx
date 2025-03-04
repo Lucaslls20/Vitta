@@ -4,11 +4,12 @@ import ProfileHeader from '../../../Components/Profile/ProfileHeader';
 import StatsSection, { StatItem } from '../../../Components/Profile/StatsSection';
 import ActionButtons from '../../../Components/Profile/ActionButtons';
 import ProfileListSection, { ListItemProps } from '../../../Components/Profile/ProfileListSection';
-import LogoutButton from '../../../Components/Profile/LogoutButton';
 import { styles } from './styles';
 import useProfileViewModel from '../../../ViewModels/ProfileHeaderViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../../App';
+import { LogoutView } from '../../../Components/LogOut';
+import { PaperProvider, Provider } from 'react-native-paper';
 
 const Profile: React.FC = () => {
   const { user, loading } = useProfileViewModel();
@@ -51,6 +52,7 @@ const Profile: React.FC = () => {
   ];
 
   return (
+   
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 10 }}>
       <ProfileHeader
         backgroundImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s"
@@ -70,9 +72,12 @@ const Profile: React.FC = () => {
       <ProfileListSection title="Preferences" items={preferencesItems} />
 
       <ProfileListSection title="Legal & Support" items={legalItems} />
-
-      <LogoutButton onLogout={() => console.log('Log Out')} />
+   
+        <LogoutView />
+     
     </ScrollView>
+  
+
   );
 };
 

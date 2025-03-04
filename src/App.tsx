@@ -21,6 +21,8 @@ import TermsAndConditionsScreen from "./View/TermsAndConditionsScreen";
 import PrivacyPolicyScreen from "./View/PrivacyPolicy";
 import GraphicScreen from "./View/PagesBottomTabs/Graphic";
 import Settings from "./View/Settings";
+import { theme } from "./View/theme";
+import { PaperProvider } from "react-native-paper";
 
 export type RootStackParamList = {
   Login: undefined
@@ -90,6 +92,7 @@ function TabRoutes() {
 
 export default function App() {
   return (
+    <PaperProvider theme={theme}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SplashScreen">
         <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
@@ -103,5 +106,6 @@ export default function App() {
         <Stack.Screen name='Settings' component={Settings} options={{   headerShown: false,   gestureEnabled: false}} />
       </Stack.Navigator>
     </NavigationContainer>
+    </PaperProvider>
   )
 }
