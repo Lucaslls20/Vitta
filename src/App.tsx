@@ -21,6 +21,7 @@ import TermsAndConditionsScreen from "./View/TermsAndConditionsScreen";
 import PrivacyPolicyScreen from "./View/PrivacyPolicy";
 import GraphicScreen from "./View/PagesBottomTabs/Graphic";
 import Settings from "./View/Settings";
+import Goals from "./View/Goals";
 import { theme } from "./View/theme";
 import { PaperProvider } from "react-native-paper";
 
@@ -34,6 +35,7 @@ export type RootStackParamList = {
   TermsAndConditionsScreen: undefined;
   PrivacyPolicyScreen: undefined;
   Settings: undefined;
+  Goals: undefined;
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -127,6 +129,7 @@ export default function App() {
           <Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} options={defaultScreenOptions} />
           <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} options={defaultScreenOptions} />
           <Stack.Screen name="Settings" component={Settings} options={defaultScreenOptions} />
+          <Stack.Screen name='Goals' component={Goals} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

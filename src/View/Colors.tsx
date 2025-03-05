@@ -20,5 +20,16 @@ export const COLORS = {
   border: "#E0E0E0",
   shadow: "rgba(0, 0, 0, 0.15)",
   shadowApp: 'rgba(0,0,0,0.4)',
-  today: "#FFAB00"
+  today: "#FFAB00",
+
+  status: {
+    pending: "#FFC107",    // Amber
+    completed: "#4CAF50",  // Green
+    overdue: "#F44336"     // Red
+  },
+  text: {
+    primary: "#212121",    // Dark Gray
+    secondary: "#757575",  // Medium Gray
+    light: "#FFFFFF"       // White
+  },
 };

@@ -29,7 +29,7 @@ const Profile: React.FC = () => {
       onPress: () => console.log('Workout History'),
       accessibilityLabel: 'View workout history',
     },
-    { title: 'Goals', leftIcon: 'target', onPress: () => console.log('Goals') },
+    { title: 'Goals', leftIcon: 'target', onPress: () => navigation.navigate('Goals') },
     { title: 'Challenges', leftIcon: 'trophy', onPress: () => console.log('Challenges') },
   ];
 
