@@ -21,6 +21,7 @@ export const COLORS = {
   shadow: "rgba(0, 0, 0, 0.15)",
   shadowApp: 'rgba(0,0,0,0.4)',
   today: "#FFAB00",
+ gray: '#9E9E9E',
 
   status: {
     pending: "#FFC107",    // Amber
