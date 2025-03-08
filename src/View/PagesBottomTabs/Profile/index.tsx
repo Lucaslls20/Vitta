@@ -26,7 +26,7 @@ const Profile: React.FC = () => {
     {
       title: 'Workout History',
       leftIcon: 'dumbbell',
-      onPress: () => console.log('Workout History'),
+      onPress: () => navigation.navigate('WorkoutHistory'),
       accessibilityLabel: 'View workout history',
     },
     { title: 'Goals', leftIcon: 'target', onPress: () => navigation.navigate('Goals') },

@@ -24,6 +24,7 @@ import Settings from "./View/Settings";
 import Goals from "./View/Goals";
 import { theme } from "./View/theme";
 import { PaperProvider } from "react-native-paper";
+import WorkoutHistory from "./View/WorkoutHistory";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -36,6 +37,7 @@ export type RootStackParamList = {
   PrivacyPolicyScreen: undefined;
   Settings: undefined;
   Goals: undefined;
+  WorkoutHistory: undefined
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -130,6 +132,7 @@ export default function App() {
           <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} options={defaultScreenOptions} />
           <Stack.Screen name="Settings" component={Settings} options={defaultScreenOptions} />
           <Stack.Screen name='Goals' component={Goals} options={defaultScreenOptions} />
+          <Stack.Screen name='WorkoutHistory' component={WorkoutHistory} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
