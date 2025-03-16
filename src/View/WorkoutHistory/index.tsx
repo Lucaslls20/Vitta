@@ -18,6 +18,8 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale/pt-BR';
 import { COLORS } from '../Colors';
 import { styles } from './styles';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../App';
 
 // Definição de tipos
 interface Exercicio {
@@ -44,6 +46,7 @@ const WorkoutHistory = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filtroCategoria, setFiltroCategoria] = useState<string | null>(null);
+  const navigation = useNavigation<NavigationProps>();
 
   // Simulação de dados para exemplo
   useEffect(() => {
@@ -184,7 +187,7 @@ const WorkoutHistory = () => {
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: COLORS.white }}>
-        <Appbar.BackAction onPress={() => console.log('Voltar')} iconColor={COLORS.primary} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} iconColor={COLORS.primary} />
         <Appbar.Content title="Histórico de Treinos" titleStyle={{color:COLORS.primary}} />
         <Appbar.Action icon="calendar-month" onPress={() => console.log('Calendário')} iconColor={COLORS.primary} />
         <Appbar.Action icon="dots-vertical" onPress={() => console.log('Menu')} iconColor={COLORS.primary} />
