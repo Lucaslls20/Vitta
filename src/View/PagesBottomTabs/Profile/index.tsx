@@ -23,12 +23,7 @@ const Profile: React.FC = () => {
   ];
 
   const fitnessItems: ListItemProps[] = [
-    {
-      title: 'Workout History',
-      leftIcon: 'dumbbell',
-      onPress: () => navigation.navigate('WorkoutHistory'),
-      accessibilityLabel: 'View workout history',
-    },
+   
     { title: 'Goals', leftIcon: 'target', onPress: () => navigation.navigate('Goals') },
     { title: 'Challenges', leftIcon: 'trophy', onPress: () => console.log('Challenges') },
   ];
