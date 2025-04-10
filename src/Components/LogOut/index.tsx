@@ -24,22 +24,22 @@ export const LogoutView = () => {
                     labelStyle={styles.logoutButtonLabel}
                     contentStyle={{ backgroundColor: COLORS.error }}
                   >
-                    Sair da conta
+                   Log out of account
                   </Button>
                 </View>
 
       <Portal>
         <Dialog visible={isDialogVisible} onDismiss={hideDialog} style={styles.logoutDialog}>
-          <Dialog.Title style={styles.dialogTitle}>Atenção</Dialog.Title>
+          <Dialog.Title style={styles.dialogTitle}>Attention</Dialog.Title>
           <Dialog.Content>
-            <Paragraph style={styles.dialogContent}>Deseja realmente sair do aplicativo?</Paragraph>
+            <Paragraph style={styles.dialogContent}>Are you sure you want to exit the application?</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={hideDialog} theme={{colors: {primary: COLORS.primary}}}>Cancelar</Button>
+            <Button onPress={hideDialog} theme={{colors: {primary: COLORS.primary}}}>Cancel</Button>
             <Button 
               onPress={handleLogout}
               theme={{ colors: { primary: COLORS.error } }}>
-              Sair
+             Leave
             </Button>
           </Dialog.Actions>
         </Dialog>

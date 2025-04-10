@@ -134,9 +134,9 @@ const Settings = () => {
                 titleStyle={styles.listItemTitle}
                 left={props => <List.Icon {...props} icon="shield-account" color={COLORS.primary} />}
                 right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
-                onPress={() => {
-                  /* Abrir política de privacidade */
-                }}
+                onPress={() => 
+                  navigation.navigate('PrivacyPolicyScreen')
+                }
               />
             </List.Section>
           </Surface>

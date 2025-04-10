@@ -22,6 +22,7 @@ import PrivacyPolicyScreen from "./View/PrivacyPolicy";
 import GraphicScreen from "./View/PagesBottomTabs/Graphic";
 import Settings from "./View/Settings";
 import Goals from "./View/Goals";
+import FavoriteRecipesScreen from "./View/FavoriteRecipes";
 import { theme } from "./View/theme";
 import { PaperProvider } from "react-native-paper";
 
@@ -37,6 +38,7 @@ export type RootStackParamList = {
   PrivacyPolicyScreen: undefined;
   Settings: undefined;
   Goals: undefined;
+  FavoriteRecipeScreen: undefined
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -131,6 +133,7 @@ export default function App() {
           <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} options={defaultScreenOptions} />
           <Stack.Screen name="Settings" component={Settings} options={defaultScreenOptions} />
           <Stack.Screen name='Goals' component={Goals} options={defaultScreenOptions} />
+          <Stack.Screen name='FavoriteRecipeScreen' component={FavoriteRecipesScreen} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

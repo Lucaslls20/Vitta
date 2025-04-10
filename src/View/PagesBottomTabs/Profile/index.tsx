@@ -30,7 +30,7 @@ const Profile: React.FC = () => {
 
   const preferencesItems: ListItemProps[] = [
     { title: 'Settings', leftIcon: 'cog', onPress: () => navigation.navigate('Settings') },
-    { title: 'Favorites Recipes', leftIcon: 'heart', onPress: () => console.log('Favorite Recipes') },
+    { title: 'Favorites Recipes', leftIcon: 'heart', onPress: () => navigation.navigate('FavoriteRecipeScreen') },
   ];
 
   const legalItems: ListItemProps[] = [
