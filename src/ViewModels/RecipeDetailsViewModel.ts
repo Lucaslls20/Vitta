@@ -1,14 +1,53 @@
 import { useState, useEffect } from 'react';
+import { auth, db } from '../Services/firebaseConfig';
 import { APIKEY } from '../Services/SpoonacularConfig';
 import { RecipeDetails } from '../Models/RecipeDetailsModel';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
 const BASE_URL = 'https://api.spoonacular.com/recipes';
-const GLYCEMIC_LOAD_URL = 'https://api.spoonacular.com/food/ingredients/glycemicLoad';
 
 export const useRecipeDetailsViewModel = (recipeId: number) => {
   const [recipeDetails, setRecipeDetails] = useState<RecipeDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  const saveFavoriteRecipe = async () => {
+    try {
+      setSaveError(null);
+      setSaveSuccess(false);
+  
+      if (!recipeDetails) {
+        throw new Error('Detalhes da receita não disponíveis');
+      }
+  
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error('Usuário não autenticado. Faça login para salvar favoritos.');
+      }
+  
+      const favoriteData = {
+        title: recipeDetails.title,
+        imageUrl: recipeDetails.imageUrl,
+        preparationTime: recipeDetails.preparationTime,
+        recipeId: recipeDetails.id,
+        createdAt: new Date()  // Adiciona timestamp para ordenação
+      };
+  
+      // Referência direta usando caminho completo
+      const docRef = doc(db, 'users', user.uid, 'favorites', String(recipeDetails.id));
+      
+      await setDoc(docRef, favoriteData, { merge: true });
+      
+      console.log('Documento salvo com ID:', docRef.id);
+      setSaveSuccess(true);
+  
+    } catch (err: any) {
+      console.error('Erro ao salvar favorito:', err);
+      setSaveError(err.message);
+    }
+  };
 
   const fetchRecipeDetails = async () => {
     try {
@@ -20,19 +59,8 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
       if (!response.ok) throw new Error('Erro ao buscar detalhes da receita');
 
       const data = await response.json();
-     
+      const price = (data.pricePerServing / 100).toFixed(2);
 
-      // Obtemos os ingredientes da receita
-      const ingredients = data.extendedIngredients.map((ing: any) => ({
-        id: ing.id,
-        amount: ing.amount,
-        unit: ing.unit,
-      }));
-
- 
-      const price = (data.pricePerServing / 100).toFixed(2)
-
-      // Mapeamento dos dados da API para nosso modelo
       const mappedDetails: RecipeDetails = {
         id: data.id,
         title: data.title,
@@ -55,47 +83,5 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
     if (recipeId) fetchRecipeDetails();
   }, [recipeId]);
 
-  return { recipeDetails, loading, error };
+  return { recipeDetails, loading, error, saveFavoriteRecipe, saveError, saveSuccess };
 };
-
-// Função para buscar a carga glicêmica dos ingredientes
-const fetchGlycemicLoad = async (ingredients: { id: number; amount: number; unit: string }[]) => {
-  try {
-    // Adiciona a API key na URL como query parameter
-    const url = `${GLYCEMIC_LOAD_URL}?apiKey=${APIKEY}`;
-    
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Corrige o corpo para usar "quantity" e remove a API key
-      body: JSON.stringify({
-        ingredients: ingredients.map(ing => ({
-          id: ing.id,
-          quantity: ing.amount, // Alterado de "amount" para "quantity"
-          unit: ing.unit,
-        })),
-      }),
-    });
-
-    if (!response.ok) {
-      // Log detalhado do erro
-      const errorText = await response.text();
-      console.error('Erro na resposta:', errorText);
-      throw new Error('Erro ao buscar carga glicêmica');
-    }
-
-    const data = await response.json();
-    
-    // Calcula a média (ajuste conforme a estrutura real da resposta)
-    const totalLoad = data.totalGlycemicLoad || 0; // Verifique a estrutura real
-    const avgLoad = totalLoad; // Ou calcule com base nos ingredientes
-
-    return avgLoad.toFixed(2);
-  } catch (error) {
-    console.error('Erro ao calcular a carga glicêmica:', error);
-    return 'Indisponível';
-  }
-};
-
