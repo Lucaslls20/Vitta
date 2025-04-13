@@ -4,6 +4,7 @@ export const COLORS = {
   secondary: "#E8F5E9",     
   accent: "#81C784",
   tertiary: "#FFB74D",
+  desable: '#98FB98 ',
   
   // Text
   textPrimary: "#1B5E20",   

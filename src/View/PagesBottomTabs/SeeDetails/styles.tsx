@@ -130,7 +130,8 @@ export const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     buttonDisabled: {
-        opacity: 0.9
+        opacity: 0.6,
+        backgroundColor: COLORS.desable, 
     },
     buttonContent: {
         height: 48,

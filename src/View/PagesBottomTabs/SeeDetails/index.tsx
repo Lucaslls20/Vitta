@@ -18,7 +18,7 @@ import { COLORS } from '../../Colors';
 
 const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
   const { recipeId } = route.params;
-  const { recipeDetails, loading, error, saveFavoriteRecipe, saveError, saveSuccess } = useRecipeDetailsViewModel(recipeId);
+  const { recipeDetails, loading, error, saveFavoriteRecipe, saveError, saveSuccess, isFavorite } = useRecipeDetailsViewModel(recipeId);
   const navigation = useNavigation();
 
   // Estados para controlar o diálogo
@@ -69,7 +69,7 @@ const SeeDetails = ({ route }: { route: SeeDetailsRouteProp }) => {
               <PreparationSteps steps={recipeDetails?.preparationSteps} />
             </DetailsCard>
 
-            <FavoriteButton onPress={saveFavoriteRecipe} />
+            <FavoriteButton onPress={saveFavoriteRecipe} disabled={saveSuccess || isFavorite} />
           </ScrollView>
         )}
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '../Services/firebaseConfig';
 import { APIKEY } from '../Services/SpoonacularConfig';
 import { RecipeDetails } from '../Models/RecipeDetailsModel';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc,getDoc } from 'firebase/firestore';
 
 const BASE_URL = 'https://api.spoonacular.com/recipes';
 
@@ -12,6 +12,23 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
   const [error, setError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const checkIfFavorite = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        setIsFavorite(false);
+        return;
+      }
+      const docRef = doc(db, 'users', user.uid, 'favorites', String(recipeId));
+      const docSnap = await getDoc(docRef);
+      
+      setIsFavorite(docSnap.exists());
+    } catch (err) {
+      console.error('Erro ao verificar favorito:', err);
+    }
+  };
 
   const saveFavoriteRecipe = async () => {
     try {
@@ -39,9 +56,9 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
       const docRef = doc(db, 'users', user.uid, 'favorites', String(recipeDetails.id));
       
       await setDoc(docRef, favoriteData, { merge: true });
-      
+      setIsFavorite(true); 
       console.log('Documento salvo com ID:', docRef.id);
-      setSaveSuccess(true);
+      setSaveSuccess(true); 
   
     } catch (err: any) {
       console.error('Erro ao salvar favorito:', err);
@@ -72,6 +89,7 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
       };
 
       setRecipeDetails(mappedDetails);
+      await checkIfFavorite();
     } catch (err) {
       setError('Erro ao carregar detalhes da receita');
     } finally {
@@ -83,5 +101,5 @@ export const useRecipeDetailsViewModel = (recipeId: number) => {
     if (recipeId) fetchRecipeDetails();
   }, [recipeId]);
 
-  return { recipeDetails, loading, error, saveFavoriteRecipe, saveError, saveSuccess };
+  return { recipeDetails, loading, error, saveFavoriteRecipe, saveError, saveSuccess, isFavorite };
 };
