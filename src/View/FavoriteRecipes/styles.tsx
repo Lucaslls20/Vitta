@@ -128,4 +128,12 @@ export const styles = StyleSheet.create({
   separator: {
     height: 16,
   },
+  snackbar:{
+    backgroundColor: COLORS.primary,
+    color: COLORS.white,
+  },
+  snackBarText:{
+    color: COLORS.white,
+    fontSize: 16,
+  }
 });
