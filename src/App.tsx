@@ -23,8 +23,9 @@ import GraphicScreen from "./View/PagesBottomTabs/Graphic";
 import Settings from "./View/Settings";
 import Goals from "./View/Goals";
 import FavoriteRecipesScreen from "./View/FavoriteRecipes";
+import ChallengesScreen from "./View/Challenges";
 import { theme } from "./View/theme";
-import { PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper"
 
 
 export type RootStackParamList = {
@@ -39,6 +40,7 @@ export type RootStackParamList = {
   Settings: undefined;
   Goals: undefined;
   FavoriteRecipeScreen: undefined
+  ChallengesScreen: undefined
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -134,6 +136,7 @@ export default function App() {
           <Stack.Screen name="Settings" component={Settings} options={defaultScreenOptions} />
           <Stack.Screen name='Goals' component={Goals} options={defaultScreenOptions} />
           <Stack.Screen name='FavoriteRecipeScreen' component={FavoriteRecipesScreen} options={defaultScreenOptions} />
+          <Stack.Screen name='ChallengesScreen' component={ChallengesScreen} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
