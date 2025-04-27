@@ -5,11 +5,13 @@ export const styles = StyleSheet.create({
   header: {
     backgroundColor: COLORS.white,
     elevation: 2,
+    marginLeft:15,
+    gap:10
   },
   headerTitle: {
-    color: COLORS.primary,
-    fontWeight: '700',
-    fontSize: 20,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: COLORS.textPrimary,
   },
   headerDivider: {
     backgroundColor: COLORS.shadow,
