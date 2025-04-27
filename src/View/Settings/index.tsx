@@ -122,12 +122,12 @@ const Settings = () => {
             <List.Section>
               <List.Subheader style={styles.sectionHeader}>Privacidade</List.Subheader>
               <List.Item
-                title="Serviços de Localização"
+                title="Terms and Conditions"
                 titleStyle={styles.listItemTitle}
-                description="Permita que o app acesse sua localização"
+                description="Read about the terms and conditions of the application."
                 descriptionStyle={styles.listItemDescription}
-                left={props => <List.Icon {...props} icon="map-marker" color={COLORS.primary} />}
-                right={props => <Switch value={locationServices} onValueChange={toggleLocationServices} color={COLORS.primary} />}
+                left={props => <List.Icon {...props} icon="file-document-multiple-outline" color={COLORS.primary} />}
+                right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
               />
               <List.Item
                 title="Política de Privacidade"
