@@ -111,16 +111,7 @@ const GraphicScreen = () => {
             period={period}
           />
           <WeeklyHighlights weeklyHighlights={weeklyHighlights} period={period} />
-          <ActionCards />
         </ScrollView>
-
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          color={COLORS.textOnPrimary}
-          theme={{ colors: { accent: COLORS.primary } }}
-          onPress={() => console.log('Pressed')}
-        />
       </View>
     </SafeAreaView>
   );
