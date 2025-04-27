@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   StyleSheet, 
@@ -6,7 +6,6 @@ import {
   TouchableOpacity, 
   Image, 
   StatusBar,
-  ScrollView,
   SafeAreaView,
   ActivityIndicator
 } from 'react-native';
@@ -18,7 +17,6 @@ import {
   Text, 
   Chip, 
   ProgressBar, 
-  Divider,
   Avatar,
   FAB,
   Portal,
@@ -31,178 +29,22 @@ import { styles } from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../App';
-
-// Mock Data
-const MOCK_RECIPES = [
-  {
-    id: 1001,
-    title: "Kale and Quinoa Salad with Lemon Vinaigrette",
-    image: "https://spoonacular.com/recipeImages/833951-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 25,
-    servings: 4,
-    healthScore: 92
-  },
-  {
-    id: 1002,
-    title: "Grilled Salmon with Avocado Salsa",
-    image: "https://spoonacular.com/recipeImages/645306-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 30,
-    servings: 2,
-    healthScore: 88
-  },
-  {
-    id: 1003,
-    title: "Mediterranean Chickpea Power Bowl",
-    image: "https://spoonacular.com/recipeImages/715540-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 20,
-    servings: 3,
-    healthScore: 94
-  },
-  {
-    id: 1004,
-    title: "Overnight Oats with Berries and Nuts",
-    image: "https://spoonacular.com/recipeImages/657095-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 10,
-    servings: 1,
-    healthScore: 85
-  },
-  {
-    id: 1005,
-    title: "Sweet Potato and Black Bean Chili",
-    image: "https://spoonacular.com/recipeImages/715424-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 45,
-    servings: 6,
-    healthScore: 90
-  },
-  {
-    id: 1006,
-    title: "Cauliflower Fried Rice with Tofu",
-    image: "https://spoonacular.com/recipeImages/716195-556x370.jpg",
-    imageType: "jpg",
-    readyInMinutes: 35,
-    servings: 4,
-    healthScore: 86
-  }
-];
-
-const MOCK_FEATURED_RECIPE = {
-  id: 9999,
-  title: "Superfood Breakfast Bowl Challenge",
-  image: "https://spoonacular.com/recipeImages/659135-556x370.jpg",
-  imageType: "jpg",
-  readyInMinutes: 15,
-  servings: 2,
-  healthScore: 95
-};
-
-// Types
-interface Recipe {
-  id: number;
-  title: string;
-  image: string;
-  imageType: string;
-  nutrition?: {
-    nutrients: {
-      name: string;
-      amount: number;
-      unit: string;
-    }[];
-  };
-  healthScore?: number;
-  readyInMinutes?: number;
-  servings?: number;
-}
-
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  daysToComplete: number;
-  currentDay?: number;
-  progress: number;
-  status: 'pending' | 'completed' | 'overdue' | 'active';
-  icon?: string;
-  reward?: string;
-  participants?: number;
-  recipeId?: number;
-  recipeImage?: string;
-  nutritionFocus?: string;
-}
+import { Recipe, Challenge } from '../../Models/ChallengesModel';
+import useChallengesViewModel from '../../ViewModels/ChallengesViewModel';
 
 const ChallengesScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed'>('all');
   const [showDialog, setShowDialog] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [randomRecipes, setRandomRecipes] = useState<Recipe[]>([]);
-  const [featuredRecipe, setFeaturedRecipe] = useState<Recipe | null>(null);
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
   const navigation = useNavigation<NavigationProps>();
-
-  useEffect(() => {
-    // Simulate API loading
-    setLoading(true);
-    setTimeout(() => {
-      loadMockData();
-      setLoading(false);
-    }, 1500);
-  }, []);
-
-  const loadMockData = () => {
-    setRandomRecipes(MOCK_RECIPES);
-    setFeaturedRecipe(MOCK_FEATURED_RECIPE);
-    
-    // Create challenges based on mock recipes
-    const newChallenges = MOCK_RECIPES.map((recipe: Recipe, index: number) => {
-      const categories = ['Nutrition', 'Healthy Eating', 'Weight Loss', 'Clean Eating', 'Meal Prep', 'Vegan'];
-      const difficulties = ['beginner', 'intermediate', 'advanced'] as const;
-      const statuses = ['pending', 'active', 'completed', 'active', 'active', 'pending'] as const;
-      const icons = ['food-apple', 'food', 'food-variant', 'pasta', 'fruit-watermelon', 'food-fork-drink'];
-      const nutritionFocus = ['Protein', 'Low Carb', 'Low Fat', 'High Fiber', 'Low Sugar', 'Balanced'];
-      
-      // Determine progress based on status
-      let progress = 0;
-      if (statuses[index] === 'completed') {
-        progress = 1.0;
-      } else if (statuses[index] === 'active') {
-        progress = Math.random() * 0.8 + 0.1; // Random progress between 10% and 90%
-      }
-      
-      // Days calculation
-      const daysToComplete = Math.floor(Math.random() * 20) + 7; // 7 to 27 days
-      const currentDay = statuses[index] === 'completed' 
-        ? daysToComplete 
-        : statuses[index] === 'active' 
-            ? Math.floor(progress * daysToComplete) 
-            : 0;
-            
-      return {
-        id: (index + 1).toString(),
-        title: `${recipe.title.substring(0, 30)}${recipe.title.length > 30 ? '...' : ''}`,
-        description: `Follow this ${recipe.readyInMinutes} minute recipe ${Math.floor(daysToComplete/7)} times per week for ${Math.ceil(daysToComplete/7)} weeks`,
-        category: categories[index % categories.length],
-        difficulty: difficulties[index % difficulties.length],
-        daysToComplete,
-        currentDay,
-        progress,
-        status: statuses[index],
-        icon: icons[index % icons.length],
-        reward: `${(index + 1) * 100} points`,
-        participants: Math.floor(Math.random() * 1000) + 100,
-        recipeId: recipe.id,
-        recipeImage: recipe.image,
-        nutritionFocus: nutritionFocus[index % nutritionFocus.length]
-      };
-    });
-    
-    setChallenges(newChallenges);
-  };
+  
+  const { 
+    loading, 
+    randomRecipes, 
+    featuredRecipe, 
+    challenges, 
+    error, 
+    fetchData 
+  } = useChallengesViewModel();
 
   const filteredChallenges = challenges.filter(challenge => {
     if (activeTab === 'all') return true;
@@ -360,7 +202,7 @@ const ChallengesScreen: React.FC = () => {
     <>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Icon name='arrow-back-ios' size={25} color={COLORS.primary}/>
+          <Icon name='arrow-back-ios' size={25} color={COLORS.primary}/>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Nutrition Challenges</Text>
         <IconButton 
@@ -532,6 +374,5 @@ const ChallengesScreen: React.FC = () => {
     </SafeAreaView>
   );
 };
-
 
 export default ChallengesScreen;

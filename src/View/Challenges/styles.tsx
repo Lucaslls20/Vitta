@@ -250,5 +250,15 @@ export const styles = StyleSheet.create({
     dialogDescription: {
       color: COLORS.textSecondary,
     },
+    errorContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    errorText: {
+      color: COLORS.error,
+      marginBottom: 20,
+    },
   });
   
