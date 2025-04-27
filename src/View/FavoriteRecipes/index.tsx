@@ -1,29 +1,31 @@
-import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  FlatList, 
-  TouchableOpacity, 
-  ActivityIndicator 
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import { 
-  Text, 
-  Card, 
-  Title, 
-  Paragraph, 
-  Appbar, 
-  IconButton, 
-  Snackbar 
+import {
+  Text,
+  Card,
+  Title,
+  Paragraph,
+  Appbar,
+  IconButton,
+  Snackbar,
 } from 'react-native-paper';
-import { COLORS } from '../Colors';
-import { styles } from './styles';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '../../App';
-import { useFavoritesViewModel } from '../../ViewModels/FavoritesRecipesViewModel';
-import { FavoriteRecipe } from '../../Models/FavoriteRecipeModel';
+import {COLORS} from '../Colors';
+import {styles} from './styles';
+import {useNavigation} from '@react-navigation/native';
+import {NavigationProps} from '../../App';
+import {useFavoritesViewModel} from '../../ViewModels/FavoritesRecipesViewModel';
+import {FavoriteRecipe} from '../../Models/FavoriteRecipeModel';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const FavoriteRecipesScreen = () => {
-  const { favoriteRecipes, loading, error, removeFavorite } = useFavoritesViewModel();
+  const {favoriteRecipes, loading, error, removeFavorite} =
+    useFavoritesViewModel();
   const navigation = useNavigation<NavigationProps>();
 
   const [snackbarVisible, setSnackbarVisible] = useState(false);
@@ -31,7 +33,7 @@ const FavoriteRecipesScreen = () => {
 
   const handleRecipePress = (recipe: FavoriteRecipe) => {
     if (navigation && navigation.navigate) {
-      navigation.navigate('SeeDetails', { recipeId: recipe.recipeId });
+      navigation.navigate('SeeDetails', {recipeId: recipe.recipeId});
     } else {
       console.error('Navigation is not configured correctly.');
     }
@@ -43,20 +45,16 @@ const FavoriteRecipesScreen = () => {
     setSnackbarVisible(true);
   };
 
-  const renderRecipeCard = ({ item }: { item: FavoriteRecipe }) => (
+  const renderRecipeCard = ({item}: {item: FavoriteRecipe}) => (
     <TouchableOpacity
       style={styles.cardContainer}
       onPress={() => handleRecipePress(item)}
-      activeOpacity={0.8}
-    >
+      activeOpacity={0.8}>
       <Card style={styles.card}>
-        <Card.Cover 
-          source={{ uri: item.imageUrl }} 
-          style={styles.cardImage}
-        />
+        <Card.Cover source={{uri: item.imageUrl}} style={styles.cardImage} />
         <Card.Content style={styles.cardContent}>
           <Title style={styles.recipeTitle}>{item.title}</Title>
-          
+
           <View style={styles.detailsRow}>
             <View style={styles.detailItem}>
               <IconButton
@@ -65,7 +63,9 @@ const FavoriteRecipesScreen = () => {
                 iconColor={COLORS.textSecondary}
                 style={styles.icon}
               />
-              <Paragraph style={styles.detailText}>{item.preparationTime}</Paragraph>
+              <Paragraph style={styles.detailText}>
+                {item.preparationTime}
+              </Paragraph>
             </View>
           </View>
         </Card.Content>
@@ -94,10 +94,9 @@ const FavoriteRecipesScreen = () => {
         {error ? error : "You don't have any favorite recipes yet"}
       </Text>
       {error && (
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.browseButton}
-          onPress={() => navigation.navigate('Login')}
-        >
+          onPress={() => navigation.navigate('Login')}>
           <Text style={styles.browseButtonText}>Login</Text>
         </TouchableOpacity>
       )}
@@ -107,26 +106,27 @@ const FavoriteRecipesScreen = () => {
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.header}>
-        <Appbar.BackAction 
-          onPress={() => navigation.goBack()} 
-          color={COLORS.white}
-        />
-        <Appbar.Content 
-          title="My Favorites Recipes" 
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back-ios" size={25} color={COLORS.textPrimary} />
+        </TouchableOpacity>
+        <Appbar.Content
+          title="My Favorites Recipes"
           titleStyle={styles.headerTitle}
         />
       </Appbar.Header>
-      
+
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={COLORS.primary} />
-          <Text style={styles.loadingText}>Loading your favorite recipes...</Text>
+          <Text style={styles.loadingText}>
+            Loading your favorite recipes...
+          </Text>
         </View>
       ) : (
         <FlatList
           data={favoriteRecipes}
           renderItem={renderRecipeCard}
-          keyExtractor={(item) => item.id}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={renderEmptyList}
           showsVerticalScrollIndicator={false}
@@ -143,9 +143,8 @@ const FavoriteRecipesScreen = () => {
         action={{
           label: 'Close',
           onPress: () => setSnackbarVisible(false),
-           textColor:COLORS.white
-        }}
-      >
+          textColor: COLORS.textPrimary,
+        }}>
         <Text style={styles.snackBarText}>{snackbarMessage}</Text>
       </Snackbar>
     </View>

@@ -7,11 +7,13 @@ export const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
   },
   header: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.secondary,
     elevation: 4,
+    marginLeft:15,
+    gap:10
   },
   headerTitle: {
-    color: COLORS.white,
+    color: COLORS.textPrimary,
     fontWeight: 'bold',
   },
   listContainer: {
@@ -129,11 +131,11 @@ export const styles = StyleSheet.create({
     height: 16,
   },
   snackbar:{
-    backgroundColor: COLORS.primary,
-    color: COLORS.white,
+    backgroundColor: COLORS.secondary,
+    color: COLORS.textPrimary,
   },
   snackBarText:{
-    color: COLORS.white,
+    color: COLORS.textPrimary,
     fontSize: 16,
   }
 });
