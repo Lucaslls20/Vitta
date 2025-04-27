@@ -48,7 +48,7 @@ const ChallengesScreen: React.FC = () => {
 
   const filteredChallenges = challenges.filter(challenge => {
     if (activeTab === 'all') return true;
-    if (activeTab === 'active') return challenge.status === 'active' || challenge.status === 'pending';
+    if (activeTab === 'active') return challenge.status === 'active'; // Removido 'pending'
     if (activeTab === 'completed') return challenge.status === 'completed';
     return true;
   });
@@ -302,16 +302,30 @@ const ChallengesScreen: React.FC = () => {
         color={COLORS.white} 
         style={{ backgroundColor: COLORS.gray }} 
       />
-      <Title style={styles.emptyTitle}>No Challenges Found</Title>
-      <Paragraph style={styles.emptyText}>Try adjusting your filters or create a new challenge</Paragraph>
-      <Button 
-        mode="contained" 
-        onPress={() => setShowDialog(true)} 
-        style={{ backgroundColor: COLORS.primary, marginTop: 16 }}
-        icon="plus"
-      >
-        Create Challenge
-      </Button>
+      <Title style={styles.emptyTitle}>
+        {activeTab === 'active' 
+          ? 'No Active Challenges' 
+          : activeTab === 'completed' 
+            ? 'No Completed Challenges' 
+            : 'No Challenges Found'}
+      </Title>
+      
+      <Paragraph style={styles.emptyText}>
+        {activeTab === 'all' && 'Try adjusting your filters or create a new challenge'}
+        {activeTab === 'active' && 'Start a challenge from the All tab to track your progress here'}
+        {activeTab === 'completed' && 'Complete some challenges to see your achievements here'}
+      </Paragraph>
+  
+      {activeTab === 'all' && (
+        <Button 
+          mode="contained" 
+          onPress={() => setShowDialog(true)} 
+          style={{ backgroundColor: COLORS.primary, marginTop: 16 }}
+          icon="plus"
+        >
+          Create Challenge
+        </Button>
+      )}
     </View>
   );
 

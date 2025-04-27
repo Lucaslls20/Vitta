@@ -15,7 +15,7 @@ const useChallengesViewModel = () => {
   const createChallengeFromRecipe = useCallback((recipe: Recipe, index: number): Challenge => {
     const categories = ['Nutrition', 'Healthy Eating', 'Weight Loss', 'Clean Eating', 'Meal Prep', 'Vegan'];
     const difficulties = ['beginner', 'intermediate', 'advanced'];
-    const statuses = ['pending', 'active', 'completed', 'active', 'active', 'pending'];
+    const statuses = ['pending'];
     const icons = ['food-apple', 'food', 'food-variant', 'pasta', 'fruit-watermelon', 'food-fork-drink'];
     const nutritionFocus = ['Protein', 'Low Carb', 'Low Fat', 'High Fiber', 'Low Sugar', 'Balanced'];
 
