@@ -150,9 +150,7 @@ const Settings = () => {
                 titleStyle={styles.listItemTitle}
                 left={props => <List.Icon {...props} icon="help-circle" color={COLORS.primary} />}
                 right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
-                onPress={() => {
-                  /* Navegação para tela de ajuda */
-                }}
+                onPress={() => navigation.navigate('HelpFeedbackScreen')}
               />
               <List.Item
                 title="Sobre o App"

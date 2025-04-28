@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative', 
   },
   headerTitle: {
     fontSize: 20,
@@ -185,4 +186,12 @@ export const styles = StyleSheet.create({
   keyboardAvoidingView: {
     flex: 1,
   },
+backButton:{
+  position: 'absolute',
+  left:  10,            
+  justifyContent: 'center', 
+  alignItems: 'center',
+  height: '100%',
+  paddingHorizontal: 8,     
+}
 });
