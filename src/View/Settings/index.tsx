@@ -58,7 +58,7 @@ const Settings = () => {
           <Appbar.Action
             icon="help-circle-outline"
             color={COLORS.textOnPrimary}
-            onPress={() => {}}
+            onPress={() => navigation.navigate('HelpFeedbackScreen')}
           />
         </Appbar.Header>
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
