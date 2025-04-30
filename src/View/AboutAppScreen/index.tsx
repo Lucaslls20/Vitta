@@ -45,37 +45,37 @@ type AppInfo = {
 const appInfo: AppInfo = {
   version: '1.0',
   developer: 'Lucas Santos',
-  lastUpdate: '29 de abril, 2025',
+  lastUpdate: 'April 29, 2025',
   description:
-    'Aplicativo de nutrição que ajuda os usuários a rastrear sua alimentação diária, encontrar receitas saudáveis e gerenciar suas metas nutricionais.',
+    'Nutrition app that helps users track their daily food intake, find healthy recipes, and manage their nutritional goals.',
   apiProviders: [
     {
       name: 'Spoonacular',
-      description: 'API de receitas e informações de alimentos',
+      description: 'Recipe and Food Information API',
       link: 'https://spoonacular.com/food-api',
       icon: 'food-apple',
     },
     {
       name: 'Nutritionix',
-      description: 'Base de dados nutricional detalhada',
+      description: 'Detailed nutritional data',
       link: 'https://www.nutritionix.com/business/api',
       icon: 'nutrition',
     },
     {
       name: 'Firebase Firestore',
-      description: 'Armazenamento em nuvem para dados do usuário',
+      description: 'Cloud storage for user data',
       link: 'https://firebase.google.com/products/firestore',
       icon: 'firebase',
     },
   ],
   features: [
-    'Busca de receitas saudáveis',
-    'Rastreador de nutrição diária',
-    'Análise nutricional de alimentos',
-    'Histórico de consumo alimentar',
-    'Sugestões personalizadas',
-    'Sincronização em nuvem',
-    'Modo offline',
+    'Healthy Recipe Search',
+    'Daily Nutrition Tracker',
+    'Food Nutrition Analysis',
+    'Food Consumption History',
+    'Personalized Suggestions',
+    'Cloud Sync',
+    'Offline Mode',
   ],
 };
 
@@ -113,12 +113,11 @@ const AboutScreen = () => {
           </View>
 
           <Text style={styles.appName}>Vitta</Text>
-        
         </Surface>
 
         <Card style={styles.card}>
           <Card.Content>
-            <Text style={styles.sectionTitle}>Sobre o Aplicativo</Text>
+            <Text style={styles.sectionTitle}>About the App</Text>
             <Text style={styles.description}>{appInfo.description}</Text>
 
             <View style={styles.infoRow}>
@@ -128,7 +127,7 @@ const AboutScreen = () => {
                 color={COLORS.textPrimary}
               />
               <Text style={styles.infoText}>
-                Desenvolvido por: {appInfo.developer}
+              Developed by: {appInfo.developer}
               </Text>
             </View>
 
@@ -139,7 +138,7 @@ const AboutScreen = () => {
                 color={COLORS.textPrimary}
               />
               <Text style={styles.infoText}>
-                Última atualização: {appInfo.lastUpdate}
+              Last update: {appInfo.lastUpdate}
               </Text>
             </View>
           </Card.Content>
@@ -147,7 +146,7 @@ const AboutScreen = () => {
 
         <Card style={styles.card}>
           <Card.Content>
-            <Text style={styles.sectionTitle}>Principais Recursos</Text>
+            <Text style={styles.sectionTitle}>Key Features</Text>
             {appInfo.features.map((feature, index) => (
               <View key={index} style={styles.featureItem}>
                 <MaterialCommunityIcons
@@ -163,7 +162,7 @@ const AboutScreen = () => {
 
         <Card style={styles.card}>
           <Card.Content>
-            <Text style={styles.sectionTitle}>Tecnologias Utilizadas</Text>
+            <Text style={styles.sectionTitle}>Technologies Used</Text>
             {appInfo.apiProviders.map((provider, index) => (
               <TouchableOpacity
                 key={index}
@@ -198,7 +197,7 @@ const AboutScreen = () => {
             onPress={() => openLink('mailto:contato@seuapp.com')}
             style={[styles.button, {backgroundColor: COLORS.primary}]}
             labelStyle={{color: COLORS.textOnPrimary}}>
-            Contato
+           Contact
           </Button>
 
           <Button
@@ -207,18 +206,18 @@ const AboutScreen = () => {
             onPress={() => openLink('market://details?id=com.seuapp.id')}
             style={[styles.button, {backgroundColor: COLORS.tertiary}]}
             labelStyle={{color: COLORS.text.primary}}>
-            Avaliar
+            Rate
           </Button>
         </View>
 
         <View style={styles.footerContainer}>
           <Text style={styles.copyright}>
-            © 2025 Todos os direitos reservados
+            © 2025 All rights reserved
           </Text>
-          <Text style={styles.appVersion}>Versão {appInfo.version}</Text>
+          <Text style={styles.appVersion}>Version {appInfo.version}</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('PrivacyPolicyScreen')}>
-            <Text style={styles.privacyLink}>Política de Privacidade</Text>
+            <Text style={styles.privacyLink}>Privacy Policy</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
