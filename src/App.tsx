@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./View/Autentication/Login";
 import Register from "./View/Autentication/Register";
@@ -26,9 +26,9 @@ import FavoriteRecipesScreen from "./View/FavoriteRecipes";
 import ChallengesScreen from "./View/Challenges";
 import HelpFeedbackScreen from "./View/HelpFeedbackScreen";
 import AboutScreen from "./View/AboutAppScreen/index";
-import { ThemeProvider } from "./View/theme";
-import { PaperProvider } from "react-native-paper"
-
+import { ThemeProvider, ThemeContext } from "./View/theme";
+import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
+import { StatusBar } from "react-native";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -71,64 +71,127 @@ const defaultScreenOptions = {
   gestureEnabled: false,
 };
 
-function TabRoutes() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveBackgroundColor: COLORS.secondary,
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.shadowApp,
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }: IconProps) => (
-            <Icon name="home" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Daily"
-        component={Health}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }: IconProps) => (
-            <MaterialIcons name="energy-savings-leaf" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Graphic"
-        component={GraphicScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }: IconProps) => (
-            <Foundation name="graph-bar" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }: IconProps) => (
-            <FontAwesome name="user-circle-o" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
+// Componente interno para gerenciar os temas da aplicação
+const ThemedApp = () => {
+  const { isDarkMode } = useContext(ThemeContext);
 
-export default function App() {
-  return (
-      <ThemeProvider>
+  // Customização do tema para o React Navigation
+  const navigationTheme = isDarkMode 
+    ? {
+        ...DarkTheme,
+        colors: {
+          ...DarkTheme.colors,
+          primary: COLORS.primary,
+          background: COLORS.text.primary,
+          card: COLORS.text.primary,
+          text: COLORS.text.light,
+        }
+      } 
+    : {
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          primary: COLORS.primary,
+          background: COLORS.white,
+          card: COLORS.white,
+          text: COLORS.text.primary,
+        }
+      };
 
-      <NavigationContainer>
+  // Customização do tema para o Paper
+  const paperTheme = isDarkMode
+    ? {
+        ...MD3DarkTheme,
+        colors: {
+          ...MD3DarkTheme.colors,
+          primary: COLORS.primary,
+          secondary: COLORS.secondary,
+          accent: COLORS.accent,
+          background: COLORS.text.primary,
+          surface: COLORS.text.primary,
+          text: COLORS.text.light,
+          onSurface: COLORS.text.secondary,
+          error: COLORS.error,
+        },
+      }
+    : {
+        ...MD3LightTheme,
+        colors: {
+          ...MD3LightTheme.colors,
+          primary: COLORS.primary,
+          secondary: COLORS.secondary,
+          accent: COLORS.accent,
+          background: COLORS.white,
+          surface: COLORS.white,
+          text: COLORS.text.primary,
+          onSurface: COLORS.text.secondary,
+          error: COLORS.error,
+        },
+      };
+
+  function TabRoutes() {
+    return (
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveBackgroundColor: COLORS.secondary,
+          tabBarActiveTintColor: COLORS.primary,
+          tabBarInactiveTintColor: COLORS.shadowApp,
+          tabBarStyle: { 
+            backgroundColor: isDarkMode ? COLORS.text.primary : COLORS.white 
+          }
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }: IconProps) => (
+              <Icon name="home" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Daily"
+          component={Health}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }: IconProps) => (
+              <MaterialIcons name="energy-savings-leaf" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Graphic"
+          component={GraphicScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }: IconProps) => (
+              <Foundation name="graph-bar" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ color, size }: IconProps) => (
+              <FontAwesome name="user-circle-o" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
+
+  return (
+    <PaperProvider theme={paperTheme}>
+      <StatusBar 
+        backgroundColor={COLORS.primary} 
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'} 
+      />
+      <NavigationContainer theme={navigationTheme}>
         <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
           <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
@@ -142,10 +205,18 @@ export default function App() {
           <Stack.Screen name='Goals' component={Goals} options={defaultScreenOptions} />
           <Stack.Screen name='FavoriteRecipeScreen' component={FavoriteRecipesScreen} options={defaultScreenOptions} />
           <Stack.Screen name='ChallengesScreen' component={ChallengesScreen} options={defaultScreenOptions} />
-          <Stack.Screen name='HelpFeedbackScreen' component={HelpFeedbackScreen } options={defaultScreenOptions} />
+          <Stack.Screen name='HelpFeedbackScreen' component={HelpFeedbackScreen} options={defaultScreenOptions} />
           <Stack.Screen name='AboutScreen' component={AboutScreen} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
-      </ThemeProvider>
+    </PaperProvider>
+  );
+};
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <ThemedApp />
+    </ThemeProvider>
   );
 }
