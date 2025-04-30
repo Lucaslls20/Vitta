@@ -26,7 +26,7 @@ import FavoriteRecipesScreen from "./View/FavoriteRecipes";
 import ChallengesScreen from "./View/Challenges";
 import HelpFeedbackScreen from "./View/HelpFeedbackScreen";
 import AboutScreen from "./View/AboutAppScreen/index";
-import { theme } from "./View/theme";
+import { ThemeProvider } from "./View/theme";
 import { PaperProvider } from "react-native-paper"
 
 
@@ -126,7 +126,8 @@ function TabRoutes() {
 
 export default function App() {
   return (
-    <PaperProvider theme={theme}>
+      <ThemeProvider>
+
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashScreen">
           <Stack.Screen name="SplashScreen" component={SplashScreen} options={{ headerShown: false }} />
@@ -145,6 +146,6 @@ export default function App() {
           <Stack.Screen name='AboutScreen' component={AboutScreen} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
-    </PaperProvider>
+      </ThemeProvider>
   );
 }

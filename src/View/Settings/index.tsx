@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, ScrollView, StatusBar, Image } from 'react-native';
 import { styles } from './styles';
 import {
@@ -8,28 +8,21 @@ import {
   Divider,
   Text,
   Button,
-  Dialog,
-  Portal,
+  Surface,
   Provider as PaperProvider,
   IconButton,
-  Surface
 } from 'react-native-paper';
 import { COLORS } from '../Colors';
 import { NavigationProps } from '../../App';
 import { useNavigation } from '@react-navigation/native';
-import useSettingsViewModel from '../../ViewModels/SettingsViewModel'; // Atualize o caminho conforme necessário
+import useSettingsViewModel from '../../ViewModels/DarkModeViewModel'; // Certifique-se de que o caminho está correto
 import { LogoutView } from '../../Components/LogOut';
 
 const Settings = () => {
-  const { user, loading } = useSettingsViewModel();
-  const [darkMode, setDarkMode] = useState(false);
-  const [notifications, setNotifications] = useState(true);
-  const [locationServices, setLocationServices] = useState(true);
   const navigation = useNavigation<NavigationProps>();
 
-  const toggleDarkMode = () => setDarkMode(!darkMode);
-  const toggleNotifications = () => setNotifications(!notifications);
-  const toggleLocationServices = () => setLocationServices(!locationServices);
+  // Obtém os dados do ViewModel
+  const { user, loading, settings, toggleDarkMode, toggleNotifications } = useSettingsViewModel();
 
   return (
     <PaperProvider>
@@ -56,7 +49,9 @@ const Settings = () => {
           <Surface style={styles.profileCard}>
             <View style={styles.profileSection}>
               <Image
-                source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' }}
+                source={{
+                  uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s',
+                }}
                 style={[styles.userAvatar, { width: 80, height: 80, borderRadius: 40 }]}
               />
               <View style={styles.profileInfo}>
@@ -88,8 +83,15 @@ const Settings = () => {
               <List.Item
                 title="Modo Escuro"
                 titleStyle={styles.listItemTitle}
-                left={props => <List.Icon {...props} icon="brightness-4" color={COLORS.primary} />}
-                right={props => <Switch value={darkMode} onValueChange={toggleDarkMode} color={COLORS.primary} />}
+                left={(props) => (
+                  <List.Icon {...props} icon="brightness-4" color={COLORS.primary} />
+                )}
+                right={() => (
+                  <Switch
+                    value={settings.darkMode}
+                    onValueChange={toggleDarkMode}
+                  />
+                )}
               />
             </List.Section>
             <Divider style={styles.divider} />
@@ -102,8 +104,15 @@ const Settings = () => {
                 titleStyle={styles.listItemTitle}
                 description="Receba notificações sobre atualizações e novidades"
                 descriptionStyle={styles.listItemDescription}
-                left={props => <List.Icon {...props} icon="bell" color={COLORS.primary} />}
-                right={props => <Switch value={notifications} onValueChange={toggleNotifications} color={COLORS.primary} />}
+                left={(props) => (
+                  <List.Icon {...props} icon="bell" color={COLORS.primary} />
+                )}
+                right={() => (
+                  <Switch
+                    value={settings.notifications}
+                    onValueChange={toggleNotifications}
+                  />
+                )}
               />
             </List.Section>
             <Divider style={styles.divider} />
@@ -112,21 +121,39 @@ const Settings = () => {
             <List.Section>
               <List.Subheader style={styles.sectionHeader}>Privacidade</List.Subheader>
               <List.Item
-                title="Terms and Conditions"
+                title="Termos e Condições"
                 titleStyle={styles.listItemTitle}
-                description="Read about the terms and conditions of the application."
+                description="Leia sobre os termos e condições do aplicativo."
                 descriptionStyle={styles.listItemDescription}
-                left={props => <List.Icon {...props} icon="file-document-multiple-outline" color={COLORS.primary} />}
-                right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
+                left={(props) => (
+                  <List.Icon
+                    {...props}
+                    icon="file-document-multiple-outline"
+                    color={COLORS.primary}
+                  />
+                )}
+                right={(props) => (
+                  <IconButton
+                    {...props}
+                    icon="chevron-right"
+                    iconColor={COLORS.textSecondary}
+                  />
+                )}
               />
               <List.Item
                 title="Política de Privacidade"
                 titleStyle={styles.listItemTitle}
-                left={props => <List.Icon {...props} icon="shield-account" color={COLORS.primary} />}
-                right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
-                onPress={() => 
-                  navigation.navigate('PrivacyPolicyScreen')
-                }
+                left={(props) => (
+                  <List.Icon {...props} icon="shield-account" color={COLORS.primary} />
+                )}
+                right={(props) => (
+                  <IconButton
+                    {...props}
+                    icon="chevron-right"
+                    iconColor={COLORS.textSecondary}
+                  />
+                )}
+                onPress={() => navigation.navigate('PrivacyPolicyScreen')}
               />
             </List.Section>
           </Surface>
@@ -138,8 +165,16 @@ const Settings = () => {
               <List.Item
                 title="Ajuda e Feedback"
                 titleStyle={styles.listItemTitle}
-                left={props => <List.Icon {...props} icon="help-circle" color={COLORS.primary} />}
-                right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
+                left={(props) => (
+                  <List.Icon {...props} icon="help-circle" color={COLORS.primary} />
+                )}
+                right={(props) => (
+                  <IconButton
+                    {...props}
+                    icon="chevron-right"
+                    iconColor={COLORS.textSecondary}
+                  />
+                )}
                 onPress={() => navigation.navigate('HelpFeedbackScreen')}
               />
               <List.Item
@@ -147,13 +182,21 @@ const Settings = () => {
                 titleStyle={styles.listItemTitle}
                 description="Versão 1.0.0"
                 descriptionStyle={styles.listItemDescription}
-                left={props => <List.Icon {...props} icon="information" color={COLORS.primary} />}
-                right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
+                left={(props) => (
+                  <List.Icon {...props} icon="information" color={COLORS.primary} />
+                )}
+                right={(props) => (
+                  <IconButton
+                    {...props}
+                    icon="chevron-right"
+                    iconColor={COLORS.textSecondary}
+                  />
+                )}
                 onPress={() => navigation.navigate('AboutScreen')}
               />
             </List.Section>
           </Surface>
-        <LogoutView />
+          <LogoutView />
         </ScrollView>
       </View>
     </PaperProvider>
