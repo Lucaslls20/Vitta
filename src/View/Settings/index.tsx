@@ -25,21 +25,11 @@ const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
   const [locationServices, setLocationServices] = useState(true);
-  const [logoutDialogVisible, setLogoutDialogVisible] = useState(false);
   const navigation = useNavigation<NavigationProps>();
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
   const toggleNotifications = () => setNotifications(!notifications);
   const toggleLocationServices = () => setLocationServices(!locationServices);
-
-  const showLogoutDialog = () => setLogoutDialogVisible(true);
-  const hideLogoutDialog = () => setLogoutDialogVisible(false);
-
-  const handleLogout = () => {
-    // Implementar lógica de logout aqui
-    hideLogoutDialog();
-    // Navegar para tela de login ou realizar outras ações necessárias
-  };
 
   return (
     <PaperProvider>
@@ -159,16 +149,11 @@ const Settings = () => {
                 descriptionStyle={styles.listItemDescription}
                 left={props => <List.Icon {...props} icon="information" color={COLORS.primary} />}
                 right={props => <IconButton {...props} icon="chevron-right" iconColor={COLORS.textSecondary} />}
-                onPress={() => {
-                  /* Exibir informações do app */
-                }}
+                onPress={() => navigation.navigate('AboutScreen')}
               />
             </List.Section>
           </Surface>
-
-
         <LogoutView />
-        
         </ScrollView>
       </View>
     </PaperProvider>

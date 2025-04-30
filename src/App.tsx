@@ -25,6 +25,7 @@ import Goals from "./View/Goals";
 import FavoriteRecipesScreen from "./View/FavoriteRecipes";
 import ChallengesScreen from "./View/Challenges";
 import HelpFeedbackScreen from "./View/HelpFeedbackScreen";
+import AboutScreen from "./View/AboutAppScreen/index";
 import { theme } from "./View/theme";
 import { PaperProvider } from "react-native-paper"
 
@@ -43,6 +44,7 @@ export type RootStackParamList = {
   FavoriteRecipeScreen: undefined
   ChallengesScreen: undefined
   HelpFeedbackScreen: undefined
+  AboutScreen: undefined
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -140,6 +142,7 @@ export default function App() {
           <Stack.Screen name='FavoriteRecipeScreen' component={FavoriteRecipesScreen} options={defaultScreenOptions} />
           <Stack.Screen name='ChallengesScreen' component={ChallengesScreen} options={defaultScreenOptions} />
           <Stack.Screen name='HelpFeedbackScreen' component={HelpFeedbackScreen } options={defaultScreenOptions} />
+          <Stack.Screen name='AboutScreen' component={AboutScreen} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
