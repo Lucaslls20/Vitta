@@ -33,49 +33,49 @@ import {NavigationProps} from '../../App';
 
 // Tipos de problemas que o usuário pode selecionar
 const problemTypes = [
-  {id: 1, label: 'Erro no aplicativo', icon: 'alert-circle'},
-  {id: 2, label: 'Problema de desempenho', icon: 'speedometer-slow'},
-  {id: 3, label: 'Sugestão de melhoria', icon: 'lightbulb-on'},
-  {id: 4, label: 'Problema com conta', icon: 'account-question'},
-  {id: 5, label: 'Outro', icon: 'help-circle'},
+  {id: 1, label: 'Application error', icon: 'alert-circle'},
+  {id: 2, label: 'Performance issue', icon: 'speedometer-slow'},
+  {id: 3, label: 'Improvement suggestion', icon: 'lightbulb-on'},
+  {id: 4, label: 'Account problem', icon: 'account-question'},
+  {id: 5, label: 'Another problem', icon: 'help-circle'},
 ];
 
 // FAQs comuns
 const faqs = [
   {
     id: 1,
-    question: 'Como alterar minhas informações pessoais?',
+    question: 'How do I change my personal information?',
     answer:
-      'Acesse o seu perfil clicando no ícone no canto inferior direito da tela. Em seguida, toque em "Editar Perfil" para modificar suas informações pessoais.',
+      'Access your profile by clicking on the icon in the bottom right corner of the screen. Then tap on "Edit Profile" to modify your personal information.',
   },
   {
     id: 2,
-    question: 'Como sincronizar dados com outros dispositivos?',
+    question: 'How to sync data with other devices?',
     answer:
-      'O Vitta sincroniza automaticamente seus dados quando você está conectado à internet. Verifique se você está usando a mesma conta em todos os dispositivos.',
+      "Vitta automatically syncs your data when you're connected to the internet. Make sure you're using the same account on all your devices.",
   },
   {
     id: 3,
-    question: 'Posso excluir meus dados do aplicativo?',
+    question: 'Can I delete my app data?',
     answer:
-      'Sim, você pode excluir dados específicos ou sua conta completa. Acesse "Configurações > Privacidade > Excluir Dados" para obter essas opções.',
+      'Yes, you can delete specific data or your entire account. Go to "Settings > Privacy > Delete Data" for these options.',
   },
   {
     id: 4,
-    question: 'Como acompanhar meu progresso semanal?',
+    question: 'How do I track my weekly progress?',
     answer:
-      'Na tela inicial, toque em "Relatórios" para visualizar gráficos e estatísticas do seu progresso semanal, mensal ou anual.',
+      'On the Home screen, tap "Reports" to view graphs and statistics of your weekly, monthly, or yearly progress.',
   },
   {
     id: 5,
-    question: 'O aplicativo funciona offline?',
+    question: 'Does the app work offline?',
     answer:
-      'Sim, o Vitta funciona offline para a maioria das funções. No entanto, recursos como sincronização e atualizações requerem conexão com a internet.',
+      'Yes, Vitta works offline for most functions. However, features like syncing and updates require an internet connection.',
   },
 ];
 
 const HelpFeedbackScreen = () => {
-  const [activeTab, setActiveTab] = useState<'ajuda' | 'feedback'>('ajuda');
+  const [activeTab, setActiveTab] = useState<'Help' | 'feedback'>('Help');
   const [feedbackText, setFeedbackText] = useState<string>('');
   const [selectedProblemType, setSelectedProblemType] = useState<number | null>(
     null,
@@ -102,7 +102,7 @@ const HelpFeedbackScreen = () => {
     // Aqui você implementaria o envio do feedback para o backend
     Alert.alert(
       'Feedback enviado',
-      'Obrigado por nos ajudar a melhorar o Vitta! Seu feedback foi enviado com sucesso.',
+      'Obrigado por nos Helpr a melhorar o Vitta! Seu feedback foi enviado com sucesso.',
       [
         {
           text: 'OK',
@@ -146,7 +146,7 @@ const HelpFeedbackScreen = () => {
       <Surface style={styles.searchSection}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Pesquisar ajuda..."
+          placeholder="Search help..."
           mode="outlined"
           left={<TextInput.Icon icon="magnify" color={COLORS.textSecondary} />}
           outlineColor={COLORS.border}
@@ -154,7 +154,7 @@ const HelpFeedbackScreen = () => {
         />
       </Surface>
 
-      <Text style={styles.sectionTitle}>Perguntas frequentes</Text>
+      <Text style={styles.sectionTitle}>FAQ</Text>
 
       {faqs.map(faq => (
         <List.Accordion
@@ -181,16 +181,16 @@ const HelpFeedbackScreen = () => {
       ))}
 
       <View style={styles.contactSection}>
-        <Text style={styles.sectionTitle}>Ainda precisa de ajuda?</Text>
+        <Text style={styles.sectionTitle}>Ainda precisa de Help?</Text>
         <Button
           mode="contained"
           icon="email"
           onPress={() =>
-            Alert.alert('Contato', 'Envie um email para suporte@vitta.com')
+            Alert.alert('Contact', 'Send an email to suporte@vitta.com')
           }
           style={styles.contactButton}
           buttonColor={COLORS.primary}>
-          Contato por Email
+          Contact by Email
         </Button>
         <Button
           mode="outlined"
@@ -198,12 +198,12 @@ const HelpFeedbackScreen = () => {
           onPress={() =>
             Alert.alert(
               'Chat',
-              'O chat de suporte está disponível de segunda a sexta, das 8h às 18h.',
+              'Support chat is available Monday through Friday, 8am to 6pm.',
             )
           }
           style={styles.contactButton}
           textColor={COLORS.primary}>
-          Chat de Suporte
+          Support Chat
         </Button>
       </View>
 
@@ -217,10 +217,10 @@ const HelpFeedbackScreen = () => {
       style={styles.keyboardAvoidingView}>
       <ScrollView style={styles.tabContent}>
         <Text style={styles.feedbackTitle}>
-          Sua opinião é importante para melhorarmos o Vitta!
+        Your opinion is important to us to improve Vitta!
         </Text>
 
-        <Text style={styles.label}>Selecione o tipo de problema:</Text>
+        <Text style={styles.label}>Select the type of problem:</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -256,11 +256,11 @@ const HelpFeedbackScreen = () => {
           ))}
         </ScrollView>
 
-        <Text style={styles.label}>Detalhes:</Text>
+        <Text style={styles.label}>Details:</Text>
         <TextInput
           value={feedbackText}
           onChangeText={setFeedbackText}
-          placeholder="Descreva seu problema ou sugestão em detalhes..."
+          placeholder="Describe your problem or suggestion in detail..."
           multiline
           numberOfLines={5}
           mode="outlined"
@@ -270,18 +270,18 @@ const HelpFeedbackScreen = () => {
         />
 
         <Text style={styles.optionalLabel}>
-          Opcional: Anexar captura de tela ou vídeo
+        Optional: Attach screenshot or video
         </Text>
         <TouchableOpacity
           style={styles.attachmentButton}
           onPress={() =>
             Alert.alert(
-              'Anexo',
-              'Funcionalidade de anexo será implementada em breve.',
+              'Annex',
+              'Attachment functionality will be implemented soon.',
             )
           }>
           <Icon name="paperclip" size={24} color={COLORS.primary} />
-          <Text style={styles.attachmentButtonText}>Adicionar anexo</Text>
+          <Text style={styles.attachmentButtonText}>Add Annex</Text>
         </TouchableOpacity>
 
         <Button
@@ -289,18 +289,18 @@ const HelpFeedbackScreen = () => {
           onPress={handleSendFeedback}
           style={styles.sendButton}
           buttonColor={COLORS.primary}>
-          Enviar Feedback
+          Send Feedback
         </Button>
 
         <View style={styles.rateSection}>
-          <Text style={styles.rateTitle}>Avalie o Vitta</Text>
+          <Text style={styles.rateTitle}>Rate Vitta</Text>
           <Button
             mode="outlined"
             icon="star"
             onPress={showDialog}
             style={styles.rateButton}
             textColor={COLORS.primary}>
-            Dar uma nota
+            Give a note
           </Button>
         </View>
 
@@ -310,11 +310,11 @@ const HelpFeedbackScreen = () => {
             onDismiss={hideDialog}
             style={styles.dialog}>
             <Dialog.Title style={styles.dialogTitle}>
-              Avalie sua experiência
+            Rate your experience
             </Dialog.Title>
             <Dialog.Content>
               <Text style={styles.dialogText}>
-                O quanto você está satisfeito com o Vitta?
+              How satisfied are you with Vitta?
               </Text>
               <View style={styles.starsContainer}>
                 {[1, 2, 3, 4, 5].map(star => renderStar(star))}
@@ -322,13 +322,13 @@ const HelpFeedbackScreen = () => {
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={hideDialog} textColor={COLORS.textSecondary}>
-                Cancelar
+                Cancel
               </Button>
               <Button
                 onPress={submitRating}
                 disabled={rating === 0}
                 textColor={COLORS.primary}>
-                Enviar
+               Send
               </Button>
             </Dialog.Actions>
           </Dialog>
@@ -347,26 +347,26 @@ const HelpFeedbackScreen = () => {
           style={styles.backButton}>
           <Arrow name="arrow-back-ios" size={25} color={COLORS.white} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Ajuda e Feedback</Text>
+        <Text style={styles.headerTitle}>Help and Feedback</Text>
       </View>
 
       <View style={styles.tabBar}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'ajuda' && styles.activeTab]}
-          onPress={() => setActiveTab('ajuda')}>
+          style={[styles.tab, activeTab === 'Help' && styles.activeTab]}
+          onPress={() => setActiveTab('Help')}>
           <Icon
             name="help-circle"
             size={24}
             color={
-              activeTab === 'ajuda' ? COLORS.primary : COLORS.textSecondary
+              activeTab === 'Help' ? COLORS.primary : COLORS.textSecondary
             }
           />
           <Text
             style={[
               styles.tabText,
-              activeTab === 'ajuda' && styles.activeTabText,
+              activeTab === 'Help' && styles.activeTabText,
             ]}>
-            Ajuda
+            Help
           </Text>
         </TouchableOpacity>
 
@@ -392,7 +392,7 @@ const HelpFeedbackScreen = () => {
 
       <Divider />
 
-      {activeTab === 'ajuda' ? renderHelpTab() : renderFeedbackTab()}
+      {activeTab === 'Help' ? renderHelpTab() : renderFeedbackTab()}
     </View>
   );
 };
