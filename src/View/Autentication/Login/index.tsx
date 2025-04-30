@@ -78,6 +78,7 @@ export default function Login({ navigation }: any) {
                     icon="email"
                     keyboardType="email-address"
                     style={styles.input}
+                    placeHolder=""
                 />
 
                 <CustomTextInput
@@ -87,6 +88,7 @@ export default function Login({ navigation }: any) {
                     icon="lock"
                     secureTextEntry
                     style={styles.input}
+                    placeHolder=""
                 />
 
                 <Text style={styles.forgotPassword}>
