@@ -44,7 +44,7 @@ const Settings = () => {
           onPress={() => navigation.goBack()}
         />
         <Appbar.Content
-          title="Configurações"
+          title="Settings"
           titleStyle={styles.appbarTitle}
           color={COLORS.textOnPrimary}
         />
@@ -66,7 +66,7 @@ const Settings = () => {
             />
             <View style={styles.profileInfo}>
               <Text style={[styles.profileName, { color: textColor }]}>
-                {user?.displayName || 'Nome do Usuário'}
+                {user?.displayName || 'User name'}
               </Text>
               <Text style={[styles.profileEmail, { color: textColor }]}>
                 {user?.email || 'usuario@example.com'}
@@ -79,7 +79,7 @@ const Settings = () => {
                 style={styles.editProfileButton}
                 onPress={() => navigation.navigate('EditProfile')}
               >
-                Editar perfil
+                Edit Profile
               </Button>
             </View>
           </View>
@@ -89,9 +89,9 @@ const Settings = () => {
         <Surface style={[styles.settingsCard, { backgroundColor: surfaceColor }]}>
           {/* Seção de Aparência */}
           <List.Section>
-            <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Aparência</List.Subheader>
+            <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Appearance</List.Subheader>
             <List.Item
-              title="Modo Escuro"
+              title="Dark Mode"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
               left={(props) => (
                 <List.Icon {...props} icon="brightness-4" color={COLORS.primary} />
@@ -108,11 +108,11 @@ const Settings = () => {
 
           {/* Seção de Notificações */}
           <List.Section>
-            <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Notificações</List.Subheader>
+            <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Notifications</List.Subheader>
             <List.Item
-              title="Notificações Push"
+              title="Push Notifications"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
-              description="Receba notificações sobre atualizações e novidades"
+              description="Receive notifications about updates and news"
               descriptionStyle={[styles.listItemDescription, { color: isDarkMode ? '#ccc' : COLORS.textSecondary }]}
               left={(props) => (
                 <List.Icon {...props} icon="bell" color={COLORS.primary} />
@@ -131,9 +131,9 @@ const Settings = () => {
           <List.Section>
             <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Privacidade</List.Subheader>
             <List.Item
-              title="Termos e Condições"
+              title="Terms and Conditions"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
-              description="Leia sobre os termos e condições do aplicativo."
+              description="Read about the terms and conditions of the app"
               descriptionStyle={[styles.listItemDescription, { color: isDarkMode ? '#ccc' : COLORS.textSecondary }]}
               left={(props) => (
                 <List.Icon
@@ -151,7 +151,7 @@ const Settings = () => {
               )}
             />
             <List.Item
-              title="Política de Privacidade"
+              title="Privacy Policy"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
               left={(props) => (
                 <List.Icon {...props} icon="shield-account" color={COLORS.primary} />
@@ -173,7 +173,7 @@ const Settings = () => {
           <List.Section>
             <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Suporte</List.Subheader>
             <List.Item
-              title="Ajuda e Feedback"
+              title="Help & Feedback"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
               left={(props) => (
                 <List.Icon {...props} icon="help-circle" color={COLORS.primary} />
@@ -188,7 +188,7 @@ const Settings = () => {
               onPress={() => navigation.navigate('HelpFeedbackScreen')}
             />
             <List.Item
-              title="Sobre o App"
+              title="About the App"
               titleStyle={[styles.listItemTitle, { color: textColor }]}
               description="Versão 1.0.0"
               descriptionStyle={[styles.listItemDescription, { color: isDarkMode ? '#ccc' : COLORS.textSecondary }]}
