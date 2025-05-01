@@ -9,18 +9,14 @@ import useProfileViewModel from '../../../ViewModels/ProfileHeaderViewModel';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../../App';
 import { LogoutView } from '../../../Components/LogOut';
-import { PaperProvider, Provider } from 'react-native-paper';
+import useStatsViewModel from '../../../ViewModels/StatsViewModel';
 
 const Profile: React.FC = () => {
   const { user, loading } = useProfileViewModel();
-
+  const { statsData }    = useStatsViewModel()
   const navigation = useNavigation<NavigationProps>()
 
-  const statsData: StatItem[] = [
-    { value: '25', label: 'Workouts' },
-    { value: '1.5K', label: 'Calories Today' },
-    { value: '12', label: 'km' },
-  ];
+
 
   const fitnessItems: ListItemProps[] = [
    

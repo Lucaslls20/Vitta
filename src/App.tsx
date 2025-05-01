@@ -189,7 +189,7 @@ const ThemedApp = () => {
     <PaperProvider theme={paperTheme}>
       <StatusBar 
         backgroundColor={COLORS.primary} 
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'} 
+        barStyle={isDarkMode ? 'dark-content' : 'light-content'} 
       />
       <NavigationContainer theme={navigationTheme}>
         <Stack.Navigator initialRouteName="SplashScreen">
