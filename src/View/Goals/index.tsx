@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { FAB, Provider as PaperProvider, Divider } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { theme } from '../theme';
 import { COLORS } from '../Colors';
 import { styles } from './styles';
 import Header from '../../Components/Goals/Header';
@@ -51,7 +50,7 @@ const GoalsScreen: React.FC = () => {
   }, []);
 
   return (
-    <PaperProvider theme={theme}>
+    <PaperProvider >
       <Header />
       <View style={[styles.container, { paddingBottom: insets.bottom }]}>
         <PeriodSelector selectedPeriod={selectedPeriod} setSelectedPeriod={setSelectedPeriod} />
