@@ -6,14 +6,7 @@ import { pt } from 'date-fns/locale';
 import * as Animatable from 'react-native-animatable';
 import { COLORS } from '../../../View/Colors';
 import { styles } from '../../../View/Goals/styles';
-
-export interface Goal {
-  id: string;
-  title: string;
-  description: string;
-  deadline: Date;
-  completed: boolean;
-}
+import { Goal } from '../../../Models/GoalsModel';
 
 interface GoalCardProps {
   goal: Goal;

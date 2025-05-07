@@ -7,12 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { pt } from 'date-fns/locale';
 import {styles} from '../../../View/Goals/styles';
-
-interface NewGoal {
-  title: string;
-  description: string;
-  deadline: Date;
-}
+import { NewGoal } from '../../../Models/GoalsModel';
 
 interface AddGoalModalProps {
   modalVisible: boolean;
