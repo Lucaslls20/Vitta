@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, ScrollView, StatusBar, Image } from 'react-native';
+import { View, ScrollView, StatusBar, Image, ActivityIndicator } from 'react-native';
 import { styles } from './styles';
 import {
   Appbar,
@@ -15,6 +15,7 @@ import { COLORS } from '../Colors';
 import { NavigationProps } from '../../App';
 import { useNavigation } from '@react-navigation/native';
 import useSettingsViewModel from '../../ViewModels/DarkModeViewModel';
+import useProfileViewModel from '../../ViewModels/SettingsViewModel';
 import { LogoutView } from '../../Components/LogOut';
 import { ThemeContext } from '../theme';
 import { darkTheme, lightTheme } from '../Context';
@@ -24,13 +25,25 @@ const Settings = () => {
   const { isDarkMode } = useContext(ThemeContext);
 
   // Obtém os dados do ViewModel
-  const { user, loading, settings, toggleDarkMode, toggleNotifications } = useSettingsViewModel();
+  const { user: profileUser, loading: profileLoading } = useProfileViewModel();
+  const { settings, toggleDarkMode, toggleNotifications, loading: settingsLoading } = useSettingsViewModel();
+
+  const loading = profileLoading || settingsLoading;
 
   // Determinar as cores com base no tema atual
   const theme = isDarkMode ? darkTheme : lightTheme;
   const backgroundColor = theme.background;
   const textColor = theme.text;
   const surfaceColor = theme.surface;
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { backgroundColor: COLORS.white, justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
+
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -66,10 +79,10 @@ const Settings = () => {
             />
             <View style={styles.profileInfo}>
               <Text style={[styles.profileName, { color: textColor }]}>
-                {user?.displayName || 'User name'}
+              {profileUser?.displayName.toUpperCase() || 'Usuário'}
               </Text>
               <Text style={[styles.profileEmail, { color: textColor }]}>
-                {user?.email || 'usuario@example.com'}
+              {profileUser?.email || ''}
               </Text>
               <Button
                 mode="text"
