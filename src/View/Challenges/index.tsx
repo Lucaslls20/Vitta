@@ -31,24 +31,30 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../App';
 import { Recipe, Challenge } from '../../Models/ChallengesModel';
 import useChallengesViewModel from '../../ViewModels/ChallengesViewModel';
+import { auth } from '../../Services/firebaseConfig';
 
 const ChallengesScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'active' | 'completed'>('all');
   const [showDialog, setShowDialog] = useState(false);
   const navigation = useNavigation<NavigationProps>();
+
+  const userId = auth.currentUser?.uid ?? '';
   
   const { 
     loading, 
-    randomRecipes, 
     featuredRecipe, 
     challenges, 
-    error, 
-    fetchData 
+    fetchData,
+    handleJoinChallenge,
+    handleTrackProgress,
+    handleViewResults,
+    handleChefHatAction,
+    handleMoreOptions
   } = useChallengesViewModel();
 
   const filteredChallenges = challenges.filter(challenge => {
     if (activeTab === 'all') return true;
-    if (activeTab === 'active') return challenge.status === 'active'; // Removido 'pending'
+    if (activeTab === 'active') return challenge.status === 'active';
     if (activeTab === 'completed') return challenge.status === 'completed';
     return true;
   });
@@ -155,7 +161,7 @@ const ChallengesScreen: React.FC = () => {
         {item.status === 'pending' && (
           <Button 
             mode="contained" 
-            onPress={() => {}} 
+            onPress={() => handleJoinChallenge(item, userId)} 
             style={styles.joinButton}
             labelStyle={styles.buttonLabel}
           >
@@ -165,7 +171,7 @@ const ChallengesScreen: React.FC = () => {
         {item.status === 'active' && (
           <Button 
             mode="contained" 
-            onPress={() => {}} 
+            onPress={() => handleTrackProgress(item, userId)}
             style={styles.trackButton}
             labelStyle={styles.buttonLabel}  
           >
@@ -175,7 +181,7 @@ const ChallengesScreen: React.FC = () => {
         {item.status === 'completed' && (
           <Button 
             mode="outlined" 
-            onPress={() => {}} 
+            onPress={() => handleViewResults(item, userId)} 
             style={styles.completedButton}
             labelStyle={{ color: COLORS.status.completed }}
           >
@@ -186,13 +192,13 @@ const ChallengesScreen: React.FC = () => {
           icon="chef-hat" 
           size={24} 
           iconColor={COLORS.textSecondary} 
-          onPress={() => {}}
+          onPress={() => handleChefHatAction(item.id)}
         />
         <IconButton 
           icon="dots-vertical" 
           size={24} 
           iconColor={COLORS.textSecondary} 
-          onPress={() => {}}
+          onPress={() => handleMoreOptions(item.id)}
         />
       </Card.Actions>
     </Card>
@@ -347,6 +353,8 @@ const ChallengesScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={renderHeaderComponent}
           ListEmptyComponent={renderEmptyComponent}
+          refreshing={loading}
+          onRefresh={fetchData}
         />
       )}
       
@@ -379,12 +387,6 @@ const ChallengesScreen: React.FC = () => {
         </Dialog>
       </Portal>
       
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        color={COLORS.white}
-        onPress={() => setShowDialog(true)}
-      />
     </SafeAreaView>
   );
 };
