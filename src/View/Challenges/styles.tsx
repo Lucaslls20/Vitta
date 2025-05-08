@@ -8,16 +8,23 @@ export const styles = StyleSheet.create({
     },
     header: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 16,
       paddingTop: 8,
       paddingBottom: 8,
+      gap:8
     },
     headerTitle: {
       fontSize: 28,
       fontWeight: 'bold',
       color: COLORS.textPrimary,
+    },
+    backAction: {
+      position: 'absolute',
+      left: 10,
+      top: 8,
+      padding: 8,
     },
     featuredChallenge: {
       margin: 16,

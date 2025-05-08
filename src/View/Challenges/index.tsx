@@ -189,12 +189,6 @@ const ChallengesScreen: React.FC = () => {
           </Button>
         )}
         <IconButton 
-          icon="chef-hat" 
-          size={24} 
-          iconColor={COLORS.textSecondary} 
-          onPress={() => handleChefHatAction(item.id)}
-        />
-        <IconButton 
           icon="dots-vertical" 
           size={24} 
           iconColor={COLORS.textSecondary} 
@@ -204,19 +198,13 @@ const ChallengesScreen: React.FC = () => {
     </Card>
   );
 
-  const renderHeaderComponent = () => (
+  const renderHeaderComponent = ({ item }: { item: Challenge }) => (
     <>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backAction} onPress={() => navigation.goBack()}>
           <Icon name='arrow-back-ios' size={25} color={COLORS.primary}/>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Nutrition Challenges</Text>
-        <IconButton 
-          icon="bell-outline" 
-          size={24} 
-          iconColor={COLORS.textPrimary} 
-          onPress={() => {}}
-        />
       </View>
       
       {featuredRecipe ? (
