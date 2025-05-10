@@ -117,6 +117,15 @@ export default function Login({ navigation }: any) {
                         Register
                     </Text>
                 </Text>
+                <Text style={styles.footerText}>
+          By signing in, you agree to our{' '}
+          <Text
+            style={styles.loginLink}
+            onPress={() => navigation.navigate('PrivacyPolicyScreen')}
+          >
+            Privacy Policy
+          </Text>.
+        </Text>
             </View>
             <CustomSnackbar
                 visible={snackbarVisible}
