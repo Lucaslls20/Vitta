@@ -21,7 +21,7 @@ const Profile: React.FC = () => {
   const fitnessItems: ListItemProps[] = [
    
     { title: 'Goals', leftIcon: 'target', onPress: () => navigation.navigate('Goals') },
-    { title: 'Challenges', leftIcon: 'trophy', onPress: () => navigation.navigate('ChallengesScreen') },
+   /* { title: 'Challenges', leftIcon: 'trophy', onPress: () => navigation.navigate('ChallengesScreen') }, */
   ];
 
   const preferencesItems: ListItemProps[] = [
