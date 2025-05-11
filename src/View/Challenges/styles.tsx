@@ -267,5 +267,16 @@ export const styles = StyleSheet.create({
       color: COLORS.error,
       marginBottom: 20,
     },
+    modalContainer: {
+  backgroundColor: COLORS.white,
+  padding: 20,
+  borderRadius: 8,
+  alignItems: 'center',
+},
+modalText: {
+  fontSize: 18,
+  fontWeight: 'bold',
+},
+
   });
   

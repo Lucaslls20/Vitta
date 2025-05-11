@@ -26,6 +26,7 @@ import FavoriteRecipesScreen from "./View/FavoriteRecipes";
 import ChallengesScreen from "./View/Challenges";
 import HelpFeedbackScreen from "./View/HelpFeedbackScreen";
 import AboutScreen from "./View/AboutAppScreen/index";
+import ChallengeDetails from "./View/ChallengeDetails";
 import { ThemeProvider, ThemeContext } from "./View/theme";
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 import { StatusBar } from "react-native";
@@ -45,6 +46,7 @@ export type RootStackParamList = {
   ChallengesScreen: undefined
   HelpFeedbackScreen: undefined
   AboutScreen: undefined
+  ChallengeDetails: { id: string; recipeId: number };
 };
 
 export type SeeDetailsRouteProp = RouteProp<RootStackParamList, 'SeeDetails'>;
@@ -207,6 +209,7 @@ const ThemedApp = () => {
           <Stack.Screen name='ChallengesScreen' component={ChallengesScreen} options={defaultScreenOptions} />
           <Stack.Screen name='HelpFeedbackScreen' component={HelpFeedbackScreen} options={defaultScreenOptions} />
           <Stack.Screen name='AboutScreen' component={AboutScreen} options={defaultScreenOptions} />
+          <Stack.Screen name='ChallengeDetails' component={ChallengeDetails} options={defaultScreenOptions} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

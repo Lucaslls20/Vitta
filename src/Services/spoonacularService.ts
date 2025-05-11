@@ -34,3 +34,11 @@ export async function fetchFeaturedRecipe(): Promise<Recipe> {
   // Retorna o primeiro (e único) item do array recipes
   return (data.recipes as Recipe[])[0];  // :contentReference[oaicite:1]{index=1}
 }
+
+export async function fetchRecipeDetails(id: number): Promise<Recipe> {
+  const url = `${BASE_URL}/${id}/information?apiKey=${API_KEY}&includeNutrition=true`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(res.statusText);
+  return (await res.json()) as Recipe;
+}
+

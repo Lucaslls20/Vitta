@@ -11,6 +11,7 @@ export interface Recipe {
   imageType: string;
   healthScore?: number;
   readyInMinutes?: number;
+  summary: string;
   servings?: number;
   nutrition?: {
     nutrients: Array<{ name: string; amount: number; unit: string }>;
