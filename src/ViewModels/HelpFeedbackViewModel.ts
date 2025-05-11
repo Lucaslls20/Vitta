@@ -179,7 +179,9 @@ const sendRating = async () => {
         break;
       case 'chat':
         title = 'Chat';
-        message = 'Support chat is available Monday through Friday, 8am to 6pm.';
+        message = `Support chat is available Monday through Friday, 8am to 6pm.
+
+        For chat support, please email chat@vitta.com`;
         break;
       case 'attachment':
         title = 'Attachment';
