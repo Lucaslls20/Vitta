@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
@@ -20,8 +19,6 @@ import {
   Chip,
   Portal,
   Dialog,
-  RadioButton,
-  IconButton,
 } from 'react-native-paper';
 // Alterar a importação do ícone para:
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -81,49 +78,69 @@ const HelpFeedbackScreen = () => {
     null,
   );
   const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
-  const [visible, setVisible] = useState<boolean>(false);
+  const [ratingDialogVisible, setRatingDialogVisible] = useState<boolean>(false);
   const [rating, setRating] = useState<number>(0);
   const navigation = useNavigation<NavigationProps>();
+  
+  // New dialog states
+  const [errorDialogVisible, setErrorDialogVisible] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successDialogVisible, setSuccessDialogVisible] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [contactDialogVisible, setContactDialogVisible] = useState<boolean>(false);
+  const [contactTitle, setContactTitle] = useState<string>('');
+  const [contactMessage, setContactMessage] = useState<string>('');
+  const [attachmentDialogVisible, setAttachmentDialogVisible] = useState<boolean>(false);
 
   const handleSendFeedback = () => {
     if (!selectedProblemType) {
-      Alert.alert('Erro', 'Por favor, selecione um tipo de problema.');
+      setErrorMessage('Please select a problem type.');
+      setErrorDialogVisible(true);
       return;
     }
 
     if (feedbackText.trim().length < 10) {
-      Alert.alert(
-        'Erro',
-        'Por favor, forneça mais detalhes sobre seu problema ou sugestão.',
-      );
+      setErrorMessage('Please provide more details about your problem or suggestion.');
+      setErrorDialogVisible(true);
       return;
     }
 
     // Aqui você implementaria o envio do feedback para o backend
-    Alert.alert(
-      'Feedback enviado',
-      'Obrigado por nos Helpr a melhorar o Vitta! Seu feedback foi enviado com sucesso.',
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            setFeedbackText('');
-            setSelectedProblemType(null);
-          },
-        },
-      ],
-    );
+    setSuccessMessage('Thank you for helping us improve Vitta! Your feedback has been successfully sent.');
+    setSuccessDialogVisible(true);
   };
 
-  const showDialog = () => setVisible(true);
-  const hideDialog = () => setVisible(false);
+  const handleSuccessDialogConfirm = () => {
+    setSuccessDialogVisible(false);
+    setFeedbackText('');
+    setSelectedProblemType(null);
+  };
+
+  const showRatingDialog = () => setRatingDialogVisible(true);
+  const hideRatingDialog = () => setRatingDialogVisible(false);
 
   const submitRating = () => {
-    Alert.alert(
-      'Avaliação enviada',
-      `Obrigado por avaliar o Vitta com ${rating} estrelas!`,
-    );
-    hideDialog();
+    setSuccessMessage(`Thank you for rating Vitta with ${rating} stars!`);
+    setSuccessDialogVisible(true);
+    hideRatingDialog();
+  };
+
+  const handleContactEmail = () => {
+    setContactTitle('Contact');
+    setContactMessage('Send an email to suporte@vitta.com');
+    setContactDialogVisible(true);
+  };
+
+  const handleContactChat = () => {
+    setContactTitle('Chat');
+    setContactMessage('Support chat is available Monday through Friday, 8am to 6pm.');
+    setContactDialogVisible(true);
+  };
+
+  const handleAttachment = () => {
+    setContactTitle('Attachment');
+    setContactMessage('Attachment functionality will be implemented soon.');
+    setAttachmentDialogVisible(true);
   };
 
   const renderStar = (starNumber: any) => {
@@ -181,13 +198,11 @@ const HelpFeedbackScreen = () => {
       ))}
 
       <View style={styles.contactSection}>
-        <Text style={styles.sectionTitle}>Ainda precisa de Help?</Text>
+        <Text style={styles.sectionTitle}>Still need Help?</Text>
         <Button
           mode="contained"
           icon="email"
-          onPress={() =>
-            Alert.alert('Contact', 'Send an email to suporte@vitta.com')
-          }
+          onPress={handleContactEmail}
           style={styles.contactButton}
           buttonColor={COLORS.primary}>
           Contact by Email
@@ -195,12 +210,7 @@ const HelpFeedbackScreen = () => {
         <Button
           mode="outlined"
           icon="chat"
-          onPress={() =>
-            Alert.alert(
-              'Chat',
-              'Support chat is available Monday through Friday, 8am to 6pm.',
-            )
-          }
+          onPress={handleContactChat}
           style={styles.contactButton}
           textColor={COLORS.primary}>
           Support Chat
@@ -274,12 +284,7 @@ const HelpFeedbackScreen = () => {
         </Text>
         <TouchableOpacity
           style={styles.attachmentButton}
-          onPress={() =>
-            Alert.alert(
-              'Annex',
-              'Attachment functionality will be implemented soon.',
-            )
-          }>
+          onPress={handleAttachment}>
           <Icon name="paperclip" size={24} color={COLORS.primary} />
           <Text style={styles.attachmentButtonText}>Add Annex</Text>
         </TouchableOpacity>
@@ -297,42 +302,12 @@ const HelpFeedbackScreen = () => {
           <Button
             mode="outlined"
             icon="star"
-            onPress={showDialog}
+            onPress={showRatingDialog}
             style={styles.rateButton}
             textColor={COLORS.primary}>
             Give a note
           </Button>
         </View>
-
-        <Portal>
-          <Dialog
-            visible={visible}
-            onDismiss={hideDialog}
-            style={styles.dialog}>
-            <Dialog.Title style={styles.dialogTitle}>
-            Rate your experience
-            </Dialog.Title>
-            <Dialog.Content>
-              <Text style={styles.dialogText}>
-              How satisfied are you with Vitta?
-              </Text>
-              <View style={styles.starsContainer}>
-                {[1, 2, 3, 4, 5].map(star => renderStar(star))}
-              </View>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={hideDialog} textColor={COLORS.textSecondary}>
-                Cancel
-              </Button>
-              <Button
-                onPress={submitRating}
-                disabled={rating === 0}
-                textColor={COLORS.primary}>
-               Send
-              </Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
 
         <View style={styles.spacer} />
       </ScrollView>
@@ -393,6 +368,117 @@ const HelpFeedbackScreen = () => {
       <Divider />
 
       {activeTab === 'Help' ? renderHelpTab() : renderFeedbackTab()}
+
+      {/* Dialog for rating */}
+      <Portal>
+        <Dialog
+          visible={ratingDialogVisible}
+          onDismiss={hideRatingDialog}
+          style={styles.dialog}>
+          <Dialog.Title style={styles.dialogTitle}>
+            Rate your experience
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>
+              How satisfied are you with Vitta?
+            </Text>
+            <View style={styles.starsContainer}>
+              {[1, 2, 3, 4, 5].map(star => renderStar(star))}
+            </View>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideRatingDialog} textColor={COLORS.textSecondary}>
+              Cancel
+            </Button>
+            <Button
+              onPress={submitRating}
+              disabled={rating === 0}
+              textColor={COLORS.primary}>
+              Send
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+
+        {/* Error Dialog */}
+        <Dialog
+          visible={errorDialogVisible}
+          onDismiss={() => setErrorDialogVisible(false)}
+          style={styles.dialog}>
+          <Dialog.Title style={[styles.dialogTitle, { color: COLORS.error }]}>
+            Error
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>{errorMessage}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button 
+              onPress={() => setErrorDialogVisible(false)} 
+              textColor={COLORS.primary}>
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+
+        {/* Success Dialog */}
+        <Dialog
+          visible={successDialogVisible}
+          onDismiss={handleSuccessDialogConfirm}
+          style={styles.dialog}>
+          <Dialog.Title style={[styles.dialogTitle, { color: COLORS.success || COLORS.primary }]}>
+            Success
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>{successMessage}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button 
+              onPress={handleSuccessDialogConfirm} 
+              textColor={COLORS.primary}>
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+
+        {/* Contact Dialog */}
+        <Dialog
+          visible={contactDialogVisible}
+          onDismiss={() => setContactDialogVisible(false)}
+          style={styles.dialog}>
+          <Dialog.Title style={styles.dialogTitle}>
+            {contactTitle}
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>{contactMessage}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button 
+              onPress={() => setContactDialogVisible(false)} 
+              textColor={COLORS.primary}>
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+
+        {/* Attachment Dialog */}
+        <Dialog
+          visible={attachmentDialogVisible}
+          onDismiss={() => setAttachmentDialogVisible(false)}
+          style={styles.dialog}>
+          <Dialog.Title style={styles.dialogTitle}>
+            {contactTitle}
+          </Dialog.Title>
+          <Dialog.Content>
+            <Text style={styles.dialogText}>{contactMessage}</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button 
+              onPress={() => setAttachmentDialogVisible(false)} 
+              textColor={COLORS.primary}>
+              OK
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 };
