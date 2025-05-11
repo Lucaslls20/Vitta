@@ -1,11 +1,9 @@
 // HelpFeedbackScreen.tsx
-import React, {useState} from 'react';
+import React from 'react';
 import {
-  StyleSheet,
   View,
   ScrollView,
   TouchableOpacity,
-  Image,
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
@@ -20,143 +18,56 @@ import {
   Portal,
   Dialog,
 } from 'react-native-paper';
-// Alterar a importação do ícone para:
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Arrow from 'react-native-vector-icons/MaterialIcons';
 import {COLORS} from '../Colors';
 import {styles} from './styles';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProps} from '../../App';
-
-// Tipos de problemas que o usuário pode selecionar
-const problemTypes = [
-  {id: 1, label: 'Application error', icon: 'alert-circle'},
-  {id: 2, label: 'Performance issue', icon: 'speedometer-slow'},
-  {id: 3, label: 'Improvement suggestion', icon: 'lightbulb-on'},
-  {id: 4, label: 'Account problem', icon: 'account-question'},
-  {id: 5, label: 'Another problem', icon: 'help-circle'},
-];
-
-// FAQs comuns
-const faqs = [
-  {
-    id: 1,
-    question: 'How do I change my personal information?',
-    answer:
-      'Access your profile by clicking on the icon in the bottom right corner of the screen. Then tap on "Edit Profile" to modify your personal information.',
-  },
-  {
-    id: 2,
-    question: 'How to sync data with other devices?',
-    answer:
-      "Vitta automatically syncs your data when you're connected to the internet. Make sure you're using the same account on all your devices.",
-  },
-  {
-    id: 3,
-    question: 'Can I delete my app data?',
-    answer:
-      'Yes, you can delete specific data or your entire account. Go to "Settings > Privacy > Delete Data" for these options.',
-  },
-  {
-    id: 4,
-    question: 'How do I track my weekly progress?',
-    answer:
-      'On the Home screen, tap "Reports" to view graphs and statistics of your weekly, monthly, or yearly progress.',
-  },
-  {
-    id: 5,
-    question: 'Does the app work offline?',
-    answer:
-      'Yes, Vitta works offline for most functions. However, features like syncing and updates require an internet connection.',
-  },
-];
+import {useHelpFeedbackViewModel} from '../../ViewModels/HelpFeedbackViewModel';
 
 const HelpFeedbackScreen = () => {
-  const [activeTab, setActiveTab] = useState<'Help' | 'feedback'>('Help');
-  const [feedbackText, setFeedbackText] = useState<string>('');
-  const [selectedProblemType, setSelectedProblemType] = useState<number | null>(
-    null,
-  );
-  const [selectedFAQ, setSelectedFAQ] = useState<number | null>(null);
-  const [ratingDialogVisible, setRatingDialogVisible] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(0);
   const navigation = useNavigation<NavigationProps>();
-  
-  // New dialog states
-  const [errorDialogVisible, setErrorDialogVisible] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [successDialogVisible, setSuccessDialogVisible] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-  const [contactDialogVisible, setContactDialogVisible] = useState<boolean>(false);
-  const [contactTitle, setContactTitle] = useState<string>('');
-  const [contactMessage, setContactMessage] = useState<string>('');
-  const [attachmentDialogVisible, setAttachmentDialogVisible] = useState<boolean>(false);
+  const {
+    activeTab,
+    setActiveTab,
+    feedbackText,
+    setFeedbackText,
+    selectedProblemType,
+    setSelectedProblemType,
+    selectedFAQ,
+    setSelectedFAQ,
+    ratingDialogVisible,
+    rating,
+    errorMessage,
+    successMessage,
+    dialogs,
+    contactInfo,
+    problemTypes,
+    faqs,
+    sendFeedback,
+    showContactInfo,
+    showRatingDialog,
+    hideErrorDialog,
+    hideSuccessDialog,
+    hideContactDialog,
+    hideAttachmentDialog,
+    hideRatingDialog,
+    setRating,
+  } = useHelpFeedbackViewModel();
 
-  const handleSendFeedback = () => {
-    if (!selectedProblemType) {
-      setErrorMessage('Please select a problem type.');
-      setErrorDialogVisible(true);
-      return;
-    }
-
-    if (feedbackText.trim().length < 10) {
-      setErrorMessage('Please provide more details about your problem or suggestion.');
-      setErrorDialogVisible(true);
-      return;
-    }
-
-    // Aqui você implementaria o envio do feedback para o backend
-    setSuccessMessage('Thank you for helping us improve Vitta! Your feedback has been successfully sent.');
-    setSuccessDialogVisible(true);
-  };
-
-  const handleSuccessDialogConfirm = () => {
-    setSuccessDialogVisible(false);
-    setFeedbackText('');
-    setSelectedProblemType(null);
-  };
-
-  const showRatingDialog = () => setRatingDialogVisible(true);
-  const hideRatingDialog = () => setRatingDialogVisible(false);
-
-  const submitRating = () => {
-    setSuccessMessage(`Thank you for rating Vitta with ${rating} stars!`);
-    setSuccessDialogVisible(true);
-    hideRatingDialog();
-  };
-
-  const handleContactEmail = () => {
-    setContactTitle('Contact');
-    setContactMessage('Send an email to suporte@vitta.com');
-    setContactDialogVisible(true);
-  };
-
-  const handleContactChat = () => {
-    setContactTitle('Chat');
-    setContactMessage('Support chat is available Monday through Friday, 8am to 6pm.');
-    setContactDialogVisible(true);
-  };
-
-  const handleAttachment = () => {
-    setContactTitle('Attachment');
-    setContactMessage('Attachment functionality will be implemented soon.');
-    setAttachmentDialogVisible(true);
-  };
-
-  const renderStar = (starNumber: any) => {
-    return (
-      <TouchableOpacity
-        key={starNumber}
-        onPress={() => setRating(starNumber)}
-        style={styles.starContainer}>
-        <Icon
-          name={rating >= starNumber ? 'star' : 'star-outline'}
-          size={36}
-          color={rating >= starNumber ? COLORS.tertiary : COLORS.textSecondary}
-        />
-      </TouchableOpacity>
-    );
-  };
+  const renderStar = (starNumber: number) => (
+    <TouchableOpacity
+      key={starNumber}
+      onPress={() => setRating(starNumber)}
+      style={styles.starContainer}>
+      <Icon
+        name={rating >= starNumber ? 'star' : 'star-outline'}
+        size={36}
+        color={rating >= starNumber ? COLORS.tertiary : COLORS.textSecondary}
+      />
+    </TouchableOpacity>
+  );
 
   const renderHelpTab = () => (
     <ScrollView style={styles.tabContent}>
@@ -172,13 +83,10 @@ const HelpFeedbackScreen = () => {
       </Surface>
 
       <Text style={styles.sectionTitle}>FAQ</Text>
-
       {faqs.map(faq => (
         <List.Accordion
           key={faq.id}
           title={faq.question}
-          id={faq.id.toString()}
-          titleStyle={styles.faqQuestion}
           expanded={selectedFAQ === faq.id}
           onPress={() => setSelectedFAQ(selectedFAQ === faq.id ? null : faq.id)}
           left={props => (
@@ -191,7 +99,6 @@ const HelpFeedbackScreen = () => {
           <List.Item
             title={faq.answer}
             titleNumberOfLines={10}
-            titleStyle={styles.faqAnswer}
             style={styles.faqAnswerContainer}
           />
         </List.Accordion>
@@ -202,7 +109,7 @@ const HelpFeedbackScreen = () => {
         <Button
           mode="contained"
           icon="email"
-          onPress={handleContactEmail}
+          onPress={() => showContactInfo('email')}
           style={styles.contactButton}
           buttonColor={COLORS.primary}>
           Contact by Email
@@ -210,13 +117,12 @@ const HelpFeedbackScreen = () => {
         <Button
           mode="outlined"
           icon="chat"
-          onPress={handleContactChat}
+          onPress={() => showContactInfo('chat')}
           style={styles.contactButton}
           textColor={COLORS.primary}>
           Support Chat
         </Button>
       </View>
-
       <View style={styles.spacer} />
     </ScrollView>
   );
@@ -227,7 +133,7 @@ const HelpFeedbackScreen = () => {
       style={styles.keyboardAvoidingView}>
       <ScrollView style={styles.tabContent}>
         <Text style={styles.feedbackTitle}>
-        Your opinion is important to us to improve Vitta!
+          Your opinion is important to us to improve Vitta!
         </Text>
 
         <Text style={styles.label}>Select the type of problem:</Text>
@@ -243,21 +149,21 @@ const HelpFeedbackScreen = () => {
                   name={type.icon}
                   size={20}
                   color={
-                    selectedProblemType === type.id
+                    selectedProblemType?.id === type.id
                       ? COLORS.primary
                       : COLORS.textSecondary
                   }
                 />
               )}
-              selected={selectedProblemType === type.id}
-              onPress={() => setSelectedProblemType(type.id)}
+              selected={selectedProblemType?.id === type.id}
+              onPress={() => setSelectedProblemType(type)}
               style={[
                 styles.problemTypeChip,
-                selectedProblemType === type.id &&
+                selectedProblemType?.id === type.id &&
                   styles.selectedProblemTypeChip,
               ]}
               textStyle={
-                selectedProblemType === type.id
+                selectedProblemType?.id === type.id
                   ? styles.selectedChipText
                   : styles.chipText
               }>
@@ -280,18 +186,18 @@ const HelpFeedbackScreen = () => {
         />
 
         <Text style={styles.optionalLabel}>
-        Optional: Attach screenshot or video
+          Optional: Attach screenshot or video
         </Text>
         <TouchableOpacity
           style={styles.attachmentButton}
-          onPress={handleAttachment}>
+          onPress={() => showContactInfo('attachment')}>
           <Icon name="paperclip" size={24} color={COLORS.primary} />
           <Text style={styles.attachmentButtonText}>Add Annex</Text>
         </TouchableOpacity>
 
         <Button
           mode="contained"
-          onPress={handleSendFeedback}
+          onPress={sendFeedback}
           style={styles.sendButton}
           buttonColor={COLORS.primary}>
           Send Feedback
@@ -302,13 +208,13 @@ const HelpFeedbackScreen = () => {
           <Button
             mode="outlined"
             icon="star"
-            onPress={showRatingDialog}
+            onPress={showRatingDialog} // chama exibição do diálogo
             style={styles.rateButton}
-            textColor={COLORS.primary}>
+            textColor={COLORS.primary}
+          >
             Give a note
           </Button>
         </View>
-
         <View style={styles.spacer} />
       </ScrollView>
     </KeyboardAvoidingView>
@@ -316,6 +222,7 @@ const HelpFeedbackScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -325,6 +232,7 @@ const HelpFeedbackScreen = () => {
         <Text style={styles.headerTitle}>Help and Feedback</Text>
       </View>
 
+      {/* Tab Bar */}
       <View style={styles.tabBar}>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'Help' && styles.activeTab]}
@@ -332,9 +240,7 @@ const HelpFeedbackScreen = () => {
           <Icon
             name="help-circle"
             size={24}
-            color={
-              activeTab === 'Help' ? COLORS.primary : COLORS.textSecondary
-            }
+            color={activeTab === 'Help' ? COLORS.primary : COLORS.textSecondary}
           />
           <Text
             style={[
@@ -344,21 +250,20 @@ const HelpFeedbackScreen = () => {
             Help
           </Text>
         </TouchableOpacity>
-
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'feedback' && styles.activeTab]}
-          onPress={() => setActiveTab('feedback')}>
+          style={[styles.tab, activeTab === 'Feedback' && styles.activeTab]}
+          onPress={() => setActiveTab('Feedback')}>
           <Icon
             name="message-text"
             size={24}
             color={
-              activeTab === 'feedback' ? COLORS.primary : COLORS.textSecondary
+              activeTab === 'Feedback' ? COLORS.primary : COLORS.textSecondary
             }
           />
           <Text
             style={[
               styles.tabText,
-              activeTab === 'feedback' && styles.activeTabText,
+              activeTab === 'Feedback' && styles.activeTabText,
             ]}>
             Feedback
           </Text>
@@ -367,10 +272,12 @@ const HelpFeedbackScreen = () => {
 
       <Divider />
 
+      {/* Conteúdo da aba selecionada */}
       {activeTab === 'Help' ? renderHelpTab() : renderFeedbackTab()}
 
-      {/* Dialog for rating */}
+      {/* Todos os Diálogos */}
       <Portal>
+        {/* Rating Dialog */}
         <Dialog
           visible={ratingDialogVisible}
           onDismiss={hideRatingDialog}
@@ -383,7 +290,7 @@ const HelpFeedbackScreen = () => {
               How satisfied are you with Vitta?
             </Text>
             <View style={styles.starsContainer}>
-              {[1, 2, 3, 4, 5].map(star => renderStar(star))}
+              {[1, 2, 3, 4, 5].map(renderStar)}
             </View>
           </Dialog.Content>
           <Dialog.Actions>
@@ -391,7 +298,7 @@ const HelpFeedbackScreen = () => {
               Cancel
             </Button>
             <Button
-              onPress={submitRating}
+              onPress={hideRatingDialog}
               disabled={rating === 0}
               textColor={COLORS.primary}>
               Send
@@ -401,19 +308,17 @@ const HelpFeedbackScreen = () => {
 
         {/* Error Dialog */}
         <Dialog
-          visible={errorDialogVisible}
-          onDismiss={() => setErrorDialogVisible(false)}
+          visible={dialogs.error}
+          onDismiss={hideErrorDialog}
           style={styles.dialog}>
-          <Dialog.Title style={[styles.dialogTitle, { color: COLORS.error }]}>
+          <Dialog.Title style={[styles.dialogTitle, {color: COLORS.error}]}>
             Error
           </Dialog.Title>
           <Dialog.Content>
             <Text style={styles.dialogText}>{errorMessage}</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button 
-              onPress={() => setErrorDialogVisible(false)} 
-              textColor={COLORS.primary}>
+            <Button onPress={hideErrorDialog} textColor={COLORS.primary}>
               OK
             </Button>
           </Dialog.Actions>
@@ -421,19 +326,17 @@ const HelpFeedbackScreen = () => {
 
         {/* Success Dialog */}
         <Dialog
-          visible={successDialogVisible}
-          onDismiss={handleSuccessDialogConfirm}
+          visible={dialogs.success}
+          onDismiss={hideSuccessDialog}
           style={styles.dialog}>
-          <Dialog.Title style={[styles.dialogTitle, { color: COLORS.success || COLORS.primary }]}>
+          <Dialog.Title style={[styles.dialogTitle, {color: COLORS.success}]}>
             Success
           </Dialog.Title>
           <Dialog.Content>
             <Text style={styles.dialogText}>{successMessage}</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button 
-              onPress={handleSuccessDialogConfirm} 
-              textColor={COLORS.primary}>
+            <Button onPress={hideSuccessDialog} textColor={COLORS.primary}>
               OK
             </Button>
           </Dialog.Actions>
@@ -441,19 +344,17 @@ const HelpFeedbackScreen = () => {
 
         {/* Contact Dialog */}
         <Dialog
-          visible={contactDialogVisible}
-          onDismiss={() => setContactDialogVisible(false)}
+          visible={dialogs.contact}
+          onDismiss={hideContactDialog}
           style={styles.dialog}>
           <Dialog.Title style={styles.dialogTitle}>
-            {contactTitle}
+            {contactInfo.title}
           </Dialog.Title>
           <Dialog.Content>
-            <Text style={styles.dialogText}>{contactMessage}</Text>
+            <Text style={styles.dialogText}>{contactInfo.message}</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button 
-              onPress={() => setContactDialogVisible(false)} 
-              textColor={COLORS.primary}>
+            <Button onPress={hideContactDialog} textColor={COLORS.primary}>
               OK
             </Button>
           </Dialog.Actions>
@@ -461,19 +362,17 @@ const HelpFeedbackScreen = () => {
 
         {/* Attachment Dialog */}
         <Dialog
-          visible={attachmentDialogVisible}
-          onDismiss={() => setAttachmentDialogVisible(false)}
+          visible={dialogs.attachment}
+          onDismiss={hideAttachmentDialog}
           style={styles.dialog}>
           <Dialog.Title style={styles.dialogTitle}>
-            {contactTitle}
+            {contactInfo.title}
           </Dialog.Title>
           <Dialog.Content>
-            <Text style={styles.dialogText}>{contactMessage}</Text>
+            <Text style={styles.dialogText}>{contactInfo.message}</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button 
-              onPress={() => setAttachmentDialogVisible(false)} 
-              textColor={COLORS.primary}>
+            <Button onPress={hideAttachmentDialog} textColor={COLORS.primary}>
               OK
             </Button>
           </Dialog.Actions>
