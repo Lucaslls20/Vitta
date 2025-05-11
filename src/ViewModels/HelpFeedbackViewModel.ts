@@ -144,6 +144,28 @@ export const useHelpFeedbackViewModel = () => {
     }
   };
 
+  // Adicionar no ViewModel
+const sendRating = async () => {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error('Usuário não autenticado.');
+    
+    const ratingsRef = collection(db, 'ratings');
+    await addDoc(ratingsRef, {
+      userId: user.uid,
+      rating: rating,
+      createdAt: serverTimestamp() as Timestamp,
+    });
+    
+    hideRatingDialog();
+    // Mostrar mensagem de sucesso se necessário
+  } catch (error) {
+   console .error('Error sending rating:', error);
+    setErrorMessage('Error sending rating.');
+    setDialogs(prev => ({ ...prev, error: true }));
+  }
+};
+
   /**
    * Manipula título e mensagem dos diálogos de contato/anexo.
    */
@@ -207,5 +229,6 @@ export const useHelpFeedbackViewModel = () => {
     hideContactDialog,
     hideAttachmentDialog,
     hideRatingDialog,
+    sendRating
   };
 };

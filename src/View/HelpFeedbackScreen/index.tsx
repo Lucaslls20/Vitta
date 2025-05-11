@@ -1,4 +1,3 @@
-// HelpFeedbackScreen.tsx
 import React from 'react';
 import {
   View,
@@ -30,6 +29,7 @@ const HelpFeedbackScreen = () => {
   const navigation = useNavigation<NavigationProps>();
   const {
     activeTab,
+    sendRating,
     setActiveTab,
     feedbackText,
     setFeedbackText,
@@ -298,7 +298,7 @@ const HelpFeedbackScreen = () => {
               Cancel
             </Button>
             <Button
-              onPress={hideRatingDialog}
+              onPress={sendRating}
               disabled={rating === 0}
               textColor={COLORS.primary}>
               Send
