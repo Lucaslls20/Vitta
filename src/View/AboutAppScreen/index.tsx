@@ -1,4 +1,5 @@
-import React from 'react';
+// src/screens/AboutScreen.tsx
+import React, { useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   Linking,
   TouchableOpacity,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import {
   Surface,
@@ -17,81 +19,86 @@ import {
   Card,
   Avatar,
   useTheme,
+  Snackbar,
 } from 'react-native-paper';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from '../Colors';
-import {styles} from './styles';
-import {useNavigation} from '@react-navigation/native';
-import {NavigationProps} from '../../App';
+import { COLORS } from '../Colors';
+import { styles } from './styles';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../App';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
-// Tipo para informações do App
-type AppInfo = {
-  version: string;
-  developer: string;
-  lastUpdate: string;
-  description: string;
-  apiProviders: {
-    name: string;
-    description: string;
-    link: string;
-    icon: string;
-  }[];
-  features: string[];
-};
-
-// Dados do app
-const appInfo: AppInfo = {
-  version: '1.0',
-  developer: 'Lucas Santos',
-  lastUpdate: 'April 29, 2025',
-  description:
-    'Nutrition app that helps users track their daily food intake, find healthy recipes, and manage their nutritional goals.',
-  apiProviders: [
-    {
-      name: 'Spoonacular',
-      description: 'Recipe and Food Information API',
-      link: 'https://spoonacular.com/food-api',
-      icon: 'food-apple',
-    },
-    {
-      name: 'Nutritionix',
-      description: 'Detailed nutritional data',
-      link: 'https://www.nutritionix.com/business/api',
-      icon: 'nutrition',
-    },
-    {
-      name: 'Firebase Firestore',
-      description: 'Cloud storage for user data',
-      link: 'https://firebase.google.com/products/firestore',
-      icon: 'firebase',
-    },
-  ],
-  features: [
-    'Healthy Recipe Search',
-    'Daily Nutrition Tracker',
-    'Food Nutrition Analysis',
-    'Food Consumption History',
-    'Personalized Suggestions',
-    'Cloud Sync',
-    'Offline Mode',
-  ],
-};
+import { useAboutViewModel } from '../../ViewModels/AboutAppViewModel';
+import { RefreshControl } from 'react-native';
 
 const AboutScreen = () => {
-  const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => console.error('Erro ao abrir link', err));
-  };
+  const {
+    appInfo,
+    contactInfo,
+    isLoading,
+    error,
+    handleOpenLink,
+    handleSendEmail,
+    handleOpenStore,
+    refreshData
+  } = useAboutViewModel();
 
   const navigation = useNavigation<NavigationProps>();
+  const [errorVisible, setErrorVisible] = React.useState<boolean>(false);
+  const [refreshing, setRefreshing] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    // Mostrar mensagem de erro quando ocorrer
+    if (error) {
+      setErrorVisible(true);
+    }
+  }, [error]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refreshData();
+    // Aguarda um tempo para dar feedback visual ao usuário
+    setTimeout(() => setRefreshing(false), 1000);
+  }, [refreshData]);
+
+  // Função para abrir links externos
+  const openLink = (url: string) => {
+    const processedUrl = handleOpenLink(url);
+    Linking.openURL(processedUrl).catch(err => console.error('Erro ao abrir link', err));
+  };
+  
+  // Função para abrir email
+  const openEmail = () => {
+    const emailAddress = handleSendEmail();
+    Linking.openURL(`mailto:${emailAddress}`).catch(err => 
+      console.error('Erro ao abrir email', err));
+  };
+  
+  // Função para abrir loja de aplicativos
+  const openStore = () => {
+    const storeUrl = handleOpenStore();
+    Linking.openURL(storeUrl).catch(err => 
+      console.error('Erro ao abrir loja', err));
+  };
+
+  if (isLoading && !appInfo) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+        <Text style={{ marginTop: 16 }}>Carregando informações...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
       <ScrollView
         style={styles.scrollView}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />
+        }>
         <Surface style={styles.headerContainer}>
           <TouchableOpacity
             style={styles.backButton}
@@ -99,7 +106,6 @@ const AboutScreen = () => {
             <Icon name="arrow-back-ios" size={25} color={COLORS.white} />
           </TouchableOpacity>
 
-          {/* Se quiser manter o logo ao lado do título */}
           <View style={styles.logoContainer}>
             <Image
               source={{
@@ -118,7 +124,7 @@ const AboutScreen = () => {
         <Card style={styles.card}>
           <Card.Content>
             <Text style={styles.sectionTitle}>About the App</Text>
-            <Text style={styles.description}>{appInfo.description}</Text>
+            <Text style={styles.description}>{appInfo?.description}</Text>
 
             <View style={styles.infoRow}>
               <MaterialCommunityIcons
@@ -127,7 +133,7 @@ const AboutScreen = () => {
                 color={COLORS.textPrimary}
               />
               <Text style={styles.infoText}>
-              Developed by: {appInfo.developer}
+                Developed by: {appInfo?.developer}
               </Text>
             </View>
 
@@ -138,7 +144,17 @@ const AboutScreen = () => {
                 color={COLORS.textPrimary}
               />
               <Text style={styles.infoText}>
-              Last update: {appInfo.lastUpdate}
+                Last update: {appInfo?.lastUpdate}
+              </Text>
+            </View>
+            <View style={styles.infoRow}>
+              <MaterialCommunityIcons
+                name="email"
+                size={20}
+                color={COLORS.textPrimary}
+              />
+              <Text style={styles.infoText}>
+                Contact email: suporte@vitta.com
               </Text>
             </View>
           </Card.Content>
@@ -147,7 +163,7 @@ const AboutScreen = () => {
         <Card style={styles.card}>
           <Card.Content>
             <Text style={styles.sectionTitle}>Key Features</Text>
-            {appInfo.features.map((feature, index) => (
+            {appInfo?.features.map((feature, index) => (
               <View key={index} style={styles.featureItem}>
                 <MaterialCommunityIcons
                   name="check-circle"
@@ -163,7 +179,7 @@ const AboutScreen = () => {
         <Card style={styles.card}>
           <Card.Content>
             <Text style={styles.sectionTitle}>Technologies Used</Text>
-            {appInfo.apiProviders.map((provider, index) => (
+            {appInfo?.apiProviders.map((provider, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => openLink(provider.link)}
@@ -172,7 +188,7 @@ const AboutScreen = () => {
                   size={40}
                   icon={provider.icon}
                   color={COLORS.textOnPrimary}
-                  style={{backgroundColor: COLORS.primary}}
+                  style={{ backgroundColor: COLORS.primary }}
                 />
                 <View style={styles.apiDetails}>
                   <Text style={styles.apiName}>{provider.name}</Text>
@@ -194,18 +210,18 @@ const AboutScreen = () => {
           <Button
             mode="contained"
             icon="email"
-            onPress={() => openLink('mailto:contato@seuapp.com')}
-            style={[styles.button, {backgroundColor: COLORS.primary}]}
-            labelStyle={{color: COLORS.textOnPrimary}}>
-           Contact
+            onPress={openEmail}
+            style={[styles.button, { backgroundColor: COLORS.primary }]}
+            labelStyle={{ color: COLORS.textOnPrimary }}>
+            Contact
           </Button>
 
           <Button
             mode="contained"
             icon="star"
-            onPress={() => openLink('market://details?id=com.seuapp.id')}
-            style={[styles.button, {backgroundColor: COLORS.tertiary}]}
-            labelStyle={{color: COLORS.text.primary}}>
+            onPress={openStore}
+            style={[styles.button, { backgroundColor: COLORS.tertiary }]}
+            labelStyle={{ color: COLORS.text.primary }}>
             Rate
           </Button>
         </View>
@@ -214,13 +230,24 @@ const AboutScreen = () => {
           <Text style={styles.copyright}>
             © 2025 All rights reserved
           </Text>
-          <Text style={styles.appVersion}>Version {appInfo.version}</Text>
+          <Text style={styles.appVersion}>Version {appInfo?.version}</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('PrivacyPolicyScreen')}>
             <Text style={styles.privacyLink}>Privacy Policy</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      
+      <Snackbar
+        visible={errorVisible}
+        onDismiss={() => setErrorVisible(false)}
+        action={{
+          label: 'OK',
+          onPress: () => setErrorVisible(false),
+        }}
+        duration={3000}>
+        {error}
+      </Snackbar>
     </SafeAreaView>
   );
 };
