@@ -1,17 +1,13 @@
 // ViewModel: HelpFeedbackViewModel.ts
-import { useState } from 'react';
-import { db, auth } from '../Services/firebaseConfig';
+import {useState} from 'react';
+import {db, auth} from '../Services/firebaseConfig';
 import {
   collection,
   addDoc,
   Timestamp,
   serverTimestamp,
 } from 'firebase/firestore';
-import {
-  Feedback,
-  ProblemType,
-  FAQ,
-} from '../Models/HelpFeedbackModel';
+import {Feedback, ProblemType, FAQ} from '../Models/HelpFeedbackModel';
 
 /**
  * ViewModel para a tela de Help & Feedback.
@@ -47,7 +43,7 @@ export const useHelpFeedbackViewModel = () => {
     message: '',
   });
 
-   /** Exibe o diálogo de avaliação */
+  /** Exibe o diálogo de avaliação */
   const showRatingDialog = () => setRatingDialogVisible(true);
 
   /** Oculta o diálogo de avaliação */
@@ -55,11 +51,11 @@ export const useHelpFeedbackViewModel = () => {
 
   /** Lista estática de tipos de problema. */
   const problemTypes: ProblemType[] = [
-    { id: 1, label: 'Application error', icon: 'alert-circle' },
-    { id: 2, label: 'Performance issue', icon: 'speedometer-slow' },
-    { id: 3, label: 'Improvement suggestion', icon: 'lightbulb-on' },
-    { id: 4, label: 'Account problem', icon: 'account-question' },
-    { id: 5, label: 'Another problem', icon: 'help-circle' },
+    {id: 1, label: 'Application error', icon: 'alert-circle'},
+    {id: 2, label: 'Performance issue', icon: 'speedometer-slow'},
+    {id: 3, label: 'Improvement suggestion', icon: 'lightbulb-on'},
+    {id: 4, label: 'Account problem', icon: 'account-question'},
+    {id: 5, label: 'Another problem', icon: 'help-circle'},
   ];
 
   /** Lista estática de FAQs. */
@@ -102,14 +98,14 @@ export const useHelpFeedbackViewModel = () => {
   const sendFeedback = async () => {
     if (!selectedProblemType) {
       setErrorMessage('Please select a problem type.');
-      setDialogs(prev => ({ ...prev, error: true }));
+      setDialogs(prev => ({...prev, error: true}));
       return;
     }
     if (feedbackText.trim().length < 10) {
       setErrorMessage(
-        'Please provide more details about your problem or suggestion.'
+        'Please provide more details about your problem or suggestion.',
       );
-      setDialogs(prev => ({ ...prev, error: true }));
+      setDialogs(prev => ({...prev, error: true}));
       return;
     }
 
@@ -118,21 +114,23 @@ export const useHelpFeedbackViewModel = () => {
       if (!user) throw new Error('Usuário não autenticado.');
 
       const feedbackRef = collection(db, 'feedbacks');
-      const newFeedback: Feedback = {
-        userId: user.uid,
-        problemType: selectedProblemType,
-        details: feedbackText.trim(),
-        createdAt: serverTimestamp() as Timestamp,
-        attachmentUrl: undefined,
-        rating: rating || undefined,
-      };
+      const feedbackData: any = {
+      userId: user.uid,
+      problemType: selectedProblemType,
+      details: feedbackText.trim(),
+      createdAt: serverTimestamp(),
+    };
+    if (rating > 0) feedbackData.rating = rating;
+    // se implementar anexos, atribua aqui; se não, não passa o campo
+    // if (attachmentUrl) feedbackData.attachmentUrl = attachmentUrl;
 
-      await addDoc(feedbackRef, newFeedback);
+    await addDoc(feedbackRef, feedbackData);
+
 
       setSuccessMessage(
-        'Thank you for helping us improve Vitta! Your feedback has been successfully sent.'
+        'Thank you for helping us improve Vitta! Your feedback has been successfully sent.',
       );
-      setDialogs(prev => ({ ...prev, success: true }));
+      setDialogs(prev => ({...prev, success: true}));
 
       // reset state
       setFeedbackText('');
@@ -140,31 +138,31 @@ export const useHelpFeedbackViewModel = () => {
       setRating(0);
     } catch (error: any) {
       setErrorMessage(error.message || 'Error sending feedback.');
-      setDialogs(prev => ({ ...prev, error: true }));
+      setDialogs(prev => ({...prev, error: true}));
     }
   };
 
   // Adicionar no ViewModel
-const sendRating = async () => {
-  try {
-    const user = auth.currentUser;
-    if (!user) throw new Error('Usuário não autenticado.');
-    
-    const ratingsRef = collection(db, 'ratings');
-    await addDoc(ratingsRef, {
-      userId: user.uid,
-      rating: rating,
-      createdAt: serverTimestamp() as Timestamp,
-    });
-    
-    hideRatingDialog();
-    // Mostrar mensagem de sucesso se necessário
-  } catch (error) {
-   console .error('Error sending rating:', error);
-    setErrorMessage('Error sending rating.');
-    setDialogs(prev => ({ ...prev, error: true }));
-  }
-};
+  const sendRating = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('Usuário não autenticado.');
+
+      const ratingsRef = collection(db, 'ratings');
+      await addDoc(ratingsRef, {
+        userId: user.uid,
+        rating: rating,
+        createdAt: serverTimestamp() as Timestamp,
+      });
+
+      hideRatingDialog();
+      // Mostrar mensagem de sucesso se necessário
+    } catch (error) {
+      console.error('Error sending rating:', error);
+      setErrorMessage('Error sending rating.');
+      setDialogs(prev => ({...prev, error: true}));
+    }
+  };
 
   /**
    * Manipula título e mensagem dos diálogos de contato/anexo.
@@ -188,21 +186,20 @@ const sendRating = async () => {
         message = 'Attachment functionality will be implemented soon.';
         break;
     }
-    setContactInfo({ title, message });
-    setDialogs(prev => ({ ...prev, contact: true }));
+    setContactInfo({title, message});
+    setDialogs(prev => ({...prev, contact: true}));
   };
 
   /** Funções para fechar diálogos */
-  const hideErrorDialog = () => setDialogs(prev => ({ ...prev, error: false }));
+  const hideErrorDialog = () => setDialogs(prev => ({...prev, error: false}));
   const hideSuccessDialog = () =>
-    setDialogs(prev => ({ ...prev, success: false }));
+    setDialogs(prev => ({...prev, success: false}));
   const hideContactDialog = () =>
-    setDialogs(prev => ({ ...prev, contact: false }));
+    setDialogs(prev => ({...prev, contact: false}));
   const hideAttachmentDialog = () =>
-    setDialogs(prev => ({ ...prev, attachment: false }));
+    setDialogs(prev => ({...prev, attachment: false}));
 
-
-   return {
+  return {
     // estados
     activeTab,
     feedbackText,
@@ -231,6 +228,6 @@ const sendRating = async () => {
     hideContactDialog,
     hideAttachmentDialog,
     hideRatingDialog,
-    sendRating
+    sendRating,
   };
 };

@@ -68,27 +68,15 @@ const FeedbackTab: React.FC<FeedbackTabProps> = ({ vm }) => {
           onChangeText={setFeedbackText}
           placeholder="Describe your problem or suggestion in detail..."
           multiline
-          numberOfLines={5}
+          numberOfLines={3}
           mode="outlined"
           outlineColor={COLORS.border}
           activeOutlineColor={COLORS.primary}
           style={styles.feedbackInput}
         />
-
-        <Text style={styles.optionalLabel}>
-          Optional: Attach screenshot or video
-        </Text>
-        <TouchableOpacity
-          style={styles.attachmentButton}
-          onPress={() => showContactInfo('attachment')}
-        >
-          <Icon name="paperclip" size={24} color={COLORS.primary} />
-          <Text style={styles.attachmentButtonText}>Add Annex</Text>
-        </TouchableOpacity>
-
         <Button
           mode="contained"
-          onPress={sendFeedback}
+          onPress={() => sendFeedback()}
           style={styles.sendButton}
           buttonColor={COLORS.primary}
         >
