@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView, View, Text, ActivityIndicator, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '../../App';
 import CancelButton from '../../Components/EditProfile/CancelButton';
@@ -7,64 +7,105 @@ import ProfilePictureUpload from '../../Components/EditProfile/ProfilePictureUpl
 import FormInput from '../../Components/EditProfile/FormInput';
 import SaveButton from '../../Components/EditProfile/SaveButton';
 import { styles } from './styles';
+import { useEditProfileViewModel } from '../../ViewModels/useEditProfileViewModel';
 
 const EditProfile: React.FC = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigation = useNavigation<NavigationProps>()
+  const navigation = useNavigation<NavigationProps>();
+  const {
+    name,
+    email,
+    phoneNumber,
+    password,
+    confirmPassword,
+    profileImageUri,
+    loading,
+    error,
+    loadProfile,
+    saveProfile,
+    setName,
+    setEmail,
+    setPhoneNumber,
+    setPassword,
+    setConfirmPassword,
+    setProfileImageUri,
+  } = useEditProfileViewModel();
 
-    const profileImage = { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDKO1YN9MsmIUgHG6HgKjcHBNbTRun4L047w&s' };
+  // Load existing data on mount
+  useEffect(() => {
+    loadProfile();
+  }, []);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <CancelButton onPress={() => navigation.goBack()} />
-            
-            <ProfilePictureUpload
-                imageSource={profileImage}
-                onPressCamera={() => {/* Lógica para trocar foto */}}
-            />
+  // Default placeholder if no image
+  const defaultImage = { uri: 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg' };
 
-            <FormInput
-                label="Name"
-                value={name}
-                onChangeText={setName}
-                placeHolder='Melissa Peters'
-            />
+  return (
+    <SafeAreaView style={styles.container}>
+      <CancelButton onPress={() => navigation.goBack()} />
 
-            <FormInput
-                label="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                placeHolder='majesters@gmail.com'
-            />
+     <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-            <FormInput
-                label="Phone number"
-                value={password}
-                onChangeText={setPassword}
-                placeHolder='55 (31) 999049860'
-            />
-            <FormInput
-                label="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                placeHolder='123456'
-            />
-            <FormInput
-                label="Confirm Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                placeHolder='123456'
-            />
+        <ProfilePictureUpload
+          imageSource={profileImageUri ? { uri: profileImageUri } : defaultImage}
+          onPressCamera={() => {
+            // TODO: open image picker and then:
+            // setProfileImageUri(pickedUri);
+          }}
+        />
 
+        <FormInput
+          label="Name"
+          value={name}
+          onChangeText={setName}
+          placeHolder="Melissa Peters"
+        />
 
-            <SaveButton onPress={() => {/* Lógica para salvar */}} />
-        </SafeAreaView>
-    );
+        <FormInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          placeHolder="majesters@gmail.com"
+        />
+
+        <FormInput
+          label="Phone number"
+          value={phoneNumber}
+          onChangeText={setPhoneNumber}
+          keyboardType="phone-pad"
+          placeHolder="55 (31) 99904-9860"
+        />
+
+        <FormInput
+          label="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeHolder="123456"
+        />
+
+        <FormInput
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          placeHolder="123456"
+        />
+
+        <View style={styles.saveContainer}>
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : (
+            <SaveButton onPress={saveProfile} />
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 };
 
 export default EditProfile;

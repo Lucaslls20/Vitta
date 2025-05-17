@@ -111,4 +111,21 @@ export const styles = StyleSheet.create({
         fontWeight: '600',
         marginBottom: 8,
     },
+    errorText: {
+        color: COLORS.error,
+        fontSize: 14,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    saveContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+    },
+      scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 40, // Ajuste conforme necessário
+  },
 });
