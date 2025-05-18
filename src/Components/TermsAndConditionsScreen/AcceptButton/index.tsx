@@ -5,16 +5,17 @@ import { styles } from '../../../View/TermsAndConditionsScreen/styles';
 interface AcceptButtonProps {
   onPress: () => void;
   disabled: boolean;
+  accepted: boolean;
 }
 
-export const AcceptButton = ({ onPress, disabled }: AcceptButtonProps) => (
+export const AcceptButton = ({ onPress, disabled, accepted }: AcceptButtonProps) => (
   <Button
     mode="contained"
     onPress={onPress}
-    style={[styles.acceptButton, !disabled && styles.disabledButton]}
+    style={[styles.acceptButton, disabled && styles.disabledButton]}
     labelStyle={styles.acceptButtonLabel}
-    disabled={!disabled}
+    disabled={disabled}
   >
-    Accept & Continue
+    {accepted ? 'You have already agreed' : 'Accept & Continue'}
   </Button>
 );

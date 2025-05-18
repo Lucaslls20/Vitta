@@ -15,12 +15,14 @@ import { COLORS } from '../Colors';
 import { Header } from '../../Components/TermsAndConditionsScreen/Header';
 import { ClauseCard } from '../../Components/TermsAndConditionsScreen/ClauseCard';
 import { AcceptButton } from '../../Components/TermsAndConditionsScreen/AcceptButton';
+import { usePrivacyPolicyViewModel } from '../../ViewModels/PrivacyPolicyViewModel';
 
 export const PrivacyPolicyScreen = () => {
   const scrollViewRef = useRef<ScrollView | null>(null);
   const navigation = useNavigation<NavigationProps>();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+  const { isAccepted, loading, acceptPolicy } = usePrivacyPolicyViewModel();
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
@@ -29,14 +31,13 @@ export const PrivacyPolicyScreen = () => {
     setIsScrolledToBottom(progress >= 0.95);
   };
 
-  const handleAcceptAndContinue = () => {
-    console.log('Privacy policy accepted');
-    // Adicione a lógica de navegação aqui
-  };
-
   const handleGoBack = () => {
     navigation.goBack();
   };
+
+  // Determine if button should be disabled:
+  // disabled if still loading, or not scrolled to bottom, or already accepted
+  const buttonDisabled = loading || !isScrolledToBottom || isAccepted;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -78,8 +79,9 @@ export const PrivacyPolicyScreen = () => {
       </ScrollView>
 
       <AcceptButton
-        onPress={handleAcceptAndContinue}
-        disabled={isScrolledToBottom}
+        onPress={acceptPolicy}
+        disabled={buttonDisabled}
+        accepted={isAccepted}
       />
     </SafeAreaView>
   );
