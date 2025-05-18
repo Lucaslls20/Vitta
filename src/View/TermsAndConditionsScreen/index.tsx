@@ -15,23 +15,21 @@ import { COLORS } from '../Colors';
 import { Header } from '../../Components/TermsAndConditionsScreen/Header';
 import { ClauseCard } from '../../Components/TermsAndConditionsScreen/ClauseCard';
 import { AcceptButton } from '../../Components/TermsAndConditionsScreen/AcceptButton';
+import { useTermsConditionsViewModel } from '../../ViewModels/TermsAndConditionsViewModel';
 
 export const TermsAndConditionsScreen = () => {
   const scrollViewRef = useRef<ScrollView | null>(null);
   const navigation = useNavigation<NavigationProps>();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
+  const { loading,acceptTerms,isAccepted } = useTermsConditionsViewModel();
+  const buttonDisabled = loading || !isScrolledToBottom || isAccepted;
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
     const progress = (layoutMeasurement.height + contentOffset.y) / contentSize.height;
     setScrollProgress(progress);
     setIsScrolledToBottom(progress >= 0.95);
-  };
-
-  const handleAcceptAndContinue = () => {
-    console.log('Terms accepted');
-    // Adicionar lógica de navegação aqui
   };
 
   const handleGoBack = () => {
@@ -78,8 +76,9 @@ export const TermsAndConditionsScreen = () => {
       </ScrollView>
 
       <AcceptButton
-        onPress={handleAcceptAndContinue}
-        disabled={isScrolledToBottom}
+        onPress={acceptTerms}
+        disabled={buttonDisabled}
+        accepted={isAccepted}
       />
     </SafeAreaView>
   );
