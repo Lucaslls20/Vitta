@@ -15,4 +15,5 @@ export interface EditProfileModel {
   setPassword: (password: string) => void;
   setConfirmPassword: (confirm: string) => void;
   setProfileImageUri: (uri: string) => void;
+   pickProfileImage: () => Promise<void>;
 }
