@@ -1,5 +1,4 @@
-// View/EditProfile.tsx
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -7,14 +6,14 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NavigationProps} from '../../App';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '../../App';
 import CancelButton from '../../Components/EditProfile/CancelButton';
 import ProfilePictureUpload from '../../Components/EditProfile/ProfilePictureUpload';
 import FormInput from '../../Components/EditProfile/FormInput';
 import SaveButton from '../../Components/EditProfile/SaveButton';
-import {styles} from './styles';
-import {useEditProfileViewModel} from '../../ViewModels/useEditProfileViewModel';
+import { styles } from './styles';
+import { useEditProfileViewModel } from '../../ViewModels/useEditProfileViewModel';
 
 const EditProfile: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -34,17 +33,17 @@ const EditProfile: React.FC = () => {
     setPhoneNumber,
     setPassword,
     setConfirmPassword,
-    pickProfileImage, // <-- novo
+    pickProfileImage, // <-- já existente
   } = useEditProfileViewModel();
 
-  // Load existing data on mount
+  // Carrega os dados existentes ao montar o componente
   useEffect(() => {
     loadProfile();
   }, []);
 
-  // Default placeholder if no image
+  // Imagem padrão que será usada para todos os usuários, se não houver profileImageUri
   const defaultImage = {
-    uri: 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg',
+    uri: 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-2124-61f7-bd61-94477d3bb2a6/raw?se=2025-05-23T23%3A16%3A03Z&sp=r&sv=2024-08-04&sr=b&scid=86969acb-b081-504f-86db-ef41501b4cb1&skoid=732f244e-db13-47c3-bcc7-7ee02a9397bc&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-23T10%3A04%3A33Z&ske=2025-05-24T10%3A04%3A33Z&sks=b&skv=2024-08-04&sig=wgRnMY%2B6B9cJkS6KXajBdP/l/p%2Bq0zAUaE4HaM3Kqe8%3D',
   };
 
   return (
@@ -55,11 +54,12 @@ const EditProfile: React.FC = () => {
         showsVerticalScrollIndicator={false}
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+      >
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
         <ProfilePictureUpload
-          imageSource={profileImageUri ? {uri: profileImageUri} : defaultImage}
+          imageSource={profileImageUri ? { uri: profileImageUri } : defaultImage}
           onPressCamera={pickProfileImage}
         />
 

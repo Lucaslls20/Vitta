@@ -14,14 +14,14 @@ const ProfilePictureUpload: React.FC<ProfilePictureUploadProps> = ({ imageSource
   <View style={[styles.profilePictureContainer, style]}>
     <View style={styles.profileFrame}>
       <Image source={imageSource} style={styles.profilePicture} />
-      <IconButton
+     {/* <IconButton
         icon="camera"
         iconColor={COLORS.white}
         size={20}
         onPress={onPressCamera}
         style={styles.cameraButton}
         containerColor={COLORS.primary}
-      />
+      /> */}
     </View>
   </View>
 );
