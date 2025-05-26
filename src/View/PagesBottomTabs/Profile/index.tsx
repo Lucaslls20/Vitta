@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
   const {user, loading} = useProfileViewModel();
   const {statsData} = useStatsViewModel();
   const navigation = useNavigation<NavigationProps>();
-  const appId = ' com.vitta.'; 
+  const appId = 'com.vitta';
   const shareVM = new ShareViewModel(appId);
 
   const fitnessItems: ListItemProps[] = [
