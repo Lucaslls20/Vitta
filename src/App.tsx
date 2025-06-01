@@ -28,6 +28,7 @@ import ChallengeDetails from "./View/ChallengeDetails";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { COLORS } from "./View/Colors";
+import { Provider   } from "react-native-paper"
 
 export type RootStackParamList = {
   Login: undefined;
@@ -126,9 +127,12 @@ function TabRoutes() {
   );
 }
 
+
 export default function App() {
   return (
+    // Envolva tudo em PaperProvider
     <>
+    <Provider>
       <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
       <NavigationContainer>
         <Stack.Navigator initialRouteName="SplashScreen">
@@ -137,78 +141,23 @@ export default function App() {
             component={SplashScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Register}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Tabs"
-            component={TabRoutes}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="SeeDetails"
-            component={SeeDetails}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="TermsAndConditionsScreen"
-            component={TermsAndConditionsScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="PrivacyPolicyScreen"
-            component={PrivacyPolicyScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="Settings"
-            component={Settings}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="Goals"
-            component={Goals}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="FavoriteRecipeScreen"
-            component={FavoriteRecipesScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="ChallengesScreen"
-            component={ChallengesScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="HelpFeedbackScreen"
-            component={HelpFeedbackScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="AboutScreen"
-            component={AboutScreen}
-            options={defaultScreenOptions}
-          />
-          <Stack.Screen
-            name="ChallengeDetails"
-            component={ChallengeDetails}
-            options={defaultScreenOptions}
-          />
+          <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+          <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+          <Stack.Screen name="Tabs" component={TabRoutes} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="SeeDetails" component={SeeDetails} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="TermsAndConditionsScreen" component={TermsAndConditionsScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="PrivacyPolicyScreen" component={PrivacyPolicyScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="Goals" component={Goals} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="FavoriteRecipeScreen" component={FavoriteRecipesScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="ChallengesScreen" component={ChallengesScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="HelpFeedbackScreen" component={HelpFeedbackScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="AboutScreen" component={AboutScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} options={{ headerShown: false, gestureEnabled: false }} />
         </Stack.Navigator>
       </NavigationContainer>
+    </Provider>
     </>
   );
 }

@@ -101,22 +101,6 @@ const Settings = () => {
         {/* Categorias de Configurações */}
         <Surface style={[styles.settingsCard, { backgroundColor: surfaceColor }]}>
           {/* Seção de Aparência */}
-          <List.Section>
-            <List.Subheader style={[styles.sectionHeader, { color: textColor }]}>Appearance</List.Subheader>
-            <List.Item
-              title="Dark Mode"
-              titleStyle={[styles.listItemTitle, { color: textColor }]}
-              left={(props) => (
-                <List.Icon {...props} icon="brightness-4" color={COLORS.primary} />
-              )}
-              right={() => (
-                <Switch
-                  value={settings.darkMode}
-                  onValueChange={toggleDarkMode}
-                />
-              )}
-            />
-          </List.Section>
           <Divider style={styles.divider} />
 
           {/* Seção de Notificações */}
