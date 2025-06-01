@@ -32,11 +32,6 @@ export const Header: React.FC = () => {
 
   return (
     <Appbar.Header style={styles.appBar}>
-      <Appbar.Action
-        icon="menu"
-        onPress={() => {}}
-        accessibilityLabel="Open menu"
-      />
       <Appbar.Content
         title={userName}
         titleStyle={styles.appBarTitle}
